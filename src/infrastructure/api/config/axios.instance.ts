@@ -46,6 +46,7 @@ export const setupAxiosResponseInterceptor = (
                     return Promise.reject(refreshError);
                 }
             }
+            return Promise.reject(error);
         }
     )
 
