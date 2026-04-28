@@ -51,3 +51,5 @@ export const setupAxiosResponseInterceptor = (
     )
 
 }
+
+export default httpClient;
