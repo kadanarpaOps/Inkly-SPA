@@ -1,9 +1,8 @@
 import type { PageResponse } from '../../../core/domain/models/common/PaginationModels';
-import type { UserModel } from '../../../core/domain/models/users/UserModel';
+import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from '../../../core/domain/models/users/UserModel';
 import httpClient from '../config/axios.instance';
-import type { RegisterUserRequest, UpdateUserRequest } from '../interfaces/user.interfaces';
 
-export const getUserByIdRequest = async (userId: string): Promise<UserModel> => {
+export const getUserByIdRequest = async (userId: string): Promise<UserInfo> => {
     const response = await httpClient.get(`users/${userId}`)
     return response.data;
 }
@@ -14,7 +13,7 @@ export const pageUsersRequest = async (
     userName: string,
     email: string,
     enable: boolean
-): Promise<PageResponse<UserModel>> => {
+): Promise<PageResponse<UserInfo>> => {
     const response = await httpClient.get(`users`, {
         params: { page, size, userName, email, enable }
     })

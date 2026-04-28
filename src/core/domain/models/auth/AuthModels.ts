@@ -1,12 +1,12 @@
-export interface LoginRequestModel {
+export interface LoginRequest {
     username: string;
     password: string;
 }
 
-export interface LoginResponseModel {
+export interface LoginResponse {
     userId: string;
 }
 
-export interface SessionValidationModel {
+export interface SessionValidation {
     active: boolean;
 }
