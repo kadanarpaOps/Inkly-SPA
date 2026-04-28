@@ -10,5 +10,5 @@ export interface UserPort {
     ): Promise<PageResponse<UserModel>>;
     registerUser(user: UserModel): Promise<void>;
     updateUser(user: UserModel): Promise<void>;
-    toggleUserStatus(userId: string, enable: boolean): Promise<void>;
+    toggleUserStatus(userId: string): Promise<void>;
 }

@@ -4,6 +4,7 @@ export interface UserModel {
     userId: string;
     userName: string;
     email: string;
+    password: string;
     emailVerified: boolean;
     passwordVerified: boolean;
     enable: boolean;

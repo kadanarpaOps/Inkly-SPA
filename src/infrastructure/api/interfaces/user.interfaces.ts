@@ -7,7 +7,7 @@ export interface RegisterUserRequest {
 
 export interface UpdateUserRequest {
     userId: string;
-    userName: string;
-    email: string;
-    password: string;
+    userName?: string;
+    email?: string;
+    password?: string;
 }
