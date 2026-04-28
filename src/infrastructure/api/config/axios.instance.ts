@@ -20,15 +20,30 @@ export const setupAxiosResponseInterceptor = (
     httpClient.interceptors.response.use(
         (response: AxiosResponse) => response,
         async (error) => {
-            if (error.response && error.response.status === 401 && authUser && authUser.enable) {
-                const validateAccessResponse = await validateAccess();
-                if (!validateAccessResponse.active) {
-                    const  validateSessionResponse = await verifySession();
-                    if (validateSessionResponse.active) {
-                        await refreshSession();
-                    } else {
-                        logout();
+            const originalRequest = error.config;
+
+            if (error.response &&
+                error.response.status === 401 &&
+                authUser &&
+                authUser?.enable &&
+                !originalRequest._retry
+            ) {
+                originalRequest._retry = true;
+
+                try {
+                    const validateAccessResponse = await validateAccess();
+                    if (!validateAccessResponse.active) {
+                        const validateSessionResponse = await verifySession();
+                        if (validateSessionResponse.active) {
+                            await refreshSession();
+                            return httpClient(originalRequest);
+                        } else {
+                            logout();
+                        }
                     }
+                } catch (refreshError) {
+                    logout();
+                    return Promise.reject(refreshError);
                 }
             }
         }
