@@ -28,17 +28,4 @@ export interface UserContextType {
     toggleUserStatus: (userId: string) => Promise<void>;
 }
 
-export const UserContext = createContext<UserContextType>({
-    loading: false,
-    error: null,
-    pagedUsers: null,
-    searchingUsers: null,
-    modifiedUser: false,
-    setModifiedUser: () => {},
-    findUserById: async () => null,
-    findPagedUsersResult: async () => {},
-    findPagedUsersForSearch: async () => {},
-    registerUser: async () => {},
-    updateUser: async () => {},
-    toggleUserStatus: async () => {},
-});
+export const UserContext = createContext<UserContextType | null>(null);

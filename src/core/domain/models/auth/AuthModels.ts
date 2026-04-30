@@ -9,4 +9,5 @@ export interface LoginResponse {
 
 export interface SessionValidation {
     active: boolean;
+    userId: string;
 }
