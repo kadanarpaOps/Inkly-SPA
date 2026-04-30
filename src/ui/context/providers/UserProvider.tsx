@@ -1,11 +1,15 @@
-import { useContext, useState, type ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
 import type { UserInfo } from "os";
+import executeTask from "../utils/TaskExecutor";
+import { UserService } from "../../../core/use-cases/UserUseCases";
+import type { RegisterUserRequest, UpdateUserRequest } from "../../../core/domain/models/users/UserModel";
 
-//// CONTINAUR CON ESTE LOLL; HACER UN PROVIDER PARA EL USUARIO, CON SU INFO, Y FUNCIONES PARA LOGUEAR, DESLOGUEAR, ETC
 type Props = {
     children: ReactNode;
 }
+
+const userService = new UserService();
 
 function UserProvider({ children }: Props) {
     // Basics
@@ -18,7 +22,30 @@ function UserProvider({ children }: Props) {
     const [modifiedUser, setModifiedUser] = useState<boolean>(false);
 
     // Rest Methods
+    const findUserById = (userId: string) => {
+        executeTask(() => userService.getUserById(userId), setLoading, setError);
+    }
 
+    const findPagedUsersResult = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
+        const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);
+        setPagedUsers(response);
+    }
 
+    const findPagedUsersForSearch = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
+        const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);
+        setSearchingUsers(response);
+    }
+
+    const registerUser = (data: RegisterUserRequest) => {
+        executeTask(() => userService.registerUser(data), setLoading, setError);
+    }
+
+    const updateUser = (data: UpdateUserRequest) => {
+        executeTask(() => userService.updateUser(data), setLoading, setError);
+    }
+
+    const toggleUserStatus = (userId: string) => {
+        executeTask(() => userService.toggleUserStatus(userId), setLoading, setError);
+    }
 
 }

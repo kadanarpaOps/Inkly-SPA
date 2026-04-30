@@ -13,7 +13,11 @@ export interface UserContextType {
     setModifiedUser: (modified: boolean) => void;
     // Rest Methods
     findUserById: (userId: string) => Promise<UserInfo | null>;
-    pageUsers: (page: number, pageSize: number,
+    findPagedUsersResult: (page: number, pageSize: number,
+        userName: string,
+        email: string,
+        enable: boolean) => Promise<void>;
+    findPagedUsersForSearch: (page: number, pageSize: number,
         userName: string,
         email: string,
         enable: boolean) => Promise<void>;

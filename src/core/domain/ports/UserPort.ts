@@ -1,5 +1,5 @@
 import type { PageResponse } from "../models/common/PaginationModels";
-import type { UserInfo } from "../models/users/UserModel";
+import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from "../models/users/UserModel";
 
 export interface UserPort {
     getUserById(userId: string): Promise<UserInfo>;
@@ -8,7 +8,7 @@ export interface UserPort {
         email: string,
         enable: boolean
     ): Promise<PageResponse<UserInfo>>;
-    registerUser(user: UserInfo): Promise<void>;
-    updateUser(user: UserInfo): Promise<void>;
+    registerUser(user: RegisterUserRequest): Promise<void>;
+    updateUser(user: UpdateUserRequest): Promise<void>;
     toggleUserStatus(userId: string): Promise<void>;
 }
