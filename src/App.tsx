@@ -1,11 +1,16 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router";
+import Login from "./ui/pages/Auth/Login";
 
 function App() {
-
   return (
-    <div style={{margin: "0 auto", width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "2rem"  }}>
-      Inkly
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login/>}>
+
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
