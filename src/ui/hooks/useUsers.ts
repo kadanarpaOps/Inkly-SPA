@@ -5,7 +5,7 @@ export const useUsers = () => {
     const userContext = useContext(UserContext);
 
     if (!userContext) {
-        throw new Error("userUsers must be used inside and UserProvider");
+        throw new Error("userUsers must be used inside an UserProvider");
     }
 
     return userContext;
