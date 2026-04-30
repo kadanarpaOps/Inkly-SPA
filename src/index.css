@@ -2,8 +2,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
+@theme {
+  /* Dark Mode Configuration */
+  --variant-dark: .class &;
+
+  /* Global Colors */
+  --color-background-global: #16161D;
+  --color-global: #DCD7BA;
+
+  /* Color Palette Refactor */
+  --color-on-tertiary: #33311d;
+  --color-surface: #13131a;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-on-tertiary-fixed: #1e1c0a;
+  --color-surface-container: #1f1f26;
+  --color-secondary: #b8c7e7;
+  --color-surface-tint: #ffb3b1;
+  --color-outline: #a98988;
+  --color-surface-container-lowest: #0d0e14;
+  --color-tertiary: #ccc7ab;
+  --color-surface-container-low: #1b1b22;
+  --color-on-error: #690005;
+  --color-tertiary-container: #9a967c;
+  --color-on-primary: #680011;
+  --color-surface-container-high: #292931;
+  --color-inverse-primary: #b42531;
+  --color-surface-bright: #393840;
+  --color-on-primary-container: #63000f;
+  --color-on-secondary-fixed: #0b1c34;
+  --color-background: #13131a;
+  --color-error: #ffb4ab;
+  --color-primary: #ffb3b1;
+  --color-surface-container-highest: #34343c;
+  --color-on-primary-fixed-variant: #91041d;
+  --color-tertiary-fixed: #e8e3c6;
+  --color-outline-variant: #5a4040;
+  --color-primary-fixed-dim: #ffb3b1;
+  --color-on-primary-fixed: #410007;
+  --color-secondary-fixed: #d6e3ff;
+  --color-on-surface-variant: #e1bebd;
+  --color-inverse-surface: #e4e1eb;
+  --color-on-secondary-container: #a6b5d5;
+  --color-on-background: #e4e1eb;
+  --color-on-secondary-fixed-variant: #384762;
+  --color-on-tertiary-fixed-variant: #4a4732;
+  --color-surface-variant: #34343c;
+  --color-surface-dim: #13131a;
+  --color-primary-fixed: #ffdad8;
+  --color-secondary-fixed-dim: #b8c7e7;
+  --color-on-secondary: #22314a;
+  --color-on-surface: #e4e1eb;
+  --color-on-tertiary-container: #302f1b;
+  --color-tertiary-fixed-dim: #ccc7ab;
+  --color-primary-container: #ff5d62;
+  --color-secondary-container: #384762;
+  --color-inverse-on-surface: #303037;
+  --color-waves-decoration: #223249;
+  --color-several-light: #9CABCA;
+}
+
+/* Global Styles using Theme Variables */
+body {
+    background-color: var(--color-background-global);
+    color: var(--color-global);
+}
+
 * {
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 400;
-    font-style: normal;
 }
