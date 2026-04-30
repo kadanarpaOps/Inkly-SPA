@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Play, Pause, Square, Speech, X } from "lucide-react";
 
 type Props = {
   start: () => void,
@@ -10,36 +11,43 @@ type Props = {
 function FloatingMenu({ start, pause, stop, speechStatus }: Props) {
   const [open, setOpen] = useState(false);
 
+  const isPlaying = speechStatus === "started";
+  
   return (
     <div className="fixed bottom-6 right-6 flex flex-col items-end">
       {/* Botones desplegables */}
-      <div className={`flex flex-col items-end space-y-2 mb-2 transation-all duration-300 ${open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+      <div className={`flex flex-col items-end space-y-2 mb-2 transation-all duration-300 ${
+          open 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-4 pointer-events-none"
+        }`}>
+        
+        {/* Botón Play/Pause Unificado */}
         <button
-          onClick={start}
-          className="bg-gray-500 text-white w-14 h-14 rounded-full shadow hover:bg-gray-600 transition"
+          onClick={isPlaying ? pause : start}
+          className="flex items-center justify-center bg-[var(--color-primary)] text-[var(--color-on-primary)] w-14 h-14 rounded-full shadow hover:bg-[var(--color-primary-container)] transition"
         >
-          S
+          {isPlaying ? <Pause className="fill-current"/> : <Play className="fill-current"/> }
         </button>
-        <button
-          onClick={pause}
-          className="bg-gray-500 text-white w-14 h-14 rounded-full shadow hover:bg-gray-600 transition"
-        >
-          P
-        </button>
+        {/* Botón Detener */}
         <button
           onClick={stop}
-          className="bg-gray-500 text-white w-14 h-14 rounded-full shadow hover:bg-gray-600 transition"
+          className="flex items-center justify-center bg-[var(--color-primary)] text-[var(--color-on-primary)] w-14 h-14 rounded-full shadow hover:bg-[var(--color-primary-container)] transition"
         >
-          St
+          <Square className="fill-current"/>
         </button>
       </div>
         
       {/* Boton principal */}
       <button
         onClick={() => setOpen(!open)}
-        className="bg-gray-600 text-white w-14 h-14 rounded-full shadow-lg hover:bg-gray-700 transition"
+        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all duration-500 transform ${
+          open 
+          ? "bg-gray-800 text-white rotate-360"
+          : "bg-[var(--color-primary)] text-[var(--color-on-primary)] hover:rotate-12"
+        }`}
       >
-        {speechStatus !== "started" ? "O" : "⏸"}
+        {open ? <X /> : <Speech className="fill-current"/>}
       </button>
     </div>
   );
