@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from "react"
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
-import type { UserInfo } from "os";
+import type { UserInfo } from "../../../core/domain/models/users/UserModel";
 import executeTask from "../utils/TaskExecutor";
 import { UserService } from "../../../core/use-cases/UserUseCases";
 import type { RegisterUserRequest, UpdateUserRequest } from "../../../core/domain/models/users/UserModel";
+import { UserContext, type UserContextType } from "../UserContext";
 
 type Props = {
     children: ReactNode;
@@ -22,8 +23,9 @@ function UserProvider({ children }: Props) {
     const [modifiedUser, setModifiedUser] = useState<boolean>(false);
 
     // Rest Methods
-    const findUserById = (userId: string) => {
-        executeTask(() => userService.getUserById(userId), setLoading, setError);
+    const findUserById = async (userId: string) => {
+        const response = executeTask(() => userService.getUserById(userId), setLoading, setError);
+        return response;
     }
 
     const findPagedUsersResult = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
@@ -36,16 +38,39 @@ function UserProvider({ children }: Props) {
         setSearchingUsers(response);
     }
 
-    const registerUser = (data: RegisterUserRequest) => {
-        executeTask(() => userService.registerUser(data), setLoading, setError);
+    const registerUser = async (data: RegisterUserRequest) => {
+        await executeTask(() => userService.registerUser(data), setLoading, setError);
     }
 
-    const updateUser = (data: UpdateUserRequest) => {
-        executeTask(() => userService.updateUser(data), setLoading, setError);
+    const updateUser = async (data: UpdateUserRequest) => {
+        await executeTask(() => userService.updateUser(data), setLoading, setError);
+        setModifiedUser(true);
     }
 
-    const toggleUserStatus = (userId: string) => {
-        executeTask(() => userService.toggleUserStatus(userId), setLoading, setError);
+    const toggleUserStatus = async (userId: string) => {
+        await executeTask(() => userService.toggleUserStatus(userId), setLoading, setError);
     }
+
+    // Export Values
+    const exportValues: UserContextType = {
+        loading,
+        error,
+        pagedUsers,
+        searchingUsers,
+        modifiedUser,
+        setModifiedUser,
+        findUserById,
+        findPagedUsersResult,
+        findPagedUsersForSearch,
+        registerUser,
+        updateUser,
+        toggleUserStatus
+    };
+
+    return (
+        <UserContext.Provider value={exportValues}>{children}</UserContext.Provider>
+    )
 
 }
+
+export default UserProvider;

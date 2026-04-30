@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { UserInfo } from "../../core/domain/models/users/UserModel";
+import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from "../../core/domain/models/users/UserModel";
 import type { PageResponse } from "../../core/domain/models/common/PaginationModels";
 
 export interface UserContextType {
@@ -9,6 +9,8 @@ export interface UserContextType {
     // Searching
     pagedUsers: PageResponse<UserInfo> | null;
     searchingUsers: PageResponse<UserInfo> | null;
+    // Refresh User Info
+    modifiedUser: boolean;
     // Fetch Info per Modification
     setModifiedUser: (modified: boolean) => void;
     // Rest Methods
@@ -21,8 +23,8 @@ export interface UserContextType {
         userName: string,
         email: string,
         enable: boolean) => Promise<void>;
-    registerUser: (user: UserInfo) => Promise<void>;
-    updateUser: (user: UserInfo) => Promise<void>;
+    registerUser: (user: RegisterUserRequest) => Promise<void>;
+    updateUser: (user: UpdateUserRequest) => Promise<void>;
     toggleUserStatus: (userId: string) => Promise<void>;
 }
 
