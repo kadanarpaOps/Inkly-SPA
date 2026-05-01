@@ -6,7 +6,6 @@ import RegisterForm from "./forms/RegisterForm";
 
 export default function Auth() {
   const [authAction, setAuthAction] = useState<"LOGIN" | "REGISTER">("LOGIN");
-  console.log(authAction);
 
   return (
     <main

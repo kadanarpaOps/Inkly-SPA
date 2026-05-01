@@ -1,9 +1,9 @@
 import z from "zod";
 
 export const registerSchema = z.object({
-    username: z.string()
+    userName: z.string()
         .nonempty("Tu Usuario es obligatorio")
-        .regex(/^[A-ZÑ][A-Za-zÀ-ÿ]+(\s[A-Za-zÀ-ÿ]+){0,4}$/, "Nombre inválido"),
+        .regex(/^[a-z]+(\s[a-z0-9]+){0,4}$/, "Nombre inválido"),
     email: z.string()
         .nonempty("Tu Correo es obligatorio")
         .regex(/^[\w.%+-]+@[A-Za-z\d.-]{2,}\.[a-z]{2,6}$/, "Email inválido"),

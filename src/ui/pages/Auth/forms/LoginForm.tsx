@@ -32,6 +32,7 @@ const LoginForm = () => {
               type="password"
               className="w-full bg-inputs-bg border-none text-global placeholder-several-light rounded-xl px-5 py-4 mt-2 focus:ring-2 focus:ring-high-enfasis focus:outline-none transition-all"
               placeholder="Ingresa tu contraseña"
+              autoComplete="off"
             />
             <button
               className="text-several-light hover:text-high-enfasis absolute top-6.5 right-4"
