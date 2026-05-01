@@ -58,8 +58,10 @@
   --color-primary-container: #ff5d62;
   --color-secondary-container: #384762;
   --color-inverse-on-surface: #303037;
-  --color-waves-decoration: #223249;
+  --color-waves-decoration: #2e425f;
   --color-several-light: #9CABCA;
+  --color-high-enfasis: #FF5D62;
+  --color-inputs-bg: #2D4F67;
 }
 
 /* Global Styles using Theme Variables */
