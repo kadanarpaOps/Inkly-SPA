@@ -1,0 +1,55 @@
+import { Eye } from "lucide-react";
+
+const LoginForm = () => {
+  return (
+    <div className="grow flex flex-col justify-center max-w-md mx-auto w-full mt-12">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-global mb-2">Bienvenido</h1>
+        <p className="text-several-light">¿Preparado para entintarte?</p>
+      </div>
+      <form action="" className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-xs font-semibold uppercase tracking-widest text-several-light ml-1">
+            Usuario o Correo
+          </label>
+          <input
+            type="text"
+            className="w-full bg-inputs-bg border-none text-global placeholder-several-light rounded-xl px-5 py-4 mt-2 focus:ring-2 focus:ring-high-enfasis focus:outline-none transition-all"
+            placeholder="ejemplo@inkly.dev"
+          />
+        </div>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <label className="text-xs font-semibold uppercase tracking-widest text-several-light ml-1">
+              Contraseña
+            </label>
+            <a className="text-xs font-medium text-several-light hover:text-high-enfasis transition-colors cursor-pointer">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+          <div className="relative">
+            <input
+              type="password"
+              className="w-full bg-inputs-bg border-none text-global placeholder-several-light rounded-xl px-5 py-4 mt-2 focus:ring-2 focus:ring-high-enfasis focus:outline-none transition-all"
+              placeholder="Ingresa tu contraseña"
+            />
+            <button
+              className="text-several-light hover:text-high-enfasis absolute top-6.5 right-4"
+              type="button"
+            >
+              <Eye size={20} className="cursor-pointer"></Eye>
+            </button>
+          </div>
+        </div>
+        <button
+          className="w-full bg-primary-container text-on-primary-fixed font-bold py-4 cursor-pointer rounded-full hover:shadow-lg hover:shadow-high-enfasis/20 active:scale-[0.98] transition-all mt-2"
+          type="submit"
+        >
+          Iniciar Sesión
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default LoginForm;
