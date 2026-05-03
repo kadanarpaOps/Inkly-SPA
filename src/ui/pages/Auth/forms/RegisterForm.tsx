@@ -24,8 +24,11 @@ const RegisterForm = () => {
     await registerUser(registerRequest);
     console.log(error);
     if (!error) {
+      const authAction = "LOGIN";
+      navigate("/auth", {
+        state: { authAction }
+      });
       reset();
-      navigate("/auth");
     }
   }
 

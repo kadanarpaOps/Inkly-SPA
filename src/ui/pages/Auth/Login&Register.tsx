@@ -3,9 +3,13 @@ import LoginLeftPanel from "../../components/decorative/LoginLeftPanel";
 import LoginForm from "./forms/LoginForm";
 import RegisterLeftPanel from "../../components/decorative/RegisterLeftPanel";
 import RegisterForm from "./forms/RegisterForm";
+import { useLocation } from "react-router";
 
 export default function Auth() {
-  const [authAction, setAuthAction] = useState<"LOGIN" | "REGISTER">("LOGIN");
+
+  const location = useLocation();
+
+  const [authAction, setAuthAction] = useState<string>(location.state?.authAction || "LOGIN");
 
   return (
     <main
