@@ -15,7 +15,7 @@ const userService = new UserService();
 
 function AuthProvider({ children }: Props) {
     // Basics
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     // Auth User Info
     const [authUser, setAuthUser] = useState<UserInfo | null>(null);
@@ -23,13 +23,14 @@ function AuthProvider({ children }: Props) {
     const [modifiedAuthUser, setModifiedAuthUser] = useState<boolean>(false);
 
     // Rest Methods
-    const login = async (userName: string, password: string) => {
+    const login = async (userName: string, password: string): Promise<boolean> => {
         setError(null);
-        const response = await executeTask(() => authService.login(userName, password), setLoading, setError) as LoginResponse;
-        console.log(error);
+        const response = await executeTask(() => authService.login(userName, password), setLoading, setError) as LoginResponse | null;
+        if (!response) return false;
         const userInfo = await executeTask(() => userService.getUserById(response.userId), setLoading, setError);
-        console.log(error);
+        if (!userInfo) return false;
         setAuthUser(userInfo);
+        return true;
     }
 
     const logout = async () => {
@@ -43,6 +44,7 @@ function AuthProvider({ children }: Props) {
         // Private Methods
         const checkAuth = async () => {
             const response = await executeTask(() => authService.validateSession(), setLoading, setError);
+            console.log(response);
             if (!response?.active) {
                 setAuthUser(null);
                 return;

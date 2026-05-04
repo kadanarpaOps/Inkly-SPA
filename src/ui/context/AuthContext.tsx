@@ -12,7 +12,7 @@ export interface AuthContextType {
     // Fetch Info per Modification
     setModifiedAuthUser: (modified: boolean) => void;
     // Rest Methods
-    login: (username: string, password: string) => Promise<void>;
+    login: (username: string, password: string) => Promise<boolean>;
     logout: () => Promise<void>;
 }
 

@@ -13,7 +13,7 @@ const LoginForm = () => {
   // Utility to Show Password
   const [showPassword, setShowPassword] = useState<boolean>(false);
   // Use Auth
-  const { login, error } = useAuth();
+  const { login, loading } = useAuth();
   // Use Navigate
   const navigate = useNavigate();
   // Use Form
@@ -24,8 +24,8 @@ const LoginForm = () => {
   // On Submit
   const onSubmit = async (data: LoginFormValues) => {
     const { username, password } = data;
-    await login(username, password);
-    if (!error) {
+    const success = await login(username, password);
+    if (success) {
       navigate("/explore")
       reset();
     }
@@ -80,10 +80,15 @@ const LoginForm = () => {
           </div>
         </div>
         <button
-          className="w-full bg-primary-container text-on-primary-fixed font-bold py-4 cursor-pointer rounded-full hover:shadow-lg hover:shadow-high-enfasis/20 active:scale-[0.98] transition-all mt-2"
+          className={`w-full hover:scale-[0.98] duration-300 ease-in-out transition-all mt-2 font-bold py-4 rounded-full ${!loading ? "cursor-pointer bg-primary-container text-on-primary-fixed hover:shadow-lg hover:shadow-high-enfasis/20}" : "cursor-default"}`}
           type="submit"
+          disabled={loading}
         >
-          Iniciar Sesión
+          {!loading ? ("Iniciar Sesión") : (
+            <div className="flex items-center justify-center w-full h-full">
+              <div className="loading-button" />
+            </div>
+          )}
         </button>
       </form>
     </div>

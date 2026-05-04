@@ -10,7 +10,9 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { authUser } = useAuth();
+  const { authUser, loading } = useAuth();
+
+  console.log(loading);
 
   return (
     <aside className={`${isSidebarOpen ? "w-64" : "w-0"} transition-all duration-300 ease-in-out overflow-hidden`}>
@@ -65,29 +67,35 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
             <div className="mt-6 flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
                 <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCsnFhyjVfUyaR7ufPrrLxwdMFvsrYPCx7MA_RinvozvIC6Aj3cm5vMVbuFI3vi_A6ZHrPABua37CDh7R0cLoeHUdDckfGusen9a81PDZ8n1vAHdn_RIFXFULHr-TV2GmZa1pi9CnXUyfM8u0B4zj-4iPe48L1PQoO2p-Dgzlfex5qxJTYBRtNKIIUGcEteqjxxkhXTIFJJlyT1wBQl8VTDe4cykAgOaNlseUiQCBdmhvD_0CZvlmdJYb6CaOezm-MmKl4jjouC-w"
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
                   alt="Imágen de Perfil"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div>
-                <p className="text-sm font-bold text-global">Nolan Grayson</p>
+                <p className="text-sm font-bold text-global">{authUser.userName}</p>
                 <p className="text-xs text-several-light">Escritor</p>
               </div>
             </div>
           ) : (
             <div className="flex mt-6 items-center justify-center">
-              <button
-                className="w-full bg-primary-container text-on-primary-fixed font-bold py-2 cursor-pointer rounded-xl hover:scale-[0.98] transition-all"
-                onClick={() => {
-                  const authAction = "LOGIN";
-                  navigate("/auth", {
-                    state: { authAction }
-                  });
-                }}
-              >
-                Iniciar Sesión
-              </button>
+              { !loading && !authUser ? (
+                <button
+                  className="w-full bg-primary-container text-on-primary-fixed font-bold py-2 cursor-pointer rounded-xl hover:scale-[0.98] transition-all"
+                  onClick={() => {
+                    const authAction = "LOGIN";
+                    navigate("/auth", {
+                      state: { authAction }
+                    });
+                  }}
+                >
+                  Iniciar Sesión
+                </button>
+              ) : (
+                <div className="flex items-center w-10 h-10">
+                  <div className="loading-button" />
+                </div>
+              )}
             </div>
           )}
         </div>
