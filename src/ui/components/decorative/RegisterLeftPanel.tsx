@@ -25,9 +25,6 @@ const RegisterLeftPanel = () => {
             </p>
             <div className="h-1 w-12 bg-high-enfasis mt-6"></div>
         </div>
-        <div className="absolute -bottom-20 -left-20 opacity-5 select-none pointer-events-none">
-            <span className="text-[24rem] font-bold text-high-enfasis">I</span>
-        </div>
     </>
   )
 }

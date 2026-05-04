@@ -2,14 +2,19 @@ import { BookCopy, CircleUserRound, Compass, SquarePen } from "lucide-react";
 import { useLocation, useNavigate } from "react-router"
 import { useAuth } from "../../hooks/useAuth";
 
-const Sidebar = () => {
+type SidebarProps= {
+  isSidebarOpen: boolean,
+}
+
+const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
 
   const location = useLocation();
   const navigate = useNavigate();
   const { authUser } = useAuth();
 
   return (
-    <nav className="sticky left-0 top-0 h-screen w-64 border-r border-inputs-bg/15 bg-background-global flex flex-col p-6 z-50">
+    <aside className={`${isSidebarOpen ? "w-64" : "w-0"} transition-all duration-300 ease-in-out overflow-hidden`}>
+      <nav className={`${isSidebarOpen ? "min-w-64 p-6": "w-0"} transition-all duration-300 ease-in-out overflow-hidden fixed h-full border-r border-inputs-bg/15 bg-background-global flex flex-col z-50`}>
         <div className="text-3xl font-bold tracking-tighter text-high-enfasis mb-8">
           Inkly
         </div>
@@ -86,7 +91,8 @@ const Sidebar = () => {
             </div>
           )}
         </div>
-    </nav>
+      </nav>
+    </aside>
   )
 }
 
