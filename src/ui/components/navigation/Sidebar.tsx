@@ -1,10 +1,12 @@
 import { BookCopy, CircleUserRound, Compass, SquarePen } from "lucide-react";
 import { useLocation, useNavigate } from "react-router"
+import { useAuth } from "../../hooks/useAuth";
 
 const Sidebar = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { authUser } = useAuth();
 
   return (
     <nav className="sticky left-0 top-0 h-screen w-64 border-r border-inputs-bg/15 bg-background-global flex flex-col p-6 z-50">
@@ -52,6 +54,37 @@ const Sidebar = () => {
             <CircleUserRound size={26} />
             <span>Mi Cuenta</span>
           </a>
+        </div>
+        <div className="mt-auto border-t border-inputs-bg/15">
+          { authUser ? (
+            <div className="mt-6 flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCsnFhyjVfUyaR7ufPrrLxwdMFvsrYPCx7MA_RinvozvIC6Aj3cm5vMVbuFI3vi_A6ZHrPABua37CDh7R0cLoeHUdDckfGusen9a81PDZ8n1vAHdn_RIFXFULHr-TV2GmZa1pi9CnXUyfM8u0B4zj-4iPe48L1PQoO2p-Dgzlfex5qxJTYBRtNKIIUGcEteqjxxkhXTIFJJlyT1wBQl8VTDe4cykAgOaNlseUiQCBdmhvD_0CZvlmdJYb6CaOezm-MmKl4jjouC-w"
+                  alt="Imágen de Perfil"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-global">Nolan Grayson</p>
+                <p className="text-xs text-several-light">Escritor</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex mt-6 items-center justify-center">
+              <button
+                className="w-full bg-primary-container text-on-primary-fixed font-bold py-2 cursor-pointer rounded-xl hover:scale-[0.98] transition-all"
+                onClick={() => {
+                  const authAction = "LOGIN";
+                  navigate("/auth", {
+                    state: { authAction }
+                  });
+                }}
+              >
+                Iniciar Sesión
+              </button>
+            </div>
+          )}
         </div>
     </nav>
   )
