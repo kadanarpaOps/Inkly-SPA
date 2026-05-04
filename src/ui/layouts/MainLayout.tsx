@@ -6,7 +6,6 @@ import { useState } from "react";
 const MainLayout = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  console.log(isSidebarOpen);
 
   return (
     <div className="flex min-h-screen">

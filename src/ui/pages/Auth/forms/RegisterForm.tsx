@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { RegisterUserRequest } from "../../../../core/domain/models/users/UserModel";
 
-type RegisterFormValues = z.infer<typeof registerSchema>
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
   // Use Navigate
@@ -14,7 +14,7 @@ const RegisterForm = () => {
   // Use Users
   const { registerUser, error, loading } = useUsers();
   // Use Form
-  const { register, handleSubmit, formState: { errors, isSubmitted}, reset } = useForm({
+  const { register, handleSubmit, formState: { errors, isSubmitted }, reset } = useForm({
     resolver: zodResolver(registerSchema)
   })
 
@@ -22,7 +22,6 @@ const RegisterForm = () => {
   const onSubmit = async (data: RegisterFormValues) => {
     const registerRequest: RegisterUserRequest = data;
     await registerUser(registerRequest);
-    console.log(error);
     if (!error) {
       const authAction = "LOGIN";
       navigate("/auth", {

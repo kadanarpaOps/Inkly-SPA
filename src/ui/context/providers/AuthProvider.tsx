@@ -24,8 +24,11 @@ function AuthProvider({ children }: Props) {
 
     // Rest Methods
     const login = async (userName: string, password: string) => {
+        setError(null);
         const response = await executeTask(() => authService.login(userName, password), setLoading, setError) as LoginResponse;
+        console.log(error);
         const userInfo = await executeTask(() => userService.getUserById(response.userId), setLoading, setError);
+        console.log(error);
         setAuthUser(userInfo);
     }
 

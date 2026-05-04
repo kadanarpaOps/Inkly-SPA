@@ -15,7 +15,7 @@ export default function Auth() {
     <main
       className={
         authAction == "LOGIN"
-          ? `min-h-screen flex items-center justify-center p-4 md:p-8`
+          ? `min-h-screen flex items-center justify-center p-4`
           : `overflow-hidden`
       }
     >
