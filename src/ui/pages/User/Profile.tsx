@@ -62,11 +62,19 @@ export default function Profile() {
                                     onClick={() => fileInputRef.current?.click()}
                                     className="group relative w-32 h-32 rounded-full border-4 border-background-global overflow-hidden bg-background-global shadow-2xl cursor-pointer"
                                 >
-                                    <img
-                                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
-                                        alt="Imagen de Perfil"
-                                        className="w-full h-full object-cover group-hover:opacity-40 transition-opacity"
-                                    />
+                                    {authUser.profileImageUrl ? (
+                                        <img
+                                            src={authUser.profileImageUrl}
+                                            alt="Imagen de Perfil"
+                                            className="w-full h-full object-cover group-hover:opacity-40 transition-opacity"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
+                                            alt="Imagen de Perfil"
+                                            className="w-full h-full object-cover group-hover:opacity-40 transition-opacity"
+                                        />
+                                    )}
                                     {/** Icon that shows when hover the Image Profile */}
                                     <div className="absolute text-several-light inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <Pen size={30} />
