@@ -94,7 +94,8 @@ function AuthProvider({ children }: Props) {
         modifiedAuthUser,
         setModifiedAuthUser,
         login,
-        logout
+        logout,
+        updateUserImage,
     };
 
     return (

@@ -5,6 +5,7 @@ interface Props {
     image: string;
     onCropComplete: (croppedImage: Blob) => void;
     onCancel: () => void;
+    loading: boolean;
 }
 
 interface AreaPixels {
@@ -14,7 +15,7 @@ interface AreaPixels {
     height: number;
 }
 
-const ImageCropperModal = ({ image, onCropComplete, onCancel }: Props) => {
+const ImageCropperModal = ({ image, onCropComplete, onCancel, loading }: Props) => {
   const [ crop, setCrop ] = useState({ x: 0, y: 0 });
   const [ zoom, setZoom ] = useState(1);
   const [ croppedAreaPixels, setCroppedAreaPixels ] = useState<AreaPixels | null>(null);
@@ -56,8 +57,18 @@ const ImageCropperModal = ({ image, onCropComplete, onCancel }: Props) => {
             />
         </div>
         <div className="mt-6 flex space-x-4 w-full max-w-lg">
-            <button onClick={onCancel} className="flex-1 py-3 text-global font-bold border border-inputs-bg/20 rounded-xl">Cancelar</button>
-            <button onClick={handleSave} className="flex-1 py-3 bg-high-enfasis text-background-global font-bold rounded-xl">Recortar y Guardar</button>
+            {!loading ? (
+                <>
+                    <button onClick={onCancel} className="flex-1 py-3 bg-search-bg text-global font-bold rounded-xl cursor-pointer hover:scale-95 transition-transform">Cancelar</button>
+                    <button onClick={handleSave} className="flex-1 py-3 bg-high-enfasis text-background-global font-bold rounded-xl cursor-pointer hover:scale-95 transition-transform">
+                        Recortar y Guardar
+                    </button>
+                </>
+            ) : (
+                <div className="flex items-center py-3 pt-8 justify-center w-full h-full">
+                  <div className="loading-button" />
+                </div>
+            )}
         </div>
     </div>
   )

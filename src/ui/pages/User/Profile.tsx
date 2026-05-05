@@ -1,11 +1,43 @@
+import { useRef, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import ImageCropperModal from "../../components/images/ImageCropperModal";
+import { Pen } from "lucide-react";
 
 export default function Profile() {
 
-    const { authUser } = useAuth();
+    // Use Auth
+    const { authUser, updateUserImage, loading } = useAuth();
+    // File Input Management
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [ selectedImage, setSelectedImage ] = useState<string | null>(null);
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = () => setSelectedImage(reader.result as string);
+        }
+    };
+    const handleImageUpload = async (blob: Blob) => {
+        if (authUser) {
+            const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+            const success = await updateUserImage(authUser.userId, file);
+            if (success) {
+                setSelectedImage(null);
+            }
+        }
+    }
 
     return (
         <main className="relative h-full">
+            {selectedImage && (
+                <ImageCropperModal
+                    image={selectedImage}
+                    onCropComplete={handleImageUpload}
+                    onCancel={() => setSelectedImage(null)}
+                    loading={loading}
+                />
+            )}
+
             { authUser ? (
                 <>
                     <div className="relative w-full h-55 overflow-hidden">
@@ -25,11 +57,27 @@ export default function Profile() {
                     <div className="px-12 -mt-12 relative z-20">
                         <div className="flex items-end justify-between">
                             <div className="flex items-end space-x-6">
-                                <div className="w-32 h-32 rounded-full border-4 border-background-global overflow-hidden bg-search-bg shadow-2xl">
+                                {/** Element to Select an Image to Update */}
+                                <div
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="group relative w-32 h-32 rounded-full border-4 border-background-global overflow-hidden bg-background-global shadow-2xl cursor-pointer"
+                                >
                                     <img
                                         src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
                                         alt="Imagen de Perfil"
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover group-hover:opacity-40 transition-opacity"
+                                    />
+                                    {/** Icon that shows when hover the Image Profile */}
+                                    <div className="absolute text-several-light inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Pen size={30} />
+                                    </div>
+                                    {/** Input to select Image */}
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                        accept="image/png, image/jpeg"
+                                        onChange={handleImageChange}
                                     />
                                 </div>
                                 <div className="pb-2">
