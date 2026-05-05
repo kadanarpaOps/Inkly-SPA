@@ -1,7 +1,7 @@
 import type { PageResponse } from "../domain/models/common/PaginationModels";
 import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from "../domain/models/users/UserModel";
 import type { UserPort } from "../domain/ports/UserPort";
-import { getUserByIdRequest, pageUsersRequest, registerUserRequest, toggleUserStatusRequest, updateProfileImageRequest, updateUserRequest } from "../../infrastructure/api/requests/users.request";
+import { deleteProfileImageRequest, getUserByIdRequest, pageUsersRequest, registerUserRequest, toggleUserStatusRequest, updateProfileImageRequest, updateUserRequest } from "../../infrastructure/api/requests/users.request";
 
 export class UserService implements UserPort {
 
@@ -49,6 +49,10 @@ export class UserService implements UserPort {
 
     async updateProfileImage(userId: string, file: File): Promise<void> {
         await updateProfileImageRequest(userId, file);
+    }
+
+    async deleteProfileImage(userId: string): Promise<void> {
+        await deleteProfileImageRequest(userId);
     }
 
 }

@@ -49,6 +49,16 @@ function AuthProvider({ children }: Props) {
         return false;
     }
 
+    const deleteUserImage = async (userId: string): Promise<boolean> => {
+        const response = await executeTask(() => userService.deleteProfileImage(userId), setLoading, setError);
+        console.log(response);
+        if (response !== null) {
+            setModifiedAuthUser(true);
+            return true;
+        }
+        return false;
+    }
+
     /** useEffects */
     // Refresh Auth User Info
     useEffect(() => {
@@ -96,6 +106,7 @@ function AuthProvider({ children }: Props) {
         login,
         logout,
         updateUserImage,
+        deleteUserImage,
     };
 
     return (

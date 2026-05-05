@@ -42,3 +42,7 @@ export const updateProfileImageRequest = async (userId: string, image: File): Pr
         }
     });
 }
+
+export const deleteProfileImageRequest = async (userId: string): Promise<void> => {
+    await httpClient.delete(`users/${userId}/delete-image`);
+}

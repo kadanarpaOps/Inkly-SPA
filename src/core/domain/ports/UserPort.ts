@@ -12,4 +12,5 @@ export interface UserPort {
     updateUser(user: UpdateUserRequest): Promise<void>;
     toggleUserStatus(userId: string): Promise<void>;
     updateProfileImage(userId: string, file: File): Promise<void>;
+    deleteProfileImage(userId: string): Promise<void>;
 }

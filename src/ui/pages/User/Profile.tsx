@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
-import { Pen } from "lucide-react";
+import { Pen, ImageMinus } from "lucide-react";
 
 export default function Profile() {
 
     // Use Auth
-    const { authUser, updateUserImage, loading } = useAuth();
+    const { authUser, updateUserImage, deleteUserImage, loading } = useAuth();
     // File Input Management
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [ selectedImage, setSelectedImage ] = useState<string | null>(null);
@@ -24,6 +24,11 @@ export default function Profile() {
             if (success) {
                 setSelectedImage(null);
             }
+        }
+    }
+    const handleDeleteImage = async () => {
+        if (authUser) {
+            await deleteUserImage(authUser.userId);
         }
     }
 
@@ -95,6 +100,24 @@ export default function Profile() {
                                     <p className="text-several-light font-medium">{authUser.email}</p>
                                 </div>
                             </div>
+                            { authUser.profileImageUrl !== null && (
+                                <div className="flex items-center justify-center min-w-43 pb-2">
+                                    { !loading ? (
+                                        <button
+                                            onClick={() => handleDeleteImage()}
+                                            className="px-6 py-2.5 space-x-3 text-sm bg-primary-container text-white font-semibold rounded-full hover:scale-95 transition-transform flex items-center cursor-pointer"
+                                        >
+                                            <ImageMinus size={20} />
+                                            <span>Eliminar Foto</span>                                        
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center justify-center w-10 h-10">
+                                          <div className="loading-button" />
+                                        </div>
+
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </>

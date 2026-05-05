@@ -15,6 +15,7 @@ export interface AuthContextType {
     login: (username: string, password: string) => Promise<boolean>;
     logout: () => Promise<void>;
     updateUserImage: (userId: string, file: File) => Promise<boolean>;
+    deleteUserImage: (userId: string) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
