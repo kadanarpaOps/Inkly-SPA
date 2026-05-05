@@ -8,6 +8,7 @@ import AuthProvider from "./ui/context/providers/AuthProvider";
 import Library from "./ui/pages/User/Library";
 import Write from "./ui/pages/User/Write";
 import ExploreStories from "./ui/pages/Stories/ExploreStories";
+import RecoveryPassword from "./ui/pages/Auth/RecoveryPassword";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route element={<AuthLayout />}>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/recovery-pass" element={<RecoveryPassword />} />
             </Route>
             <Route element={<MainLayout />}>
               <Route path="/explore" element={<ExploreStories />} />
