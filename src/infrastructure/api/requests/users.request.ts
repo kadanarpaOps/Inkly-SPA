@@ -31,3 +31,14 @@ export const updateUserRequest = async (user: UpdateUserRequest): Promise<void> 
 export const toggleUserStatusRequest = async (userId: string): Promise<void> => {
     await httpClient.patch(`users/${userId}/toggle-status`);
 }
+
+export const updateProfileImageRequest = async (userId: string, image: File): Promise<void> => {
+    const formData = new FormData();
+    formData.append('file', image);
+
+    await httpClient.patch(`users/${userId}/update-image`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
