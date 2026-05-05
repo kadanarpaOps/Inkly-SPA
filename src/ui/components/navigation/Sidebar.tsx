@@ -64,11 +64,19 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
           { authUser ? (
             <div className="mt-6 flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
-                  alt="Imágen de Perfil"
-                  className="w-full h-full object-cover"
-                />
+                {authUser.profileImageUrl ? (
+                  <img
+                    src={authUser.profileImageUrl}
+                    alt="Imágen de Perfil"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
+                    alt="Imágen de Perfil"
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
               <div>
                 <p className="text-sm font-bold text-global">{authUser.userName}</p>
