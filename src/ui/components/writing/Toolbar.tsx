@@ -12,7 +12,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
   })
 
   return (
-        <div className="sticky top-4 z-30 w-full max-w-4xl bg-search-bg/90 backdrop-opacity-95 rounded-2xl p-2 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)] mb-12">
+        <div className="sticky top-24 z-30 w-full max-w-4xl bg-search-bg/90 backdrop-opacity-95 rounded-2xl p-2 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)] mb-12">
             <div className="flex items-center space-x-1">
                 {/** Font Selector */}
                 <div className="relative group px-3 border-r border-toolbar-bg/30">
@@ -42,7 +42,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
                         <Italic size={20} />
                     </button>
                     <button
-                      onClick={() => editor?.chain().focus().toggleStrike().run()}
+                      onClick={() => editor?.chain().focus().toggleUnderline().run()}
                       disabled={!editorState.canUnderline}
                       className={`w-10 h-10 flex items-center rounded-lg justify-center
                         ${editorState.canUnderline ? "cursor-pointer" : "cursor-default"}
@@ -80,7 +80,13 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
                     >
                         <TextAlignEnd size={20} />
                     </button>
-                    <button className="w-10 h-10 flex items-center justify-center cursor-pointer rounded-lg text-global hover:bg-toolbar-bg/50 hover:text-global duration-300 transition-all">
+                    <button
+                      onClick={() => editor?.chain().focus().setTextAlign('justify').run()}
+                      disabled={!editorState.canJustify}
+                      className={`w-10 h-10 flex items-center rounded-lg justify-center
+                        ${editorState.canJustify ? "cursor-pointer" : "cursor-default"}
+                        ${editorState.isJustified ? "bg-high-enfasis text-background-global transition-transform hover:scale-90" : "text-several-light hover:bg-toolbar-bg/50 hover:text-global duration-300 transition-all"}`}
+                    >
                         <TextAlignJustify size={20} />
                     </button>
                 </div>

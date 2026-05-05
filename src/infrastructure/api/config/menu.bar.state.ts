@@ -19,6 +19,8 @@ export function menuBarStateSelector(ctx: EditorStateSnapshot<Editor>) {
         canCenter: editor.can().setTextAlign('center'),
         isRight: editor.isActive({ textAlign: 'right' }),
         canRight: editor.can().setTextAlign('right'),
+        isJustified: editor.isActive({ textAlign: 'justify' }),
+        canJustify: editor.can().setTextAlign('justify'),
     }
 
 }
