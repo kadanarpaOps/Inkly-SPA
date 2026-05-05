@@ -44,7 +44,6 @@ function AuthProvider({ children }: Props) {
         // Private Methods
         const checkAuth = async () => {
             const response = await executeTask(() => authService.validateSession(), setLoading, setError);
-            console.log(response);
             if (!response?.active) {
                 setAuthUser(null);
                 return;

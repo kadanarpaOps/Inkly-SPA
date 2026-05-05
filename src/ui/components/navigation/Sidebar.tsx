@@ -12,8 +12,6 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
   const navigate = useNavigate();
   const { authUser, loading } = useAuth();
 
-  console.log(loading);
-
   return (
     <aside className={`${isSidebarOpen ? "w-64" : "w-0"} transition-all duration-300 ease-in-out overflow-hidden`}>
       <nav className={`${isSidebarOpen ? "min-w-64 p-6": "w-0"} transition-all duration-300 ease-in-out overflow-hidden fixed h-full border-r border-inputs-bg/15 bg-background-global flex flex-col z-50`}>
