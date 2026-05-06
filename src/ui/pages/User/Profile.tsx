@@ -47,7 +47,7 @@ export default function Profile() {
                 <>
                     <div className="relative w-full h-55 overflow-hidden">
                         <img
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU5-3REf2uu_jeWzK0luLHUMfKov2H6h-Z257x-WsyaugO_-a-dT6cY3-SkJ_ikX-zdRl8QJfiKO4WcMLwxC5EWiSDxfx0agW9MyuVLvut02oEewMn7Qypr-IIN7euKLbH8RDvQrw992M2JCZdP-8IOHqoEqT7lMSNjm2XIK6sdsXIN-lwgMC1eo7LQNmGR3pmTaXtbewYW_tSlCUMdwKkhF9yrpRE97u2h2AbbXMCi82t2iXGOgB80rubgjclJlxIx5VW71n2Ka8"
+                            src="https://images.pexels.com/photos/29253139/pexels-photo-29253139.jpeg"
                             alt="Banner de paisaje oscuro montañoso"
                             className="w-full h-full object-cover grayscale opacity-40"
                         />
@@ -114,10 +114,47 @@ export default function Profile() {
                                         <div className="flex items-center justify-center w-10 h-10">
                                           <div className="loading-button" />
                                         </div>
-
                                     )}
                                 </div>
                             )}
+                        </div>
+                        <div className="mt-6 max-w-3xl">
+                            <p className="text-global/60 leading-relaxed">
+                                Bienvenido a tu perfil, gestiona tus historias o introducete en otros mundos, tú decides.
+                            </p>
+                            <div className="flex items-center space-x-6 mt-6 text-several-light text-sm">
+                                <div className="flex items-center space-x-1.5">
+                                    <span className="text-global font-bold">
+                                        0
+                                    </span>
+                                    <span>
+                                        Historias
+                                    </span>
+                                </div>
+                                <div className="w-1 h-1 rounded-full bg-toolbar-bg/50"></div>
+                                <div className="flex items-center space-x-1.5">
+                                    <span className="text-global font-bold">
+                                        0
+                                    </span>
+                                    <span>
+                                        Vistas
+                                    </span>
+                                </div>
+                                <div className="w-1 h-1 rounded-full bg-toolbar-bg/50"></div>
+                                <div className="flex items-center space-x-1.5">
+                                    <span className="text-global font-bold">
+                                        0
+                                    </span>
+                                    <span>
+                                        Historias Guardadas
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-12 flex space-x-10 border-b border-toolbar-bg/10">
+                            <span className="pb-4 text-high-enfasis font-bold border-b-2 border-high-enfasis px-2">
+                                Tus Historias
+                            </span>
                         </div>
                     </div>
                 </>

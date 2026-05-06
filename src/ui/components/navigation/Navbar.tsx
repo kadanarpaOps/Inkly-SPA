@@ -6,6 +6,7 @@ type NavbarProps = {
 }
 
 const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
+
   return (
     <header className="sticky top-0 z-40 w-full bg-background-global/80 backdrop-blur-sm pl-8 pr-12 py-4">
         <div className="grid grid-cols-3 items-center">
@@ -21,7 +22,7 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
                     />
                 </button>
                 <span className="text-global font-semibold text-lg hidden md:block">
-                    Tu Perfil
+                            
                 </span>
             </div>
             <div className="flex justify-center items-center">
