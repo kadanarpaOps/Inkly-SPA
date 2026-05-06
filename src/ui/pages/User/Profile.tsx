@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
-import { Pen, ImageMinus } from "lucide-react";
+import { Pen, ImageMinus, SquarePen } from "lucide-react";
 
 export default function Profile() {
 
@@ -166,6 +166,19 @@ export default function Profile() {
                             <span className="pb-4 text-high-enfasis font-bold border-b-2 border-high-enfasis px-2">
                                 Tus Historias
                             </span>
+                        </div>
+                        {/** Auth User Stories */}
+                        <div className="asymmetric-grid grid-cols-4 mt-12 pb-24">
+                            {/** Create new Story */}
+                            <div className="aspect-2/3 col-span-1 overflow-hidden rounded-xl border-2 border-dashed border-high-enfasis/30 flex flex-col items-center justify-center space-y-4 hover:bg-high-enfasis/5 hover:border-high-enfasis transition-all cursor-pointer group">
+                                <div className="w-16 h-16 rounded-full bg-high-enfasis/10 flex items-center justify-center text-high-enfasis group-hover:scale-110 transition-transform">
+                                    <span><SquarePen size={24} /></span>
+                                </div>
+                                <span className="text-global font-bold text-lg">
+                                    Nueva Historia
+                                </span>
+                            </div>
+                            {/** List of Stories */}
                         </div>
                     </div>
                 </>

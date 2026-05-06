@@ -24,23 +24,41 @@ const extensions = [
 export default function Write() {
 
     const [ wordsCount, setWordsCount ] = useState(0);
+    const [ activeEditor, setActiveEditor ] = useState<'title' | 'content'>('content');
+
+    const titleEditor = useEditor({
+        extensions: [
+            StarterKit.configure({ heading: false }),
+            Placeholder.configure({ placeholder: 'Título...' }),
+            TextAlign.configure({
+                alignments: ['left', 'center', 'right', 'justify'],
+                types: ['heading', 'paragraph'],
+                defaultAlignment: 'left'
+            }),
+        ],
+        editorProps: {
+            attributes: {
+                class: "text-5xl font-bold text-global outline-none min-h-fit",
+            }
+        },
+        onFocus: () => setActiveEditor('title'),
+    });
 
     const editor = useEditor({
         extensions,
         onUpdate({ editor }) {
             setWordsCount(editor.storage.characterCount.words());
         },
+        onFocus: () => setActiveEditor('content'),
     })
 
     return (
         <div className="grow flex flex-col items-center px-12 pb-12 writing-canvas">
             {/** Barra de Herramientas */}
-            <Toolbar editor={editor} />
+            <Toolbar editor={activeEditor === 'title' ? titleEditor : editor} />
             <div className="w-full max-w-3xl grow">
                 <div className="relative focus:outline-none">
-                    <h1 className="text-5xl font-bold mb-10 text-global outline-none">
-                        Capitulo I: Sangre y Entrañas
-                    </h1>
+                    <EditorContent editor={titleEditor} className='mb-10' />
                     <EditorContent editor={editor} className='leading-relaxed' />
                 </div>
             </div>
