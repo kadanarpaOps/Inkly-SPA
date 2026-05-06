@@ -24,9 +24,13 @@ export const newPasswordSchema = z.object({
     .regex(
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\d]).{7,30}$/,
       "Debe tener entre 7 y 30 caracteres, mínimo 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial"
-    )
+    ),
+  confirmPassword: z.string().trim().nonempty("Debes confirmar la contraseña")
+})
+.refine((data) => data.newPassword === data.confirmPassword, {
+  path: ["newPassword"],
+  message: "Las contraseñas no coinciden"
 });
 
 export type RequestPasswordFormData = z.infer<typeof requestSchema>;
-export type OtpFormData = z.infer<typeof verificationSchema>;
 export type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
