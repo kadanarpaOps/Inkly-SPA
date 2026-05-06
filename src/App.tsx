@@ -7,6 +7,8 @@ import Profile from "./ui/pages/User/Profile";
 import AuthProvider from "./ui/context/providers/AuthProvider";
 import Library from "./ui/pages/User/Library";
 import Write from "./ui/pages/User/Write";
+import LandingPage from './ui/pages/LandingPage';
+import ErrorPage from './ui/pages/ErrorPage';
 import ExploreStories from "./ui/pages/Stories/ExploreStories";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
               <Route path="/write" element={<Write />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
           </Routes>
         </Router>
       </AuthProvider>
