@@ -14,7 +14,7 @@ function FloatingMenu({ start, pause, stop, speechStatus }: Props) {
   const isPlaying = speechStatus === "started";
   
   return (
-    <div className="fixed bottom-6 right-6 flex flex-col items-end">
+    <div className="fixed bottom-6 left-6 flex flex-col items-end">
       {/* Botones desplegables */}
       <div className={`flex flex-col items-end space-y-2 mb-2 transation-all duration-300 ${
           open 
