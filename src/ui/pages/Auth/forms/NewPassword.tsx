@@ -14,7 +14,6 @@ function NewPassword({ onSuccess }: Props) {
   });
 
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = async (data: NewPasswordFormData) => {
     console.log("data=", data);
@@ -41,6 +40,7 @@ function NewPassword({ onSuccess }: Props) {
               {...register("newPassword")}
               placeholder="••••••••••••"
               className="w-full bg-inputs-bg border-none text-global rounded-xl px-5 py-4 focus:ring-2 focus:ring-high-enfasis focus:outline-none transition-all"
+              autoComplete="off"
             />
             <button
               type="button"
@@ -60,17 +60,17 @@ function NewPassword({ onSuccess }: Props) {
           </label>
           <div className="relative mt-2">
             <input
-              type={showConfirmPassword ? "text" : "password"}
+              type={"password"}
               {...register("confirmPassword")}
               placeholder="••••••••••••"
               className="w-full bg-inputs-bg border-none text-global rounded-xl px-5 py-4 focus:ring-2 focus:ring-high-enfasis focus:outline-none transition-all"
+              autoComplete="off"
             />
             <button
               type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-several-light"
             >
-              {showConfirmPassword ? <EyeOff size={20} /> : <Lock size={20} />}
+              <Lock size={20}/>
             </button>
           </div>
         </div>
