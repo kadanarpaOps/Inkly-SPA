@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @theme {
   /* Dark Mode Configuration */
@@ -195,5 +198,55 @@ body {
       19px 19px 0 5px,
       38px 19px 0 0px,
       57px 19px 0 0px;
+  }
+}
+
+/** Landing Page */
+@layer components {
+  /* Animaciones */
+  @keyframes kanaFloat {
+    from { transform: translateY(0px); }
+    to   { transform: translateY(-16px); }
+  }
+
+  @keyframes blobMorph {
+    from { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+    to   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+
+  @keyframes geoRotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes sparklePulse {
+    from { opacity: 0.2; transform: scale(0.8); }
+    to   { opacity: 0.7; transform: scale(1.2); }
+  }
+
+  @keyframes heroFadeIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Clases de Utilidad para la Landing */
+  .animate-kana-float { animation: kanaFloat 7s ease-in-out infinite alternate; }
+  .animate-blob-morph { animation: blobMorph 8s ease-in-out infinite alternate; }
+  .animate-geo-rotate { animation: geoRotate 12s linear infinite; }
+  .animate-geo-rotate-reverse { animation: geoRotate 18s linear infinite reverse; }
+  .animate-sparkle-pulse { animation: sparklePulse 3s ease-in-out infinite alternate; }
+  .animate-hero-fade { animation: heroFadeIn 1s ease both; }
+
+  /* Estilos específicos de la Gota Japonesa */
+  .kana-drop-shape {
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+
+  /* Efecto de lomo de libro */
+  .book-spine-effect {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: rgba(0,0,0,0.25);
   }
 }

@@ -1,8 +1,9 @@
 import { Bell, PanelTopClose, Search, } from "lucide-react"
 import { useLocation } from "react-router"
+import { useAuth } from "../../hooks/useAuth"
 
 type NavbarProps = {
-    isSidebarOpen: boolean,
+    isSidebarOpen: boolean | null,
     toggleSidebar: () => void
 }
 
@@ -10,25 +11,30 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
 
   const location = useLocation();
 
+    const { authUser } = useAuth();
+
   return (
-    <header className="sticky top-0 z-40 w-full bg-background-global/80 backdrop-blur-sm pl-8 pr-12 py-4">
+    <header className={`${isSidebarOpen !== null ? 'sticky' : 'fixed'} top-0 z-40 w-full bg-background-global/80 backdrop-blur-sm pl-8 pr-12 py-4`}>
         <div className={`grid grid-cols-3 items-center
             ${location.pathname.includes("/write") && !isSidebarOpen && 'transition-opacity duration-500 opacity-0 hover:opacity-100'}
         `}>
             <div className="flex items-center space-x-4">
-                <button
-                    className="p-2 hover:bg-global/10 rounded-lg transition-colors cursor-pointer"
-                    onClick={toggleSidebar}
-                >
-                    <PanelTopClose
-                        size={24}
-                        className={`transition-transform duration-300 transform
-                            ${isSidebarOpen ? "rotate-270" : "rotate-90"}`}
-                    />
-                </button>
-                <span className="text-global font-semibold text-lg hidden md:block">
-                            
-                </span>
+                {isSidebarOpen !== null && (
+                    <>
+                        <button
+                            className="p-2 hover:bg-global/10 rounded-lg transition-colors cursor-pointer"
+                            onClick={toggleSidebar}
+                        >
+                            <PanelTopClose
+                                size={24}
+                                className={`transition-transform duration-300 transform
+                                    ${isSidebarOpen ? "rotate-270" : "rotate-90"}`}
+                            />
+                        </button>
+                        <span className="text-global font-semibold text-lg hidden md:block">
+                        </span>
+                    </>
+                )}
             </div>
             <div className="flex justify-center items-center">
                 <div className="flex items-center relative group">
@@ -46,7 +52,9 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
                 </div>
             </div>
             <div className="flex justify-end">
-                <Bell fill="currentColor" size={26} />
+                {authUser && (
+                    <Bell fill="currentColor" size={26} />
+                )}
             </div>
         </div>
     </header>
