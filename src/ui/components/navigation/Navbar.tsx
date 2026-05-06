@@ -1,4 +1,5 @@
 import { Bell, PanelTopClose, Search, } from "lucide-react"
+import { useLocation } from "react-router"
 
 type NavbarProps = {
     isSidebarOpen: boolean,
@@ -7,9 +8,13 @@ type NavbarProps = {
 
 const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
 
+  const location = useLocation();
+
   return (
     <header className="sticky top-0 z-40 w-full bg-background-global/80 backdrop-blur-sm pl-8 pr-12 py-4">
-        <div className="grid grid-cols-3 items-center">
+        <div className={`grid grid-cols-3 items-center
+            ${location.pathname.includes("/write") && !isSidebarOpen && 'transition-opacity duration-500 opacity-0 hover:opacity-100'}
+        `}>
             <div className="flex items-center space-x-4">
                 <button
                     className="p-2 hover:bg-global/10 rounded-lg transition-colors cursor-pointer"

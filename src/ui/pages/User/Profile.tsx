@@ -53,9 +53,20 @@ export default function Profile() {
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-background-global to-transparent z-10">
                             <div className="absolute right-12 top-8 z-20 flex flex-col items-end space-y-3">
-                                <div className="px-3 py-1 border border-high-enfasis rounded-full text-[10px] font-bold text-high-enfasis uppercase tracking-wider bg-high-enfasis/5">
-                                    Escritor
-                                </div>
+                                {authUser.role.roleName == "INKLY_USER" ? (
+                                    <>
+                                        <div className="px-3 py-1 border border-high-enfasis rounded-full text-[10px] font-bold text-high-enfasis uppercase tracking-wider bg-high-enfasis/5">
+                                            Escritor
+                                        </div>
+                                        <div className="px-3 py-1 border border-high-enfasis rounded-full text-[10px] font-bold text-high-enfasis uppercase tracking-wider bg-high-enfasis/5">
+                                            Lector
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="px-3 py-1 border border-high-enfasis rounded-full text-[10px] font-bold text-high-enfasis uppercase tracking-wider bg-high-enfasis/5">
+                                        Administrador
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

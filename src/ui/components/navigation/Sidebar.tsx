@@ -80,7 +80,13 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
               </div>
               <div>
                 <p className="text-sm font-bold text-global">{authUser.userName}</p>
-                <p className="text-xs text-several-light">Escritor</p>
+                <p className="text-xs text-several-light">
+                  {authUser.role.roleName == "INKLY_USER" ? (
+                    "Escritor"
+                  ) : (
+                    "Administrador"
+                  )}
+                </p>
               </div>
             </div>
           ) : (
