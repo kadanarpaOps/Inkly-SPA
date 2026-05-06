@@ -1,11 +1,16 @@
+import { BrowserRouter, Routes, Route } from 'react-router';
+import LandingPage from './ui/pages/LandingPage';
+import ErrorPage from './ui/pages/ErrorPage';
 
 function App() {
-
   return (
-    <div style={{margin: "0 auto", width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "2rem"  }}>
-      Inkly
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
