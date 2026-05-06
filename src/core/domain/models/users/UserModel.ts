@@ -4,6 +4,7 @@ export interface UserInfo {
     userId: string;
     userName: string;
     email: string;
+    profileImageUrl: string;
     emailVerified: boolean;
     passwordVerified: boolean;
     enable: boolean;

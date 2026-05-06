@@ -12,8 +12,10 @@ export interface AuthContextType {
     // Fetch Info per Modification
     setModifiedAuthUser: (modified: boolean) => void;
     // Rest Methods
-    login: (username: string, password: string) => Promise<void>;
+    login: (username: string, password: string) => Promise<boolean>;
     logout: () => Promise<void>;
+    updateUserImage: (userId: string, file: File) => Promise<boolean>;
+    deleteUserImage: (userId: string) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);

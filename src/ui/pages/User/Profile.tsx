@@ -1,0 +1,168 @@
+import { useRef, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import ImageCropperModal from "../../components/images/ImageCropperModal";
+import { Pen, ImageMinus } from "lucide-react";
+
+export default function Profile() {
+
+    // Use Auth
+    const { authUser, updateUserImage, deleteUserImage, loading } = useAuth();
+    // File Input Management
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [ selectedImage, setSelectedImage ] = useState<string | null>(null);
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = () => setSelectedImage(reader.result as string);
+        }
+    };
+    const handleImageUpload = async (blob: Blob) => {
+        if (authUser) {
+            const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+            const success = await updateUserImage(authUser.userId, file);
+            if (success) {
+                setSelectedImage(null);
+            }
+        }
+    }
+    const handleDeleteImage = async () => {
+        if (authUser) {
+            await deleteUserImage(authUser.userId);
+        }
+    }
+
+    return (
+        <main className="relative h-full">
+            {selectedImage && (
+                <ImageCropperModal
+                    image={selectedImage}
+                    onCropComplete={handleImageUpload}
+                    onCancel={() => setSelectedImage(null)}
+                    loading={loading}
+                />
+            )}
+
+            { authUser ? (
+                <>
+                    <div className="relative w-full h-55 overflow-hidden">
+                        <img
+                            src="https://images.pexels.com/photos/29253139/pexels-photo-29253139.jpeg"
+                            alt="Banner de paisaje oscuro montañoso"
+                            className="w-full h-full object-cover grayscale opacity-40"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-background-global to-transparent z-10">
+                            <div className="absolute right-12 top-8 z-20 flex flex-col items-end space-y-3">
+                                <div className="px-3 py-1 border border-high-enfasis rounded-full text-[10px] font-bold text-high-enfasis uppercase tracking-wider bg-high-enfasis/5">
+                                    Escritor
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="px-12 -mt-12 relative z-20">
+                        <div className="flex items-end justify-between">
+                            <div className="flex items-end space-x-6">
+                                {/** Element to Select an Image to Update */}
+                                <div
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="group relative w-32 h-32 rounded-full border-4 border-background-global overflow-hidden bg-background-global shadow-2xl cursor-pointer"
+                                >
+                                    {authUser.profileImageUrl ? (
+                                        <img
+                                            src={authUser.profileImageUrl}
+                                            alt="Imagen de Perfil"
+                                            className="w-full h-full object-cover group-hover:opacity-40 transition-opacity"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.userName)}&background=dcd7ba&color=16161d`}
+                                            alt="Imagen de Perfil"
+                                            className="w-full h-full object-cover group-hover:opacity-40 transition-opacity"
+                                        />
+                                    )}
+                                    {/** Icon that shows when hover the Image Profile */}
+                                    <div className="absolute text-several-light inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Pen size={30} />
+                                    </div>
+                                    {/** Input to select Image */}
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                        accept="image/png, image/jpeg"
+                                        onChange={handleImageChange}
+                                    />
+                                </div>
+                                <div className="pb-2">
+                                    <h1 className="text-3xl font-bold text-global">
+                                        {authUser.userName}
+                                    </h1>
+                                    <p className="text-several-light font-medium">{authUser.email}</p>
+                                </div>
+                            </div>
+                            { authUser.profileImageUrl !== null && (
+                                <div className="flex items-center justify-center min-w-43 pb-2">
+                                    { !loading ? (
+                                        <button
+                                            onClick={() => handleDeleteImage()}
+                                            className="px-6 py-2.5 space-x-3 text-sm bg-primary-container text-white font-semibold rounded-full hover:scale-95 transition-transform flex items-center cursor-pointer"
+                                        >
+                                            <ImageMinus size={20} />
+                                            <span>Eliminar Foto</span>                                        
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center justify-center w-10 h-10">
+                                          <div className="loading-button" />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-6 max-w-3xl">
+                            <p className="text-global/60 leading-relaxed">
+                                Bienvenido a tu perfil, gestiona tus historias o introducete en otros mundos, tú decides.
+                            </p>
+                            <div className="flex items-center space-x-6 mt-6 text-several-light text-sm">
+                                <div className="flex items-center space-x-1.5">
+                                    <span className="text-global font-bold">
+                                        0
+                                    </span>
+                                    <span>
+                                        Historias
+                                    </span>
+                                </div>
+                                <div className="w-1 h-1 rounded-full bg-toolbar-bg/50"></div>
+                                <div className="flex items-center space-x-1.5">
+                                    <span className="text-global font-bold">
+                                        0
+                                    </span>
+                                    <span>
+                                        Vistas
+                                    </span>
+                                </div>
+                                <div className="w-1 h-1 rounded-full bg-toolbar-bg/50"></div>
+                                <div className="flex items-center space-x-1.5">
+                                    <span className="text-global font-bold">
+                                        0
+                                    </span>
+                                    <span>
+                                        Historias Guardadas
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-12 flex space-x-10 border-b border-toolbar-bg/10">
+                            <span className="pb-4 text-high-enfasis font-bold border-b-2 border-high-enfasis px-2">
+                                Tus Historias
+                            </span>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <div className="flex items-center justify-center w-full h-full">
+                  <div className="loading-button" />
+                </div>
+            ) }
+        </main>
+    );
+}

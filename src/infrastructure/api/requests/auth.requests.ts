@@ -11,12 +11,12 @@ export const logoutRequest = async (): Promise<void> => {
 }
 
 export const verifyAccessTokenRequest = async (): Promise<SessionValidation> => {
-    const response = await httpClient.get(`auth/validate/access`);
+    const response = await httpClient.post(`auth/validate/access`);
     return response.data;
 }
 
 export const verifyRefreshTokenRequest = async (): Promise<SessionValidation> => {
-    const response = await httpClient.get(`auth/validate/session`);
+    const response = await httpClient.post(`auth/validate/session`);
     return response.data;
 }
 

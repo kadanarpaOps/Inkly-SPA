@@ -15,7 +15,7 @@ const userService = new UserService();
 
 function AuthProvider({ children }: Props) {
     // Basics
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     // Auth User Info
     const [authUser, setAuthUser] = useState<UserInfo | null>(null);
@@ -23,15 +23,40 @@ function AuthProvider({ children }: Props) {
     const [modifiedAuthUser, setModifiedAuthUser] = useState<boolean>(false);
 
     // Rest Methods
-    const login = async (userName: string, password: string) => {
-        const response = await executeTask(() => authService.login(userName, password), setLoading, setError) as LoginResponse;
+    const login = async (userName: string, password: string): Promise<boolean> => {
+        setError(null);
+        const response = await executeTask(() => authService.login(userName, password), setLoading, setError) as LoginResponse | null;
+        if (!response) return false;
         const userInfo = await executeTask(() => userService.getUserById(response.userId), setLoading, setError);
+        if (!userInfo) return false;
         setAuthUser(userInfo);
+        return true;
     }
 
     const logout = async () => {
         await executeTask(() => authService.logout(), setLoading, setError);
         setAuthUser(null);
+    }
+     
+    // Business Methods (Update Info)
+    const updateUserImage = async (userId: string, file: File): Promise<boolean> => {
+        const response = await executeTask(() => userService.updateProfileImage(userId, file), setLoading, setError);
+        console.log(response);
+        if (response !== null) {
+            setModifiedAuthUser(true);
+            return true;
+        }
+        return false;
+    }
+
+    const deleteUserImage = async (userId: string): Promise<boolean> => {
+        const response = await executeTask(() => userService.deleteProfileImage(userId), setLoading, setError);
+        console.log(response);
+        if (response !== null) {
+            setModifiedAuthUser(true);
+            return true;
+        }
+        return false;
     }
 
     /** useEffects */
@@ -79,7 +104,9 @@ function AuthProvider({ children }: Props) {
         modifiedAuthUser,
         setModifiedAuthUser,
         login,
-        logout
+        logout,
+        updateUserImage,
+        deleteUserImage,
     };
 
     return (
