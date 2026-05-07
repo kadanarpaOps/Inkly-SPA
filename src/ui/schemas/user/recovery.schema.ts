@@ -31,6 +31,3 @@ export const newPasswordSchema = z.object({
   path: ["newPassword"],
   message: "Las contraseñas no coinciden"
 });
-
-export type RequestPasswordFormData = z.infer<typeof requestSchema>;
-export type NewPasswordFormData = z.infer<typeof newPasswordSchema>;

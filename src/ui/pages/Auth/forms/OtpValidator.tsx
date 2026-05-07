@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { verificationSchema } from "./zodSchemas/zodRecoveryPass";
 import { ArrowLeft, ArrowRight, MailCheck } from "lucide-react";
+import { verificationSchema } from "../../../schemas/user/recovery.schema";
 
 type Props = {
   onSuccess: () => void;

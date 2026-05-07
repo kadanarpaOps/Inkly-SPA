@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Check, User, ShieldCheck, Lock } from "lucide-react";
+import { User, ShieldCheck, Lock } from "lucide-react";
 import RequestPassword from "./forms/RequestPassword";
 import OtpValidator from "./forms/OtpValidator";
 import NewPassword from "./forms/NewPassword";

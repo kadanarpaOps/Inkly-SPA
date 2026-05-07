@@ -1,13 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { requestSchema, type RequestPasswordFormData } from "./zodSchemas/zodRecoveryPass";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
+import type z from "zod";
+import { requestSchema } from "../../../schemas/user/recovery.schema";
 
 type Props = {
   onSuccess: () => void;
   onBack: () => void;
 }
+
+export type RequestPasswordFormData = z.infer<typeof requestSchema>;
 
 function RequestPassword({ onSuccess }: Props) {
   const { register, handleSubmit, formState: { errors } } = useForm<RequestPasswordFormData>({

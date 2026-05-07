@@ -1,12 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { newPasswordSchema, type NewPasswordFormData } from "./zodSchemas/zodRecoveryPass";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
+import type z from "zod";
+import { newPasswordSchema } from "../../../schemas/user/recovery.schema";
 
 type Props = {
   onSuccess: () => void;
 };
+
+export type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
 
 function NewPassword({ onSuccess }: Props) {
   const { register, handleSubmit, formState: { errors } } = useForm<NewPasswordFormData>({
