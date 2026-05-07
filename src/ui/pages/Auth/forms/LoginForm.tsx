@@ -48,6 +48,7 @@ const LoginForm = () => {
             placeholder="ejemplo@inkly.dev"
             {...register("username")}
           />
+          {errors.username && <p>{errors.username.message}</p>}
         </div>
         <div className="space-y-2">
           <div className="flex justify-between items-center">
@@ -66,6 +67,7 @@ const LoginForm = () => {
               autoComplete="off"
               {...register("password")}
             />
+            {errors.password && <p>{errors.password.message}</p>}
             <button
               className="text-several-light hover:text-high-enfasis absolute top-6.5 right-4"
               type="button"
