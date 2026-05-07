@@ -54,6 +54,7 @@ const RegisterForm = () => {
                 placeholder="ej. Scriptor_Inkly"
                 {...register("userName")}
               />
+              {errors.userName && <p>{errors.userName.message}</p>}
             </div>
           </div>
           <div className="space-y-2">
@@ -67,6 +68,7 @@ const RegisterForm = () => {
                 placeholder="ejemplo@inkly.com"
                 {...register("email")}
               />
+              {errors.email && <p>{errors.email.message}</p>}
             </div>
           </div>
           <div className="space-y-2">
@@ -81,6 +83,7 @@ const RegisterForm = () => {
                 autoComplete="off"
                 {...register("password")}
               />
+              {errors.password && <p>{errors.password.message}</p>}
             </div>
           </div>
           <button className="w-full bg-high-enfasis hover:bg-high-enfasis/90 text-on-primary-fixed font-semibold py-4 rounded-full transition-all duration-300 shadow-lg shadow-high-enfasis/20 active:scale-[0.98] mt-4 cursor-pointer" type="submit">
