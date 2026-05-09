@@ -11,7 +11,7 @@ export class UserService implements UserPort {
     }
 
     async pageUsers(page: number, pageSize: number, userName: string, email: string, enable: boolean): Promise<PageResponse<UserInfo>> {
-        const pageResponse = pageUsersRequest(page, pageSize, userName, email, enable);
+        const pageResponse = await pageUsersRequest(page, pageSize, userName, email, enable);
         return pageResponse;
     }
 

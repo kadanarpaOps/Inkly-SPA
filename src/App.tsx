@@ -11,29 +11,32 @@ import LandingPage from './ui/pages/LandingPage';
 import ErrorPage from './ui/pages/ErrorPage';
 import ExploreStories from "./ui/pages/Stories/ExploreStories";
 import CreateStory from "./ui/pages/Stories/CreateStory";
+import StoriesProvider from "./ui/context/providers/StoriesProvider";
 
 function App() {
   return (
-    <UserProvider>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route element={<AuthLayout />}>
-              <Route path="/auth" element={<Auth />} />
-            </Route>
-            <Route element={<MainLayout />}>
-              <Route path="/explore" element={<ExploreStories />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/write" element={<Write />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-            <Route path="/story/create" element={<CreateStory />} />
-            <Route path="/" element={<LandingPage />} />
-            <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </UserProvider>
+    <StoriesProvider>
+      <UserProvider>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route element={<AuthLayout />}>
+                <Route path="/auth" element={<Auth />} />
+              </Route>
+              <Route element={<MainLayout />}>
+                <Route path="/explore" element={<ExploreStories />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/write" element={<Write />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
+              <Route path="/story/create" element={<CreateStory />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </UserProvider>
+    </StoriesProvider>
   );
 }
 

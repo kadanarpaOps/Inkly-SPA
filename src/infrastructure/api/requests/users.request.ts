@@ -3,7 +3,7 @@ import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from '../../../
 import httpClient from '../config/axios.instance';
 
 export const getUserByIdRequest = async (userId: string): Promise<UserInfo> => {
-    const response = await httpClient.get(`users/${userId}`)
+    const response = await httpClient.get(`users/${userId}`);
     return response.data;
 }
 
@@ -16,7 +16,7 @@ export const pageUsersRequest = async (
 ): Promise<PageResponse<UserInfo>> => {
     const response = await httpClient.get(`users`, {
         params: { page, size, userName, email, enable }
-    })
+    });
     return response.data;
 }
 

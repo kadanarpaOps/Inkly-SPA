@@ -64,7 +64,7 @@ function UserProvider({ children }: Props) {
         findPagedUsersForSearch,
         registerUser,
         updateUser,
-        toggleUserStatus
+        toggleUserStatus,
     };
 
     return (

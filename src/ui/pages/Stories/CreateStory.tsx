@@ -1,6 +1,11 @@
 import { Bell, Bolt, Cog, ImageUp, Plus, X } from "lucide-react"
+import { useState } from "react";
 
 const CreateStory = () => {
+
+  const [ selectingGenre, setSelectingGenre ] = useState<boolean>(false);
+  const [ selectingSubgenre, setSelectingSubgenre ] = useState<boolean>(false);
+
   return (
     <main className="flex min-h-screen overflow-x-hidden">
       <div className="grow bg-surface min-h-screen relative">
