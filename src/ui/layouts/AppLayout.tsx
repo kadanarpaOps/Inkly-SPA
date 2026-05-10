@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router";
+import { BrowserRouter as Router, Route, Routes } from "react-router";
 import ErrorPage from "../pages/ErrorPage";
 import AuthLayout from "./AuthLayout";
 import Auth from "../pages/Auth/Login&Register";
@@ -16,7 +16,6 @@ import { setupAxiosResponseInterceptor } from "../../infrastructure/api/config/a
 const AppLayout = () => {
 
   const { authUser, logout, validateAccess, validateSession, refreshSession } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setupAxiosResponseInterceptor(
@@ -26,7 +25,6 @@ const AppLayout = () => {
         refreshSession,
         () => {
             logout();
-            navigate("/auth");
         }
     )
   });

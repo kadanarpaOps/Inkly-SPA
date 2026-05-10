@@ -61,17 +61,17 @@ function AuthProvider({ children }: Props) {
 
     // Validate AUth Methods for Interceptor
     const validateAccess = async (): Promise<SessionValidation> => {
-        const validationResponse = await executeTask(() => authService.validateAccess(), setLoading, setError) as SessionValidation;
+        const validationResponse = await executeTask(() => authService.validateAccess(), () => {}, setError) as SessionValidation;
         return validationResponse;
     }
 
     const validateSession = async (): Promise<SessionValidation> => {
-        const validationResponse = await executeTask(() => authService.validateSession(), setLoading, setError) as SessionValidation;
+        const validationResponse = await executeTask(() => authService.validateSession(), () => {}, setError) as SessionValidation;
         return validationResponse;
     }
 
     const refreshSession = async (): Promise<void> => {
-        await executeTask(() => authService.refreshSession(), setLoading, setError);
+        await executeTask(() => authService.refreshSession(), () => {}, setError);
     }
 
     /** useEffects */

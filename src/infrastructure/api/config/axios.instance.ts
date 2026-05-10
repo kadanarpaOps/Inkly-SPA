@@ -1,18 +1,8 @@
-import axios, { type AxiosResponse } from "axios";
+import axios from "axios";
 import type { UserInfo } from "../../../core/domain/models/users/UserModel";
 import type { SessionValidation } from "../../../core/domain/models/auth/AuthModels";
 
-interface ImportMetaEnv {
-    readonly VITE_API_URL: string;
-}
-
-interface ImportMeta {
-    readonly env?: ImportMetaEnv;
-}
-
-const meta = import.meta as ImportMeta;
-
-const apiURL = meta.env?.VITE_API_URL;
+const apiURL = import.meta.env.VITE_API_URL;
 
 const httpClient = axios.create({
     baseURL: apiURL,
@@ -26,44 +16,41 @@ export const setupAxiosResponseInterceptor = (
     refreshSession: () => Promise<void>,
     logout: () => void
 ) => {
+httpClient.interceptors.request.use(
+        async (config) => {
+            if (!authUser || !authUser.enable) return config;
 
-    httpClient.interceptors.response.use(
-        (response: AxiosResponse) => response,
-        async (error) => {
-            console.log("Interceptor triggered for error:", error);
-            const originalRequest = error.config;
-
-            if (error.response &&
-                error.response.status === 401 &&
-                authUser &&
-                authUser?.enable &&
-                !originalRequest._retry
-            ) {
-                originalRequest._retry = true;
-
-                try {
-                    const validateAccessResponse = await validateAccess();
-                    console.log(validateAccessResponse);
-                    if (!validateAccessResponse.active) {
-                        const validateSessionResponse = await verifySession();
-                        console.log(validateSessionResponse);
-                        if (validateSessionResponse.active) {
-                            await refreshSession();
-                            console.log(originalRequest);
-                            return httpClient(originalRequest);
-                        } else {
-                            logout();
-                        }
-                    }
-                } catch (refreshError) {
-                    logout();
-                    return Promise.reject(refreshError);
-                }
+            // We define routes to don't validate
+            if (config.url?.includes('auth/')) {
+                return config;
             }
-            return Promise.reject(error);
-        }
-    )
 
-}
+            try {
+                const access = await validateAccess();
+                
+                if (!access.active) {
+                    console.log("Access expired, checking session...");
+                    const session = await verifySession();
+                    
+                    if (session.active) {
+                        console.log("Session active, refreshing token...");
+                        await refreshSession();
+                    } else {
+                        console.log("Session expired, logging out...");
+                        logout();
+                        return Promise.reject("Session expired");
+                    }
+                }
+            } catch (error) {
+                console.error("Error in request interceptor:", error);
+                // If validation fails, we can choose to logout or just reject the request
+                return Promise.reject(error);
+            }
+
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
+};
 
 export default httpClient;
