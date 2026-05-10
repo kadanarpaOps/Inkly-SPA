@@ -7,7 +7,7 @@ export const getAllGenresRequest = async (): Promise<BasicInfo[]> => {
 }
 
 export const registerStoryRequest = async (story: RegisterStory): Promise<void> => {
-    const response = await httpClient.post(`api/stories`, story, {
+    const response = await httpClient.post(`api/story/create`, story, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

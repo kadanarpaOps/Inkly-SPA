@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { BasicInfo, StoryInfo } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, RegisterStory, StoryInfo } from "../../core/domain/models/stories/StoryModel";
 
 export interface StoriesContextType {
     // Basics
@@ -14,7 +14,7 @@ export interface StoriesContextType {
     // Refresh Info per modification
     modifiedStories: boolean;
     // Rest Methods
-
+    createStory: (story: RegisterStory) => Promise<boolean>;
 }
 
 export const StoriesContext = createContext<StoriesContextType | null>(null);

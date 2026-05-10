@@ -1,8 +1,18 @@
 import axios, { type AxiosResponse } from "axios";
-import type { UserModel } from "../../../core/domain/models/users/UserModel";
-import type { SessionValidationModel } from "../../../core/domain/models/auth/AuthModels";
+import type { UserInfo } from "../../../core/domain/models/users/UserModel";
+import type { SessionValidation } from "../../../core/domain/models/auth/AuthModels";
 
-const apiURL = import.meta.env.VITE_API_URL;
+interface ImportMetaEnv {
+    readonly VITE_API_URL: string;
+}
+
+interface ImportMeta {
+    readonly env?: ImportMetaEnv;
+}
+
+const meta = import.meta as ImportMeta;
+
+const apiURL = meta.env?.VITE_API_URL;
 
 const httpClient = axios.create({
     baseURL: apiURL,
@@ -10,9 +20,9 @@ const httpClient = axios.create({
 })
 
 export const setupAxiosResponseInterceptor = (
-    authUser: UserModel,
-    validateAccess: () => Promise<SessionValidationModel>,
-    verifySession: () => Promise<SessionValidationModel>,
+    authUser: UserInfo | null,
+    validateAccess: () => Promise<SessionValidation>,
+    verifySession: () => Promise<SessionValidation>,
     refreshSession: () => Promise<void>,
     logout: () => void
 ) => {
@@ -20,6 +30,7 @@ export const setupAxiosResponseInterceptor = (
     httpClient.interceptors.response.use(
         (response: AxiosResponse) => response,
         async (error) => {
+            console.log("Interceptor triggered for error:", error);
             const originalRequest = error.config;
 
             if (error.response &&
@@ -32,10 +43,13 @@ export const setupAxiosResponseInterceptor = (
 
                 try {
                     const validateAccessResponse = await validateAccess();
+                    console.log(validateAccessResponse);
                     if (!validateAccessResponse.active) {
                         const validateSessionResponse = await verifySession();
+                        console.log(validateSessionResponse);
                         if (validateSessionResponse.active) {
                             await refreshSession();
+                            console.log(originalRequest);
                             return httpClient(originalRequest);
                         } else {
                             logout();

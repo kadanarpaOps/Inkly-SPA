@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import type { UserInfo } from "../../core/domain/models/users/UserModel";
+import type { SessionValidation } from "../../core/domain/models/auth/AuthModels";
 
 export interface AuthContextType {
     // Basics
@@ -16,6 +17,9 @@ export interface AuthContextType {
     logout: () => Promise<void>;
     updateUserImage: (userId: string, file: File) => Promise<boolean>;
     deleteUserImage: (userId: string) => Promise<boolean>;
+    validateAccess: () => Promise<SessionValidation>;
+    validateSession: () => Promise<SessionValidation>;
+    refreshSession: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);

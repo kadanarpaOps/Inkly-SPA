@@ -18,7 +18,7 @@ const CreateStory = () => {
   // Use Navigate
   const navigate = useNavigate();
   // Use Stories
-  const { loading,  } = useStories();
+  const { loading, createStory  } = useStories();
   // Use Auth
   const { authUser } = useAuth();
   // Show Set Genres Modal
@@ -36,7 +36,6 @@ const CreateStory = () => {
   // Watch for RealTime values
   const currentGenre = useWatch({ control, name: "genreName" });
   const currentSubgenre = useWatch({ control, name: "secondaryGenreName" });
-  const currentImage = useWatch({ control, name: "image"});
 
   // Handle Genre Selection
   const handleSelectGenre = (value: string) => {
@@ -76,6 +75,11 @@ const CreateStory = () => {
   // On Submit
   const onSubmit = async (data: CreateFormValues) => {
     const createRequest: RegisterStory = { ...data, userId: authUser!.userId };
+    const success = await createStory(createRequest);
+    if (success) {
+      navigate("/profile");
+      reset();
+    }
   }
 
   /** UseEffect to Upload previewUrl value */

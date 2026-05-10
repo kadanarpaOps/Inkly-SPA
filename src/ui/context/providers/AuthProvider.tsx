@@ -3,7 +3,7 @@ import { AuthService } from "../../../core/use-cases/AuthUseCases";
 import type { UserInfo } from "../../../core/domain/models/users/UserModel";
 import executeTask from "../utils/TaskExecutor";
 import { UserService } from "../../../core/use-cases/UserUseCases";
-import type { LoginResponse } from "../../../core/domain/models/auth/AuthModels";
+import type { LoginResponse, SessionValidation } from "../../../core/domain/models/auth/AuthModels";
 import { AuthContext, type AuthContextType } from "../AuthContext";
 
 type Props = {
@@ -59,6 +59,21 @@ function AuthProvider({ children }: Props) {
         return false;
     }
 
+    // Validate AUth Methods for Interceptor
+    const validateAccess = async (): Promise<SessionValidation> => {
+        const validationResponse = await executeTask(() => authService.validateAccess(), setLoading, setError) as SessionValidation;
+        return validationResponse;
+    }
+
+    const validateSession = async (): Promise<SessionValidation> => {
+        const validationResponse = await executeTask(() => authService.validateSession(), setLoading, setError) as SessionValidation;
+        return validationResponse;
+    }
+
+    const refreshSession = async (): Promise<void> => {
+        await executeTask(() => authService.refreshSession(), setLoading, setError);
+    }
+
     /** useEffects */
     // Refresh Auth User Info
     useEffect(() => {
@@ -107,6 +122,9 @@ function AuthProvider({ children }: Props) {
         logout,
         updateUserImage,
         deleteUserImage,
+        validateAccess,
+        validateSession,
+        refreshSession,
     };
 
     return (

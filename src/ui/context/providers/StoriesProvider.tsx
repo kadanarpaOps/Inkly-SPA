@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { StoryService } from "../../../core/use-cases/StoryUseCases";
-import type { BasicInfo, StoryInfo } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, RegisterStory, StoryInfo } from "../../../core/domain/models/stories/StoryModel";
 import executeTask from "../utils/TaskExecutor";
-import { StoriesContext, type StoriesContextType } from "../utils/StoriesContext";
+import { StoriesContext, type StoriesContextType } from "../StoriesContext";
 
 type Props = {
     children: ReactNode;
@@ -24,6 +24,12 @@ function StoriesProvider({ children }: Props) {
     const [modifiedStories, setModifiedStories] = useState<boolean>(false);
 
     // Business Methods
+    const createStory = async (storyData: RegisterStory): Promise<boolean> => {
+        setError(null);
+        const response = await executeTask(() => storiesService.registerStory(storyData), setLoading, setError);
+        if (!response) return false;
+        return true;
+    }
 
     /** useEffects */
     // Load all Genres
@@ -44,6 +50,7 @@ function StoriesProvider({ children }: Props) {
         storiesAuthUser,
         savedStoriesAuthUser,
         modifiedStories,
+        createStory,
     }
 
     return (
