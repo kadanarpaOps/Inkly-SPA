@@ -2,9 +2,12 @@ import { useRef, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
 import { Pen, ImageMinus, SquarePen } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function Profile() {
 
+    // Use Navigate
+    const navigate = useNavigate();
     // Use Auth
     const { authUser, updateUserImage, deleteUserImage, loading } = useAuth();
     // File Input Management
@@ -37,6 +40,7 @@ export default function Profile() {
             {selectedImage && (
                 <ImageCropperModal
                     image={selectedImage}
+                    aspect={1/1}
                     onCropComplete={handleImageUpload}
                     onCancel={() => setSelectedImage(null)}
                     loading={loading}
@@ -170,7 +174,10 @@ export default function Profile() {
                         {/** Auth User Stories */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-12 pb-24">
                             {/** Create new Story */}
-                            <div className="aspect-3/4 col-span-1 overflow-hidden rounded-xl border-2 border-dashed border-high-enfasis/30 flex flex-col items-center justify-center space-y-4 hover:bg-high-enfasis/5 hover:border-high-enfasis transition-all cursor-pointer group">
+                            <div
+                                onClick={() => navigate("/story/create")}
+                                className="aspect-3/4 col-span-1 overflow-hidden rounded-xl border-2 border-dashed border-high-enfasis/30 flex flex-col items-center justify-center space-y-4 hover:bg-high-enfasis/5 hover:border-high-enfasis transition-all cursor-pointer group"
+                            >
                                 <div className="w-16 h-16 rounded-full bg-high-enfasis/10 flex items-center justify-center text-high-enfasis group-hover:scale-110 transition-transform">
                                     <span><SquarePen size={24} /></span>
                                 </div>

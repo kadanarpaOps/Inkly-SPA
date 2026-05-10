@@ -3,6 +3,7 @@ import Cropper from 'react-easy-crop';
 
 interface Props {
     image: string;
+    aspect: number,
     onCropComplete: (croppedImage: Blob) => void;
     onCancel: () => void;
     loading: boolean;
@@ -15,7 +16,7 @@ interface AreaPixels {
     height: number;
 }
 
-const ImageCropperModal = ({ image, onCropComplete, onCancel, loading }: Props) => {
+const ImageCropperModal = ({ image, onCropComplete, onCancel, loading, aspect }: Props) => {
   const [ crop, setCrop ] = useState({ x: 0, y: 0 });
   const [ zoom, setZoom ] = useState(1);
   const [ croppedAreaPixels, setCroppedAreaPixels ] = useState<AreaPixels | null>(null);
@@ -50,7 +51,7 @@ const ImageCropperModal = ({ image, onCropComplete, onCancel, loading }: Props) 
                 image={image}
                 crop={crop}
                 zoom={zoom}
-                aspect={1/1}
+                aspect={aspect}
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
                 onCropComplete={(_, pixels) => setCroppedAreaPixels(pixels)}

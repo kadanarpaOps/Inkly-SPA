@@ -1,5 +1,5 @@
-import { Bell, PanelTopClose, Search, } from "lucide-react"
-import { useLocation } from "react-router"
+import { Bell, LogOut, PanelTopClose, Search, } from "lucide-react"
+import { useLocation, useNavigate } from "react-router"
 import { useAuth } from "../../hooks/useAuth"
 
 type NavbarProps = {
@@ -10,8 +10,8 @@ type NavbarProps = {
 const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
 
   const location = useLocation();
-
-    const { authUser } = useAuth();
+  const navigate = useNavigate();
+  const { authUser, logout } = useAuth();
 
   return (
     <header className={`${isSidebarOpen !== null ? 'sticky' : 'fixed'} top-0 z-40 w-full bg-background-global/80 backdrop-blur-sm pl-8 pr-12 py-4`}>
@@ -53,7 +53,14 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
             </div>
             <div className="flex justify-end">
                 {authUser && (
-                    <Bell fill="currentColor" size={26} />
+                    <>
+                        <Bell fill="currentColor" size={26} />
+                        <LogOut
+                            size={26}
+                            className="ml-4 md:ml-8 cursor-pointer hover:text-high-enfasis"
+                            onClick={() => {logout(); navigate("/explore")}}
+                        />
+                    </>
                 )}
             </div>
         </div>

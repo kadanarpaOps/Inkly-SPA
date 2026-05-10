@@ -38,9 +38,9 @@ export interface RegisterStory {
     description: string;
     genreName: string;
     secondaryGenreName: string;
-    tagNames: string [];
+    tagNames: string [] | null;
     userId: string;
-    image: File;
+    image: File | null;
 }
 
 export interface UpdateStory {
