@@ -24,7 +24,7 @@ const CreateStory = () => {
   // Show Set Genres Modal
   const [ modalMode, setModalMode ] = useState<"genre" | "subgenre" | null>(null);
   // Use Form
-  const { register, handleSubmit, setValue, control, reset } = useForm({
+  const { register, handleSubmit, setValue, control, formState: { isSubmitting}, reset } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       tagNames: [],
@@ -33,6 +33,7 @@ const CreateStory = () => {
       image: null,
     }
   });
+  console.log(isSubmitting);
   // Watch for RealTime values
   const currentGenre = useWatch({ control, name: "genreName" });
   const currentSubgenre = useWatch({ control, name: "secondaryGenreName" });
@@ -101,15 +102,12 @@ const CreateStory = () => {
 
   // On Submit
   const onSubmit = async (data: CreateFormValues) => {
-    console.log(data);
-    {/**
     const createRequest: RegisterStory = { ...data, userId: authUser!.userId };
     const success = await createStory(createRequest);
     if (success) {
       navigate("/profile");
       reset();
     }
-    */}
   }
 
   /** UseEffect to Upload previewUrl value */
@@ -326,43 +324,65 @@ const CreateStory = () => {
                   </div>
                   { toSearchTag && (
                     <div className="absolute top-full mt-2 left-0 right-0 bg-surface-bright/50 shadow-lg border border-toolbar-bg/10 rounded-xl z-50 overflow-hidden">
-                      {tagResults.length > 0 ? (
-                        tagResults.filter((tag) => !currentTags?.includes(tag.name)).map((tag) => (
+                      { !loading ? (
+                        tagResults.length > 0 ? (
+                          tagResults.filter((tag) => !currentTags?.includes(tag.name)).map((tag) => (
+                            <div
+                              key={tag.id}
+                              onClick={() => handleAddTag(tag.name)}
+                              className="px-4 py-2 hover:bg-high-enfasis/10 cursor-pointer text-md transition-colors"
+                            >
+                              {tag.name}
+                            </div>
+                          ))
+                        ) : (
                           <div
-                            key={tag.id}
-                            onClick={() => handleAddTag(tag.name)}
-                            className="px-4 py-2 hover:bg-high-enfasis/10 cursor-pointer text-md transition-colors"
+                            onClick={() => handleAddTag(toSearchTag)}
+                            className="px-4 py-2 hover:bg-primary-container/20 cursor-pointer text-md text-primary font-bold transition-colors flex items-center space-x-2"
                           >
-                            {tag.name}
+                            <span>
+                              <PlusIcon size={20} />
+                            </span>
+                            <span className="font-bold"> Crear Tag</span>
                           </div>
-                        ))
+                        )
                       ) : (
-                        <div
-                          onClick={() => handleAddTag(toSearchTag)}
-                          className="px-4 py-2 hover:bg-primary-container/20 cursor-pointer text-md text-primary font-bold transition-colors flex items-center space-x-2"
-                        >
-                          <span>
-                            <PlusIcon size={20} />
-                          </span>
-                          <span className="font-bold"> Crear Tag</span>
-                        </div>
+                          <div
+                            className="px-4 py-2 hover:bg-primary-container/20 cursor-pointer text-md text-primary font-bold transition-colors justify-center flex items-center space-x-2"
+                          >
+                            <div className="flex items-center justify-center w-10 h-10">
+                              <div className="loading-button" />
+                            </div>
+                          </div>
                       )}
                     </div>
                   )}
                 </div>
                 <div className="pt-5 flex items-center justify-end border-t border-outline-variant/10">
-                  <button
-                    onClick={() => navigate(-1)}
-                    className="text-on-surface-variant font-semibold px-8 py-4 mr-6 hover:text-primary transition-colors cursor-pointe cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    className="bg-primary-container text-on-primary-container px-12 py-4 rounded-full font-bold text-lg tracking-tight hover:scale-95 transition-transform cursor-pointer"
-                    type="submit"
-                  >
-                    Crear Historia
-                  </button>
+                  {
+                    (!loading || !isSubmitting) ? (
+                      <>
+                        <button
+                          onClick={() => navigate(-1)}
+                          className="text-on-surface-variant font-semibold px-8 py-4 mr-6 hover:text-primary transition-colors cursor-pointe cursor-pointer"
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          className="bg-primary-container text-on-primary-container px-12 py-4 rounded-full font-bold text-lg tracking-tight hover:scale-95 transition-transform cursor-pointer"
+                          type="submit"
+                        >
+                          Crear Historia
+                        </button>
+                      </>
+                    ) : (
+                      <div className="py-4 w-50 justify-center">
+                        <div className="flex items-center justify-center w-10 h-10">
+                          <div className="loading-button" />
+                        </div>
+                      </div>
+                    )
+                  }
                 </div>
               </form>
             </section>

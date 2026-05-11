@@ -25,7 +25,7 @@ function StoriesProvider({ children }: Props) {
 
     // Business Methods
     const pageTags = async (offset: number, limit: number, tagName: string) => {
-        const response = await storiesService.pageTags(offset, limit, tagName);
+        const response = await executeTask(() => storiesService.pageTags(offset, limit, tagName), setLoading, setError);
         return response;
     }
 
