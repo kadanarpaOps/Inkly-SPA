@@ -16,6 +16,6 @@ export const registerSchema = z.object({
     image: z.instanceof(File).nullable()
         .refine(f => {
             if (!f) return true;
-            return ["image/png", "image/jpeg", "image/webp"].includes(f!.type), "Formato no soportado"
+            return ["image/png", "image/jpeg", "image/webp"].includes(f!.type), { message: "Formato no soportado" }
         })
 })

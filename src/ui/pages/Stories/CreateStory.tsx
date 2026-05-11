@@ -1,12 +1,12 @@
 import type z from "zod";
-import { Bell, Bolt, Cog, ImageUp, Plus, X } from "lucide-react"
+import { Bell, Bolt, Cog, ImageUp, Plus, PlusIcon, X } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react";
 import SelectCategoryModal from "../../components/stories/SelectCategoryModal";
 import { registerSchema } from "../../schemas/stories/stories.schema";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
-import type { RegisterStory } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, RegisterStory } from "../../../core/domain/models/stories/StoryModel";
 import { useStories } from "../../hooks/useStories";
 import { useAuth } from "../../hooks/useAuth";
 import { GenreIcon } from "../../components/stories/GenresIcons";
@@ -18,7 +18,7 @@ const CreateStory = () => {
   // Use Navigate
   const navigate = useNavigate();
   // Use Stories
-  const { loading, createStory  } = useStories();
+  const { loading, createStory, pageTags } = useStories();
   // Use Auth
   const { authUser } = useAuth();
   // Show Set Genres Modal
@@ -36,6 +36,7 @@ const CreateStory = () => {
   // Watch for RealTime values
   const currentGenre = useWatch({ control, name: "genreName" });
   const currentSubgenre = useWatch({ control, name: "secondaryGenreName" });
+  const currentTags = useWatch({ control, name: "tagNames" });
 
   // Handle Genre Selection
   const handleSelectGenre = (value: string) => {
@@ -72,14 +73,43 @@ const CreateStory = () => {
     if (coverInputRef.current) coverInputRef.current.value = "";
   }
 
+  // Tags Input Management
+  const [ toSearchTag, setToSearchTag ] = useState("");
+  const [ tagResults, setTagResults ] = useState<BasicInfo[]>([]);
+  const searchedTagRef = useRef<HTMLInputElement>(null);
+  const handleTagInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const toSearch = e.target.value;
+    setToSearchTag(toSearch);
+    if (toSearch.trim() != "") {
+      const searchResult = await pageTags(0, 3, toSearch);
+      setTagResults(searchResult.data);
+    } else {
+      setToSearchTag("");
+      setTagResults([]);
+    }
+  }
+  const handleAddTag = (tagName: string) => {
+    if (!currentTags!.includes(tagName)) {
+      setValue("tagNames", [...currentTags!, tagName]);
+    }
+    setToSearchTag("");
+    setTagResults([]);
+  }
+  const handleRemoveTag = (tagName: string) => {
+    setValue("tagNames", currentTags!.filter((t) => t !== tagName));
+  }
+
   // On Submit
   const onSubmit = async (data: CreateFormValues) => {
+    console.log(data);
+    {/**
     const createRequest: RegisterStory = { ...data, userId: authUser!.userId };
     const success = await createStory(createRequest);
     if (success) {
       navigate("/profile");
       reset();
     }
+    */}
   }
 
   /** UseEffect to Upload previewUrl value */
@@ -160,8 +190,16 @@ const CreateStory = () => {
                     onClick={() => coverInputRef.current?.click()}
                     className="cursor-pointer px-6 py-3 bg-on-surface text-surface rounded-full font-bold text-sm tracking-wide hover:scale-105 transition-transform active:scale-95 shadow-lg"
                   >
-                    Subir Portada
+                    {previewUrl ? "Cambiar" : "Subir"} Portada
                   </button>
+                  {previewUrl && (
+                    <button
+                      onClick={handleCoverDeleteImage}
+                      className="cursor-pointer mt-4 px-6 py-3 bg-secondary text-surface rounded-full font-bold text-sm tracking-wide hover:scale-105 transition-transform active:scale-95 shadow-lg"
+                    >
+                      Eliminar Portada
+                    </button>
+                  )}
                   {/** Input to select Cover */}
                   <input
                       type="file"
@@ -259,36 +297,58 @@ const CreateStory = () => {
                     </button>
                   </div>
                 </div>
-                <div className="space-y-3">
+                <div className="relative w-full space-y-3">
                   <label className="block text-sm font-semibold tracking-wide text-primary/80 uppercase ml-1">
                     Etiquetas (Tags)
                   </label>
                   <div className="w-full bg-surface-container-highest rounded-xl p-3 flex flex-wrap items-center gap-3 min-h-16">
-                    {/** Mock Tags Activos */}
-                    <div className="flex items-center gap-2 bg-secondary-container/30 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-sm font-medium transition-all hover:bg-secondary-container/50">
-                      Fantasía
-                      <span className="text-xs cursor-pointer hover:text-on-surface">
-                        <X size={12} />
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-secondary-container/30 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-sm font-medium transition-all hover:bg-secondary-container/50">
-                      Misterio
-                      <span className="text-xs cursor-pointer hover:text-on-surface">
-                        <X size={12} />
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-secondary-container/30 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-sm font-medium transition-all hover:bg-secondary-container/50">
-                      Nocturno
-                      <span className="text-xs cursor-pointer hover:text-on-surface">
-                        <X size={12} />
-                      </span>
-                    </div>
+                    {currentTags?.map((tag, index) => (
+                      <div
+                        key={`${tag}-${index}`}
+                        className="flex items-center gap-2 bg-secondary-container/30 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-sm font-medium transition-all hover:bg-secondary-container/50"
+                      >
+                        {tag}
+                        <span
+                          onClick={() => handleRemoveTag(tag)}
+                          className="text-xs cursor-pointer hover:text-on-surface"
+                        >
+                          <X size={12} />
+                        </span>
+                      </div>
+                    ))}
                     <input
                       type="text"
                       className="bg-transparent border-none outline-none ring-0 focus:ring-0 text-on-surface placeholder:text-on-surface-variant/40 grow px-2 py-1"
                       placeholder="Añadir..."
+                      ref={searchedTagRef}
+                      onChange={handleTagInputChange}
                     />
                   </div>
+                  { toSearchTag && (
+                    <div className="absolute top-full mt-2 left-0 right-0 bg-surface-bright/50 shadow-lg border border-toolbar-bg/10 rounded-xl z-50 overflow-hidden">
+                      {tagResults.length > 0 ? (
+                        tagResults.filter((tag) => !currentTags?.includes(tag.name)).map((tag) => (
+                          <div
+                            key={tag.id}
+                            onClick={() => handleAddTag(tag.name)}
+                            className="px-4 py-2 hover:bg-high-enfasis/10 cursor-pointer text-md transition-colors"
+                          >
+                            {tag.name}
+                          </div>
+                        ))
+                      ) : (
+                        <div
+                          onClick={() => handleAddTag(toSearchTag)}
+                          className="px-4 py-2 hover:bg-primary-container/20 cursor-pointer text-md text-primary font-bold transition-colors flex items-center space-x-2"
+                        >
+                          <span>
+                            <PlusIcon size={20} />
+                          </span>
+                          <span className="font-bold"> Crear Tag</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="pt-5 flex items-center justify-end border-t border-outline-variant/10">
                   <button

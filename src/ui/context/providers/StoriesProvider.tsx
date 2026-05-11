@@ -24,6 +24,11 @@ function StoriesProvider({ children }: Props) {
     const [modifiedStories, setModifiedStories] = useState<boolean>(false);
 
     // Business Methods
+    const pageTags = async (offset: number, limit: number, tagName: string) => {
+        const response = await storiesService.pageTags(offset, limit, tagName);
+        return response;
+    }
+
     const createStory = async (storyData: RegisterStory): Promise<boolean> => {
         setError(null);
         const response = await executeTask(() => storiesService.registerStory(storyData), setLoading, setError);
@@ -51,6 +56,7 @@ function StoriesProvider({ children }: Props) {
         savedStoriesAuthUser,
         modifiedStories,
         createStory,
+        pageTags,
     }
 
     return (
