@@ -31,12 +31,12 @@ function AuthProvider({ children }: Props) {
         if (!userInfo) return false;
         setAuthUser(userInfo);
         return true;
-    }
+    };
 
     const logout = async () => {
         await executeTask(() => authService.logout(), setLoading, setError);
         setAuthUser(null);
-    }
+    };
      
     // Business Methods (Update Info)
     const updateUserImage = async (userId: string, file: File): Promise<boolean> => {
@@ -47,7 +47,7 @@ function AuthProvider({ children }: Props) {
             return true;
         }
         return false;
-    }
+    };
 
     const deleteUserImage = async (userId: string): Promise<boolean> => {
         const response = await executeTask(() => userService.deleteProfileImage(userId), setLoading, setError);
@@ -57,22 +57,22 @@ function AuthProvider({ children }: Props) {
             return true;
         }
         return false;
-    }
+    };
 
-    // Validate AUth Methods for Interceptor
+    // Validate Auth Methods for Interceptor
     const validateAccess = async (): Promise<SessionValidation> => {
         const validationResponse = await executeTask(() => authService.validateAccess(), () => {}, setError) as SessionValidation;
         return validationResponse;
-    }
+    };
 
     const validateSession = async (): Promise<SessionValidation> => {
         const validationResponse = await executeTask(() => authService.validateSession(), () => {}, setError) as SessionValidation;
         return validationResponse;
-    }
+    };
 
     const refreshSession = async (): Promise<void> => {
         await executeTask(() => authService.refreshSession(), () => {}, setError);
-    }
+    };
 
     /** useEffects */
     // Refresh Auth User Info

@@ -56,11 +56,12 @@ export interface UpdateStory {
 export interface UserFilters {
     offset: number;
     limit: number;
-    title: string;
-    genreName: string;
-    secondaryGenreName: string;
-    status: StatusNames;
-    tagNames: string[];
+    title?: string;
+    genreName?: string;
+    secondaryGenreName?: string;
+    status?: StatusNames;
+    tagNames?: string[];
+    newestFirst?: boolean;
 }
 
 export interface UpdateTags {

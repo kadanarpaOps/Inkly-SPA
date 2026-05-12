@@ -8,16 +8,10 @@ export interface StoriesContextType {
     error: string | null;
     // Genres
     genres: BasicInfo[] | null;
-    // Searching
-    storiesForAllUsers: StoryInfo[] | null;
-    storiesAuthUser: StoryInfo[] | null;
-    savedStoriesAuthUser: StoryInfo[] | null;
-    // Refresh Info per modification
-    modifiedStories: boolean;
     // Rest Methods
     pageTags: (offset: number, limit: number, tagName: string) => Promise<PageResponse<BasicInfo>>
     createStory: (story: RegisterStory) => Promise<boolean>;
-    loadStoriesForAuthUser: (filters: UserFilters) => Promise<PageResponse<StoryInfo>>;
+    loadStoriesForAuthUser: (filters: UserFilters, userId: string) => Promise<PageResponse<StoryInfo>>;
 }
 
 export const StoriesContext = createContext<StoriesContextType | null>(null);

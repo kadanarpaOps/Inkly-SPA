@@ -1,6 +1,6 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { StoryService } from "../../../core/use-cases/StoryUseCases";
-import type { BasicInfo, RegisterStory, StoryInfo } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, RegisterStory, StoryInfo, UserFilters } from "../../../core/domain/models/stories/StoryModel";
 import executeTask from "../utils/TaskExecutor";
 import { StoriesContext, type StoriesContextType } from "../StoriesContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
@@ -17,25 +17,24 @@ function StoriesProvider({ children }: Props) {
     const [error, setError] = useState<string | null>(null);
     // Genres
     const [genres, setGenres] = useState<BasicInfo[] | null>(null);
-    // Searching
-    const [storiesForAllUsers, setStoriesForAllUsers] = useState<StoryInfo[] | null>(null);
-    const [storiesAuthUser, setStoriesAuthUser] = useState<StoryInfo[] | null>(null);
-    const [savedStoriesAuthUser, setSavedStoriesAuthUser] = useState<StoryInfo[] | null>(null);
-    // Refresh Info per modification
-    const [modifiedStories, setModifiedStories] = useState<boolean>(false);
 
     // Business Methods
     const pageTags = async (offset: number, limit: number, tagName: string) => {
         const response = await executeTask(() => storiesService.pageTags(offset, limit, tagName), setLoading, setError);
         return response as PageResponse<BasicInfo>;
-    }
+    };
 
     const createStory = async (storyData: RegisterStory): Promise<boolean> => {
         setError(null);
         const response = await executeTask(() => storiesService.registerStory(storyData), setLoading, setError);
         if (!response) return false;
         return true;
-    }
+    };
+
+    const loadStoriesForAuthUser = useCallback(async (filters: UserFilters, userId: string) => {
+        const response = await executeTask(() => storiesService.getAuthUserStories(filters, userId), setLoading, setError) as PageResponse<StoryInfo>;
+        return response;
+    }, []);
 
     /** useEffects */
     // Load all Genres
@@ -52,12 +51,9 @@ function StoriesProvider({ children }: Props) {
         loading,
         error,
         genres,
-        storiesForAllUsers,
-        storiesAuthUser,
-        savedStoriesAuthUser,
-        modifiedStories,
         createStory,
         pageTags,
+        loadStoriesForAuthUser,
     }
 
     return (

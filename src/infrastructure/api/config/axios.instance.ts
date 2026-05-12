@@ -9,6 +9,8 @@ const httpClient = axios.create({
     withCredentials: true,
 })
 
+let requestInterceptorId: number | null;
+
 export const setupAxiosResponseInterceptor = (
     authUser: UserInfo | null,
     validateAccess: () => Promise<SessionValidation>,
@@ -16,7 +18,12 @@ export const setupAxiosResponseInterceptor = (
     refreshSession: () => Promise<void>,
     logout: () => void
 ) => {
-httpClient.interceptors.request.use(
+
+    if (requestInterceptorId !== null) {
+        httpClient.interceptors.request.eject(requestInterceptorId);
+    }
+
+    requestInterceptorId = httpClient.interceptors.request.use(
         async (config) => {
             if (!authUser || !authUser.enable) return config;
 

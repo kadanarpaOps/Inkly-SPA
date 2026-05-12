@@ -1,8 +1,12 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
-import { Pen, ImageMinus, SquarePen } from "lucide-react";
+import { Pen, ImageMinus, SquarePen, Eye, Star } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useStories } from "../../hooks/useStories";
+import type { StoryInfo } from "../../../core/domain/models/stories/StoryModel";
+import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+import { getRandomString } from "./utils/util";
 
 export default function Profile() {
 
@@ -10,6 +14,23 @@ export default function Profile() {
     const navigate = useNavigate();
     // Use Auth
     const { authUser, updateUserImage, deleteUserImage, loading } = useAuth();
+    // Use Stories
+    const { loadStoriesForAuthUser } = useStories();
+    // Search Stories
+    const [ userStories, setUserStories ] = useState<PageResponse<StoryInfo> | null>(null);
+    useEffect(() => {
+        const loadUserStories = async () => {
+            if (authUser) {
+                const responseUserStories = await loadStoriesForAuthUser({ offset: 1, limit: 7, newestFirst: true }, authUser!.userId);
+                setUserStories(responseUserStories);
+            }
+        };
+        loadUserStories();
+    }, [authUser, loadStoriesForAuthUser]);
+    const defaultCovers = [
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuBi_kMQ_BggKRrkmCfPH-cR6BxPLGopvWXhVpw7CCe5RAD7NFmAaHPxnQkDxcDhPHNCM2Jbv7AFF6SGmmkWzyLHff0Wzg_nYG836y6LqCkYwFiixPluy41c12pMe9eeRJ5L8QeKYepNBAqyUOujFUb6TX0JiF02Rx01nC0YyHLUIqrNrCyw-b2PoUVKqSTzBkAcKBv6dUHH-7LriifzG2yvflGsAxzqpdZBhBwtHoFRZ8HofszZbJTQ1tWUTYBiLVa8gMxX1kW4D78",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuCNHnoGe4LoiQkJqvnbBND14-SvwMgpaRRjbE5jeHh88I0cFtcxmYLQJHSuSHq3U5pt58KXFy-cMSMC8uUyj4G0GT1eae8V47Yiji3rA3i9GMh92DM6lAE1kRIX1Z76cs6yx10Z_jQPZTTTIFsi3jtWA0qOHE0y5rUugmNj3rp1DQ6h_ZJ2nAanU9r3_J0dxWGpNVNqcHtUEz6ZkIw3iCkD3qMSZBTsRL8-2_lLoeTS2AAT6qtFcZ2ByvtePQ6rePwz0Do_7iGHvk0"
+    ];
     // File Input Management
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [ selectedImage, setSelectedImage ] = useState<string | null>(null);
@@ -140,7 +161,7 @@ export default function Profile() {
                             <div className="flex items-center space-x-6 mt-6 text-several-light text-sm">
                                 <div className="flex items-center space-x-1.5">
                                     <span className="text-global font-bold">
-                                        0
+                                        {userStories && userStories.meta.totalItems}
                                     </span>
                                     <span>
                                         Historias
@@ -186,6 +207,55 @@ export default function Profile() {
                                 </span>
                             </div>
                             {/** List of Stories */}
+                            { userStories && userStories.data.map(story => (
+                                <div
+                                    key={story.id}
+                                    className="group cursor-pointer"
+                                >
+                                    <div
+                                        key={story.id}
+                                        onClick={() => navigate("/story/create")}
+                                        className="aspect-3/4 col-span-1 overflow-hidden rounded-xl shadow-2xl relative group-hover:-translate-y-2 transition-transform duration-500"
+                                    >
+                                        <img
+                                            src={`${story.coverUrl !== null ? story.coverUrl : getRandomString(defaultCovers)}`}
+                                            alt="Portada de Historia"
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute top-3 right-3 bg-background-global/80 backdrop-blur-md px-2 py-1 rounded text-[10px] text-white font-bold uppercase">
+                                            {story.genre.name}
+                                        </div>
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                                            <div className="flex items-center space-x-4 text-white text-xs">
+                                                <span className="flex items-center space-x-1">
+                                                    <span className="text-sm">
+                                                        <Eye size={20} />
+                                                    </span>
+                                                    <span>
+                                                        {story.totalViews}
+                                                    </span>
+                                                </span>
+                                                <span className="flex items-center space-x-1">
+                                                    <span className="text-sm">
+                                                        <Star size={20} />
+                                                    </span>
+                                                    <span>
+                                                        {story.totalRating}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 px-2 flex items-center justify-between">
+                                        <h3 className="text-global font-bold text-lg line-clamp-1">
+                                            {story.title}
+                                        </h3>
+                                        <p className="text-several-light text-sm mt-1">
+                                            {story.totalChapters} Capítulos
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </>

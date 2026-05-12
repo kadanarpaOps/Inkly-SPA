@@ -26,30 +26,30 @@ function UserProvider({ children }: Props) {
     const findUserById = async (userId: string) => {
         const response = executeTask(() => userService.getUserById(userId), setLoading, setError);
         return response;
-    }
+    };
 
     const findPagedUsersResult = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
         const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);
         setPagedUsers(response);
-    }
+    };
 
     const findPagedUsersForSearch = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
         const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);
         setSearchingUsers(response);
-    }
+    };
 
     const registerUser = async (data: RegisterUserRequest) => {
         await executeTask(() => userService.registerUser(data), setLoading, setError);
-    }
+    };
 
     const updateUser = async (data: UpdateUserRequest) => {
         await executeTask(() => userService.updateUser(data), setLoading, setError);
         setModifiedUser(true);
-    }
+    };
 
     const toggleUserStatus = async (userId: string) => {
         await executeTask(() => userService.toggleUserStatus(userId), setLoading, setError);
-    }
+    };
 
     // Export Values
     const exportValues: UserContextType = {
