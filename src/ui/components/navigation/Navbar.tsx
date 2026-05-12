@@ -58,7 +58,7 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
                         <LogOut
                             size={26}
                             className="ml-4 md:ml-8 cursor-pointer hover:text-high-enfasis"
-                            onClick={() => {logout(); navigate("/explore")}}
+                            onClick={() => {logout(); navigate("/auth")}}
                         />
                     </>
                 )}

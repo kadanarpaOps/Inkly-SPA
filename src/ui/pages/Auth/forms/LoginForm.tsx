@@ -17,7 +17,7 @@ const LoginForm = () => {
   // Use Navigate
   const navigate = useNavigate();
   // Use Form
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(loginSchema)
   })
 
