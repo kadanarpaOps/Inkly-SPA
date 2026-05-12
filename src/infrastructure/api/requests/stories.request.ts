@@ -11,7 +11,7 @@ export const pageTagsRequest = async (offset: number, limit: number, tagName: st
     const response = await httpClient.get(`api/tag/search`, {
         params: { offset, limit, tagName }
     });
-    return { data: response.data.tags, meta: response.data.meta };
+    return response.data;
 }
 
 export const getStoriesRequest = async (filters: UserFilters) : Promise<PageResponse<StoryInfo>> => {

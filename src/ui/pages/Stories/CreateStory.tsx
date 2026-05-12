@@ -82,7 +82,7 @@ const CreateStory = () => {
     const toSearch = e.target.value;
     setToSearchTag(toSearch);
     if (toSearch.trim() != "") {
-      const searchResult = await pageTags(0, 3, toSearch);
+      const searchResult = await pageTags(1, 3, toSearch);
       setTagResults(searchResult.data);
     } else {
       setToSearchTag("");
