@@ -214,7 +214,7 @@ export default function Profile() {
                                 >
                                     <div
                                         key={story.id}
-                                        onClick={() => navigate("/story/create")}
+                                        onClick={() => navigate(`/story/edit/${story.id}`)}
                                         className="aspect-3/4 col-span-1 overflow-hidden rounded-xl shadow-2xl relative group-hover:-translate-y-2 transition-transform duration-500"
                                     >
                                         <img
