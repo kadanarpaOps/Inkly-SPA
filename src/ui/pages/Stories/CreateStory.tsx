@@ -33,7 +33,7 @@ const CreateStory = () => {
       image: null,
     }
   });
-  console.log(isSubmitting);
+
   // Watch for RealTime values
   const currentGenre = useWatch({ control, name: "genreName" });
   const currentSubgenre = useWatch({ control, name: "secondaryGenreName" });

@@ -14,9 +14,11 @@ export interface BasicInfo {
 }
 
 export interface StoryInfo {
+    id: string;
     title: string;
     description: string;
     coverUrl: string;
+    hidden: boolean;
     genre: BasicInfo;
     secondaryGenre: BasicInfo;
     tags: BasicInfo[];
@@ -49,6 +51,16 @@ export interface UpdateStory {
     genreName: string;
     secondaryGenreName: string;
     status: StatusNames;
+}
+
+export interface UserFilters {
+    offset: number;
+    limit: number;
+    title: string;
+    genreName: string;
+    secondaryGenreName: string;
+    status: StatusNames;
+    tagNames: string[];
 }
 
 export interface UpdateTags {

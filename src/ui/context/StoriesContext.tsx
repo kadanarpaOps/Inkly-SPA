@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { BasicInfo, RegisterStory, StoryInfo } from "../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, RegisterStory, StoryInfo, UserFilters } from "../../core/domain/models/stories/StoryModel";
 import type { PageResponse } from "../../core/domain/models/common/PaginationModels";
 
 export interface StoriesContextType {
@@ -15,8 +15,9 @@ export interface StoriesContextType {
     // Refresh Info per modification
     modifiedStories: boolean;
     // Rest Methods
-    createStory: (story: RegisterStory) => Promise<boolean>;
     pageTags: (offset: number, limit: number, tagName: string) => Promise<PageResponse<BasicInfo>>
+    createStory: (story: RegisterStory) => Promise<boolean>;
+    loadStoriesForAuthUser: (filters: UserFilters) => Promise<PageResponse<StoryInfo>>;
 }
 
 export const StoriesContext = createContext<StoriesContextType | null>(null);

@@ -3,6 +3,7 @@ import { StoryService } from "../../../core/use-cases/StoryUseCases";
 import type { BasicInfo, RegisterStory, StoryInfo } from "../../../core/domain/models/stories/StoryModel";
 import executeTask from "../utils/TaskExecutor";
 import { StoriesContext, type StoriesContextType } from "../StoriesContext";
+import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
 
 type Props = {
     children: ReactNode;
@@ -26,7 +27,7 @@ function StoriesProvider({ children }: Props) {
     // Business Methods
     const pageTags = async (offset: number, limit: number, tagName: string) => {
         const response = await executeTask(() => storiesService.pageTags(offset, limit, tagName), setLoading, setError);
-        return response;
+        return response as PageResponse<BasicInfo>;
     }
 
     const createStory = async (storyData: RegisterStory): Promise<boolean> => {
