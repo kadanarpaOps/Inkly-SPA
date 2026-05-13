@@ -4,12 +4,12 @@ import { GenreIcon } from "./GenresIcons";
 import { Search } from "lucide-react";
 
 interface Props {
-    repeatedGenre: string | null;
+    repeatedGenres: string[];
     onCancel: () => void;
     onSelect: (value: string) => void;
 }
 
-const SelectCategoryModal = ({ repeatedGenre, onCancel, onSelect }: Props) => {
+const SelectCategoryModal = ({ repeatedGenres, onCancel, onSelect }: Props) => {
 
   // Use Stories
   const { loading, genres } = useStories();
@@ -59,7 +59,7 @@ const SelectCategoryModal = ({ repeatedGenre, onCancel, onSelect }: Props) => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 { genres!
-                    .filter(g => g.name !== repeatedGenre)
+                    .filter(g => !repeatedGenres.includes(g.name))
                     .filter(g => {
                       if (searchedGenre !== "") {
                         return g.name.toLocaleLowerCase().includes(searchedGenre.toLocaleLowerCase())

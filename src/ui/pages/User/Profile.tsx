@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { useStories } from "../../hooks/useStories";
 import type { StoryInfo } from "../../../core/domain/models/stories/StoryModel";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
-import { getRandomCover } from "./utils/covers.util";
+import { getRandomCover } from "../utils/covers.util";
 
 export default function Profile() {
 

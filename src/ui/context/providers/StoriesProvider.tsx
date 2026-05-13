@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { StoryService } from "../../../core/use-cases/StoryUseCases";
-import type { BasicInfo, RegisterStory, StoryInfo, UserFilters } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../../../core/domain/models/stories/StoryModel";
 import executeTask from "../utils/TaskExecutor";
 import { StoriesContext, type StoriesContextType } from "../StoriesContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
@@ -25,8 +25,25 @@ function StoriesProvider({ children }: Props) {
     };
 
     const createStory = async (storyData: RegisterStory): Promise<boolean> => {
-        setError(null);
         const response = await executeTask(() => storiesService.registerStory(storyData), setLoading, setError);
+        if (!response) return false;
+        return true;
+    };
+
+    const updateStory = async (storyData: UpdateStory, storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.updateStory(storyData, storyId), setLoading, setError);
+        if (!response) return false;
+        return true;
+    }
+
+    const updateStoryCover = async (file: File, storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.updateStoryCover(file, storyId), setLoading, setError);
+        if (!response) return false;
+        return true;
+    };
+
+    const deleteStoryCover = async (storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.deleteStoryCover(storyId), setLoading, setError);
         if (!response) return false;
         return true;
     };
@@ -57,6 +74,9 @@ function StoriesProvider({ children }: Props) {
         error,
         genres,
         createStory,
+        updateStory,
+        updateStoryCover,
+        deleteStoryCover,
         pageTags,
         loadStoriesForAuthUser,
         loadStoryById,

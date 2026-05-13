@@ -135,7 +135,7 @@ const CreateStory = () => {
         <SelectCategoryModal
           onSelect={(value: string) => {handleSelectGenre(value)}}
           onCancel={() => setModalMode(null)}
-          repeatedGenre={modalMode === "genre" ? currentSubgenre : currentGenre}
+          repeatedGenres={modalMode === "genre" ? [currentSubgenre] : [currentGenre]}
         />
       )}
       <div className="grow bg-surface min-h-screen relative">

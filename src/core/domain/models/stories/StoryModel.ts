@@ -6,7 +6,7 @@ export const statusNames = {
     PAUSED: "PAUSED",
 } as const
 
-type StatusNames = typeof statusNames[keyof typeof statusNames];
+export type StatusNames = typeof statusNames[keyof typeof statusNames];
 
 export interface BasicInfo {
     id: string;
