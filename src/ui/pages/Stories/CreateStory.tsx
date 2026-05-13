@@ -24,7 +24,7 @@ const CreateStory = () => {
   // Show Set Genres Modal
   const [ modalMode, setModalMode ] = useState<"genre" | "subgenre" | null>(null);
   // Use Form
-  const { register, handleSubmit, setValue, control, formState: { isSubmitting}, reset } = useForm({
+  const { register, handleSubmit, setValue, control, formState: { isSubmitting, errors }, reset } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       tagNames: [],
@@ -206,6 +206,7 @@ const CreateStory = () => {
                       accept="image/png, image/jpeg, image/webp"
                       onChange={handleCoverChange}
                   />
+                  {errors.image && <p>{errors.image.message}</p>}
                 </div>
                 <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-primary/5 blur-[80px] rounded-full"></div>
               </div>
@@ -233,6 +234,7 @@ const CreateStory = () => {
                     placeholder="Nombre de tu obra..."
                     {...register("title")}
                   />
+                  {errors.title && <p>{errors.title.message}</p>}
                 </div>
                 <div className="space-y-3">
                   {/** Description */}
@@ -245,6 +247,7 @@ const CreateStory = () => {
                     rows={5}
                     {...register("description")}
                   />
+                  {errors.description && <p>{errors.description.message}</p>}
                 </div>
                 {/** Genres */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -270,6 +273,7 @@ const CreateStory = () => {
                         <Plus size={20} />
                       </span>
                     </button>
+                    {errors.genreName && <p className="text-sm text-destructive mt-2">{errors.genreName.message}</p>}
                   </div>
                   <div className="space-y-3">
                     <label className="block text-sm font-semibold tracking-wide text-primary/80 uppercase ml-1">
@@ -293,6 +297,7 @@ const CreateStory = () => {
                         <Plus size={20} />
                       </span>
                     </button>
+                    {errors.secondaryGenreName && <p className="text-sm text-destructive mt-2">{errors.secondaryGenreName.message}</p>}
                   </div>
                 </div>
                 <div className="relative w-full space-y-3">
@@ -321,6 +326,7 @@ const CreateStory = () => {
                       ref={searchedTagRef}
                       onChange={handleTagInputChange}
                     />
+                    {errors.tagNames && <p>{errors.tagNames.message}</p>}
                   </div>
                   { toSearchTag && (
                     <div className="absolute top-full mt-2 left-0 right-0 bg-surface-bright/50 shadow-lg border border-toolbar-bg/10 rounded-xl z-50 overflow-hidden">
