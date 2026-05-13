@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { useStories } from "../../hooks/useStories";
 import type { StoryInfo } from "../../../core/domain/models/stories/StoryModel";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
-import { getRandomString } from "./utils/util";
+import { getRandomCover } from "./utils/covers.util";
 
 export default function Profile() {
 
@@ -27,10 +27,6 @@ export default function Profile() {
         };
         loadUserStories();
     }, [authUser, loadStoriesForAuthUser]);
-    const defaultCovers = [
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBi_kMQ_BggKRrkmCfPH-cR6BxPLGopvWXhVpw7CCe5RAD7NFmAaHPxnQkDxcDhPHNCM2Jbv7AFF6SGmmkWzyLHff0Wzg_nYG836y6LqCkYwFiixPluy41c12pMe9eeRJ5L8QeKYepNBAqyUOujFUb6TX0JiF02Rx01nC0YyHLUIqrNrCyw-b2PoUVKqSTzBkAcKBv6dUHH-7LriifzG2yvflGsAxzqpdZBhBwtHoFRZ8HofszZbJTQ1tWUTYBiLVa8gMxX1kW4D78",
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCNHnoGe4LoiQkJqvnbBND14-SvwMgpaRRjbE5jeHh88I0cFtcxmYLQJHSuSHq3U5pt58KXFy-cMSMC8uUyj4G0GT1eae8V47Yiji3rA3i9GMh92DM6lAE1kRIX1Z76cs6yx10Z_jQPZTTTIFsi3jtWA0qOHE0y5rUugmNj3rp1DQ6h_ZJ2nAanU9r3_J0dxWGpNVNqcHtUEz6ZkIw3iCkD3qMSZBTsRL8-2_lLoeTS2AAT6qtFcZ2ByvtePQ6rePwz0Do_7iGHvk0"
-    ];
     // File Input Management
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [ selectedImage, setSelectedImage ] = useState<string | null>(null);
@@ -218,7 +214,7 @@ export default function Profile() {
                                         className="aspect-3/4 col-span-1 overflow-hidden rounded-xl shadow-2xl relative group-hover:-translate-y-2 transition-transform duration-500"
                                     >
                                         <img
-                                            src={`${story.coverUrl !== null ? story.coverUrl : getRandomString(defaultCovers)}`}
+                                            src={`${story.coverUrl !== null ? story.coverUrl : getRandomCover()}`}
                                             alt="Portada de Historia"
                                             className="w-full h-full object-cover"
                                         />
@@ -263,7 +259,7 @@ export default function Profile() {
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="loading-button" />
                 </div>
-            ) }
+            )}
         </main>
     );
 }

@@ -12,6 +12,7 @@ import LandingPage from "../pages/LandingPage";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { setupAxiosResponseInterceptor } from "../../infrastructure/api/config/axios.instance";
+import StoryDetails from "../pages/Stories/StoryDetails";
 
 const AppLayout = () => {
 
@@ -40,6 +41,8 @@ const AppLayout = () => {
               <Route path="/library" element={<Library />} />
               <Route path="/write" element={<Write />} />
               <Route path="/profile" element={<Profile />} />
+              {/** Stories */}
+              <Route path="/explore/story/:storyId" element={<StoryDetails />} />
             </Route>
             <Route path="/story/create" element={<CreateStory />} />
             <Route path="/" element={<LandingPage />} />

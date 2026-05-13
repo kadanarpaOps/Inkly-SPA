@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react"
+import { useCallback, useState, type ReactNode } from "react"
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
 import type { UserInfo } from "../../../core/domain/models/users/UserModel";
 import executeTask from "../utils/TaskExecutor";
@@ -23,10 +23,10 @@ function UserProvider({ children }: Props) {
     const [modifiedUser, setModifiedUser] = useState<boolean>(false);
 
     // Rest Methods
-    const findUserById = async (userId: string) => {
+    const findUserById = useCallback(async (userId: string) => {
         const response = executeTask(() => userService.getUserById(userId), setLoading, setError);
         return response;
-    };
+    }, []);
 
     const findPagedUsersResult = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
         const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);

@@ -27,6 +27,7 @@ export interface StoryInfo {
     totalRating: number;
     // User that has Rated
     ratingCount: number;
+    ratingSum: number;
     totalChapters: number;
     totalViews: number;
     totalFavorites: number;

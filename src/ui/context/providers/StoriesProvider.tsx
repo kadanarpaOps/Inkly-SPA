@@ -36,6 +36,11 @@ function StoriesProvider({ children }: Props) {
         return response;
     }, []);
 
+    const loadStoryById = useCallback(async (storyId: string) => {
+        const response = await executeTask(() => storiesService.getStoryById(storyId), setLoading, setError) as StoryInfo;
+        return response;
+    }, []);
+
     /** useEffects */
     // Load all Genres
     useEffect(() => {
@@ -54,6 +59,7 @@ function StoriesProvider({ children }: Props) {
         createStory,
         pageTags,
         loadStoriesForAuthUser,
+        loadStoryById,
     }
 
     return (
