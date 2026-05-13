@@ -157,7 +157,7 @@ export default function Profile() {
                             <div className="flex items-center space-x-6 mt-6 text-several-light text-sm">
                                 <div className="flex items-center space-x-1.5">
                                     <span className="text-global font-bold">
-                                        {userStories && userStories.meta.totalItems}
+                                        {(userStories?.meta !== undefined) ? userStories.meta.totalItems : 0 }
                                     </span>
                                     <span>
                                         Historias

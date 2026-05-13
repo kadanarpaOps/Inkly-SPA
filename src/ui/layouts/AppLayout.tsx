@@ -13,6 +13,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { setupAxiosResponseInterceptor } from "../../infrastructure/api/config/axios.instance";
 import StoryDetails from "../pages/Stories/StoryDetails";
+import EditStory from "../pages/Stories/EditStory";
 
 const AppLayout = () => {
 
@@ -43,9 +44,11 @@ const AppLayout = () => {
               <Route path="/profile" element={<Profile />} />
               {/** Stories */}
               <Route path="/explore/story/:storyId" element={<StoryDetails />} />
+              <Route path="/story/edit/:storyId" element={<EditStory />} />
             </Route>
             <Route path="/story/create" element={<CreateStory />} />
             <Route path="/" element={<LandingPage />} />
+            <Route path="/forbidden" element={<ErrorPage statusCode={403} messageError="No tienes Permisos para explorar por aquí..." />} />
             <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
           </Routes>
         </Router>

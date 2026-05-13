@@ -6,7 +6,7 @@ import type { StoryInfo } from "../../../core/domain/models/stories/StoryModel";
 import { getRandomCover } from "../User/utils/covers.util";
 import { useUsers } from "../../hooks/useUsers";
 import type { UserInfo } from "../../../core/domain/models/users/UserModel";
-import { Bookmark, BookOpen, Clock, Info, List, MessageSquareText, Pencil, ThumbsUp } from "lucide-react";
+import { Bookmark, BookOpen, Clock, Info, List, MessageSquareText, Pencil } from "lucide-react";
 
 const StoryDetails = () => {
 
@@ -37,6 +37,18 @@ const StoryDetails = () => {
     };
     loadStory();
   }, [storyId, loadStoryById, findUserById, navigate]);
+  // Modify Story
+  const [ modifiedStory, setModifiedStory ] = useState<boolean>(false);
+  useEffect(() => {
+    const refreshStory = async () => {
+      if (storyId && modifiedStory === true) {
+        const refreshedStory = await loadStoryById(storyId);
+        setStory(refreshedStory);
+        setModifiedStory(false);
+      }
+    }
+    refreshStory();
+  }, [storyId, loadStoryById, modifiedStory]);
 
   return (
     <main className="relative h-full">
