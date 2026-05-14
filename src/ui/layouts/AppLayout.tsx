@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router";
-import ErrorPage from "../pages/ErrorPage";
+import ErrorPage from "../pages/errors/ErrorPage";
 import AuthLayout from "./AuthLayout";
 import Auth from "../pages/Auth/Login&Register";
 import MainLayout from "./MainLayout";
@@ -8,12 +8,12 @@ import { Library } from "lucide-react";
 import Write from "../pages/User/Write";
 import Profile from "../pages/User/Profile";
 import CreateStory from "../pages/Stories/CreateStory";
-import LandingPage from "../pages/LandingPage";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { setupAxiosResponseInterceptor } from "../../infrastructure/api/config/axios.instance";
 import StoryDetails from "../pages/Stories/StoryDetails";
 import EditStory from "../pages/Stories/EditStory";
+import LandingPage from "../pages/landing/LandingPage";
 
 const AppLayout = () => {
 
