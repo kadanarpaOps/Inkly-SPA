@@ -286,3 +286,13 @@ body {
     background: rgba(0,0,0,0.25);
   }
 }
+
+/* Ocultar el botón de mostrar contraseña en Chrome, Edge, Safari */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-password-toggle-button {
+  display: none !important;
+  visibility: hidden !important;
+}

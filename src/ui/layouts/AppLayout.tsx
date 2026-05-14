@@ -14,6 +14,7 @@ import { setupAxiosResponseInterceptor } from "../../infrastructure/api/config/a
 import StoryDetails from "../pages/Stories/StoryDetails";
 import EditStory from "../pages/Stories/EditStory";
 import LandingPage from "../pages/landing/LandingPage";
+import RecoveryPassword from "../pages/Auth/RecoveryPassword";
 
 const AppLayout = () => {
 
@@ -36,6 +37,7 @@ const AppLayout = () => {
           <Routes>
             <Route element={<AuthLayout />}>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/recovery-pass" element={<RecoveryPassword />} />
             </Route>
             <Route element={<MainLayout />}>
               <Route path="/explore" element={<ExploreStories />} />
