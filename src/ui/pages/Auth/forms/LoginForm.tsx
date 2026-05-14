@@ -55,7 +55,10 @@ const LoginForm = () => {
             <label className="text-xs font-semibold uppercase tracking-widest text-several-light ml-1">
               Contraseña
             </label>
-            <a className="text-xs font-medium text-several-light hover:text-high-enfasis transition-colors cursor-pointer">
+            <a
+              onClick={() => navigate("/recovery-pass")}
+              className="text-xs font-medium text-several-light hover:text-high-enfasis transition-colors cursor-pointer"
+            >
               ¿Olvidaste tu contraseña?
             </a>
           </div>
