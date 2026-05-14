@@ -160,7 +160,7 @@ const EditStory = () => {
           onSelect={(value: string) => {
             handleStatusUpdate(value);
           }}
-          onCancel={() => setEditingStatus(null)}
+          onCancel={() => setEditingStatus(false)}
           repeatedStatus={[story!.status]}
         />
       )}
