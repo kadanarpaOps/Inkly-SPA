@@ -4,7 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useStories } from "../../hooks/useStories";
 import { useEffect, useRef, useState } from "react";
 import type { StatusNames, StoryInfo, UpdateStory } from "../../../core/domain/models/stories/StoryModel";
-import { Check, Info, List, Pencil, RotateCcw, Trash } from "lucide-react";
+import { Check, Info, List, Pencil, Plus, RotateCcw, Trash } from "lucide-react";
 import { getRandomCover } from "../utils/covers.util";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
 import { updateSchema } from "../../schemas/stories/stories.schema";
@@ -166,9 +166,9 @@ const EditStory = () => {
       )}
 
       { story && !modifiedStory ? (
-        <div className="p-8 md:p-14 md:px-30 max-w-7xl mx-auto ">
+        <div className="p-8 md:p-14 md:px-30 max-w-7xl mx-auto space-y-16">
           <section className="relative" id="info">
-            <nav className="absolute -top-4 -right-8 flex flex-col gap-2 z-10">
+            <nav className="fixed top-26 right-20 flex flex-col gap-2 z-10">
               <a href="#info" className="p-4 rounded-xl text-on-surface-variant hover:bg-primary-container hover:text-on-primary hover:shadow-lg hover:shadow-primary-container/10 transition-all" title="Basic Info">
                 <Info size={20} />
               </a>
@@ -366,6 +366,24 @@ const EditStory = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </section>
+          <section className="space-y-8" id="chapters">
+            <div className="flex items-end justify-between border-b border-outline-variant/10 pb-6">
+              <div>
+                <h2 className="text-3xl font-display font-bold text-on-surface mb-2">
+                  Capítulos
+                </h2>
+                <p className="text-on-surface-variant/60 font-body">
+                  Administra y organiza el avance de tu historia
+                </p>
+              </div>
+              <button className="bg-primary-container text-on-primary-container px-6 py-4 rounded-full font-bold flex items-center gap-3 hover:scale-95 transition-all cursor-pointer">
+                <span>
+                  <Plus size={20} />
+                </span>
+                Crear Capítulo
+              </button>
             </div>
           </section>
         </div>
