@@ -49,6 +49,7 @@ const AppLayout = () => {
             <Route path="/story/create" element={<CreateStory />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/forbidden" element={<ErrorPage statusCode={403} messageError="No tienes Permisos para explorar por aquí..." />} />
+            <Route path="/network-lost" element={<ErrorPage statusCode={500} messageError="Regálanos unos minutos en lo que se restaura la conexión..." />} />
             <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
           </Routes>
         </Router>

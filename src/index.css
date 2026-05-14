@@ -118,6 +118,22 @@ body {
   background: var(--color-high-enfasis);
 }
 
+.custom-scrollbar-edit::-webkit-scrollbar {
+  width: 10px;
+}
+.custom-scrollbar-edit::-webkit-scrollbar-track {
+  margin: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar-edit::-webkit-scrollbar-thumb {
+  background: var(--color-inputs-bg, #333);
+  border-radius: 10px;
+}
+.custom-scrollbar-edit::-webkit-scrollbar-thumb:hover {
+  background: var(--color-high-enfasis);
+}
+
 /** Utilities */
 .loading-button {
   width: 4px;
@@ -215,6 +231,10 @@ body {
       38px 19px 0 0px,
       57px 19px 0 0px;
   }
+}
+/** Edit Story */
+.glass-panel {
+  background: rgba(52, 52, 60, 0.6); border: 1px solid rgba(90, 64, 64, 0.15);
 }
 
 /** Landing Page */

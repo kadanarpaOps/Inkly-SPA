@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectCategoryModal from "../../components/stories/SelectCategoryModal";
 import { GenreIcon } from "../../components/stories/GenresIcons";
+import { getLastModifiedTime } from "../utils/time.util";
+import SelectNewStatusModal from "../../components/stories/SelectNewStatusModal";
 
 type UpdateFormValues = z.infer<typeof updateSchema>;
 
@@ -32,7 +34,7 @@ const EditStory = () => {
       if (storyId && authUser) {
         const responseStory = await loadStoryById(storyId);
         if (responseStory === null) {
-          navigate("*");
+          navigate("/network-lost");
         }
         if (responseStory.userId !== authUser.userId) {
           navigate("/forbidden")
@@ -62,6 +64,7 @@ const EditStory = () => {
   const [ isEditingTitle, setIsEditingTitle ] = useState<boolean>(false);
   const [ isEditingDescription, setIsEditingDescription ] = useState<boolean>(false);
   const [ editingGenreOrSubgenre, setEditingGenreOrSubgenre ] = useState<"genre" | "subgenre" | null>(null);
+  const [ editingStatus, setEditingStatus ] = useState<boolean>(false);
 
   useEffect(() => {
     if (story) {
@@ -77,7 +80,6 @@ const EditStory = () => {
 
   const onSubmit = async (data: UpdateFormValues): Promise<boolean> => {
     if (story) {
-      console.log("Llegó al onSubmit");
       const updateRequest: UpdateStory = { ...data, status: data.status as StatusNames };
       const success = await updateStory(updateRequest, story.id);
       if (success) setModifiedStory(true);
@@ -91,7 +93,13 @@ const EditStory = () => {
     setValue(fieldToUpdate, genreName);
     
     setEditingGenreOrSubgenre(null);
-    console.log("Llegó al handleGenre");
+    handleSubmit(onSubmit)();
+  }
+
+  const handleStatusUpdate = async (newStatus: string) => {
+    setValue("status", newStatus);
+    
+    setEditingStatus(false);
     handleSubmit(onSubmit)();
   }
 
@@ -141,17 +149,26 @@ const EditStory = () => {
         <SelectCategoryModal
           onSelect={(value: string) => {
             handleGenreOrSubgenreUpdate(value);
-            handleSubmit(async(data) => onSubmit(data));
           }}
           onCancel={() => setEditingGenreOrSubgenre(null)}
           repeatedGenres={[story!.genre.name, story!.secondaryGenre.name]}
         />
       )}
 
+      { editingStatus && (
+        <SelectNewStatusModal
+          onSelect={(value: string) => {
+            handleStatusUpdate(value);
+          }}
+          onCancel={() => setEditingStatus(null)}
+          repeatedStatus={[story!.status]}
+        />
+      )}
+
       { story && !modifiedStory ? (
         <div className="p-8 md:p-14 md:px-30 max-w-7xl mx-auto ">
           <section className="relative" id="info">
-            <nav className="absolute -top-4 right-0 flex flex-col gap-2 z-10">
+            <nav className="absolute -top-4 -right-8 flex flex-col gap-2 z-10">
               <a href="#info" className="p-4 rounded-xl text-on-surface-variant hover:bg-primary-container hover:text-on-primary hover:shadow-lg hover:shadow-primary-container/10 transition-all" title="Basic Info">
                 <Info size={20} />
               </a>
@@ -161,7 +178,7 @@ const EditStory = () => {
             </nav>
             <div className="flex flex-col lg:flex-row gap-12 items-start">
               {/** Modify Cover */}
-              <div className="group relative w-full max-w-[320px] aspect-2/3 rounded-xl overflow-hidden shadow-2xl shadow-black/40 bg-surface-container-highest flex-shrink-0">
+              <div className="group relative w-full max-w-[320px] aspect-2/3 rounded-xl overflow-hidden shadow-2xl shadow-black/40 bg-surface-container-highest shrink-0">
                 <img
                   src={story.coverUrl ? story.coverUrl : getRandomCover()}
                   alt="Portada de la Historia"
@@ -264,6 +281,88 @@ const EditStory = () => {
                         {story.secondaryGenre.name}
                       </span>
                     </button>
+                  </div>
+                </div>
+                {!isEditingDescription ? (
+                  <div
+                    onClick={() => setIsEditingDescription(true)}
+                    className="relative group cursor-pointer p-6 rounded-2xl glass-panel w-140 h-55 overflow-y-scroll custom-scrollbar-edit"
+                  >
+                    <h3 className="text-on-surface-variant font-bold text-md uppercase tracking-widest mb-4 flex items-center justify-between">
+                      Sinopsis
+                      <span className="text-primary/40 group-hover:text-primary transition-colors">
+                        <Pencil size={24} />
+                      </span>
+                    </h3>
+                    <p className="text-on-surface/80 h-max leading-relaxed text-lg font-light italic">
+                      {story.description}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="relative p-6 rounded-2xl glass-panel w-140 h-55 border border-primary/50">
+                    <h3 className="text-on-surface-variant font-bold text-md uppercase tracking-widest mb-4 flex items-center justify-between">
+                      Sinopsis
+                      <div className="inline-flex gap-4">
+                        <span
+                          onClick={handleSubmit(async (data) => {
+                            const success = await onSubmit(data);
+                            if (success) setIsEditingDescription(false);
+                          })}
+                          className="text-primary/40 hover:text-primary transition-colors cursor-pointer"
+                        >
+                          <Check size={24} />
+                        </span>
+                        <span
+                          onClick={() => {
+                            setValue("description", story.description)
+                            setIsEditingDescription(false);
+                          }}
+                          className="text-primary/40 hover:text-primary transition-colors cursor-pointer"
+                        >
+                          <RotateCcw size={24} />
+                        </span>
+                      </div>
+                    </h3>
+                    <textarea
+                      {...register("description")}
+                      autoFocus
+                      className="w-full h-30 bg-surface-container-highest border-none rounded-xl px-6 py-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary transition-all outline-none focus:outline-none resize-none custom-scrollbar-edit"
+                      placeholder="Modifica la Sinopsis..."
+                    />
+                  </div>
+                )}
+                <div className="grid grid-cols-2 md:grid-cols-5 px-6 w-140">
+                  <div className="space-y-1">
+                    <span className="text-xs text-on-surface-variant/60 uppercase tracking-tighter font-bold">
+                      Capítulos
+                    </span>
+                    <p className="text-xl font-display font-bold text-on-surface">
+                      {story.totalChapters}
+                    </p>
+                  </div>
+                  <div className="space-y-1 col-span-2">
+                    <span className="text-xs text-on-surface-variant/60 uppercase tracking-tighter font-bold">
+                      Estado
+                    </span>
+                    <div className="flex items-center gap-3">
+                      <p className="text-xl font-display font-bold text-primary">
+                        {story.status.replace("_", " ")}
+                      </p>
+                      <span
+                        onClick={() => setEditingStatus(true)}
+                        className="text-primary/40 hover:text-primary transition-colors cursor-pointer"
+                      >
+                        <Pencil size={24} />
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-1 col-span-2">
+                    <span className="text-xs text-on-surface-variant/60 uppercase tracking-tighter font-bold">
+                      Actualizado
+                    </span>
+                    <p className="text-xl font-display font-bold text-on-surface">
+                      {story.updatedAt ? getLastModifiedTime(story.updatedAt): "Nunca"}
+                    </p>
                   </div>
                 </div>
               </div>
