@@ -5,6 +5,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import { Placeholder, CharacterCount } from '@tiptap/extensions';
 import Toolbar from "../../components/writing/Toolbar";
 import { useState } from 'react';
+import SpeechReader from '../../components/textToSpeech/SpeechReader';
 
 const extensions = [
     TextStyleKit, StarterKit,
@@ -62,6 +63,7 @@ export default function Write() {
                     <EditorContent editor={editor} className='leading-relaxed' />
                 </div>
             </div>
+            <SpeechReader editor={editor} />
             <div className="fixed bottom-8 right-12 flex items-center space-x-4 bg-search-bg/80 px-5 py-3 rounded-2xl ghost-border backdrop-opacity-95 shadow-2xl z-40">
                 <div className="flex flex-col items-end">
                     <span className="text-[10px] text-several-light uppercase tracking-tighter">

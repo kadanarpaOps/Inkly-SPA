@@ -25,14 +25,14 @@ function FloatingMenu({ start, pause, stop, speechStatus }: Props) {
         {/* Botón Play/Pause Unificado */}
         <button
           onClick={isPlaying ? pause : start}
-          className="flex items-center justify-center bg-[var(--color-primary)] text-[var(--color-on-primary)] w-14 h-14 rounded-full shadow hover:bg-[var(--color-primary-container)] transition"
+          className="flex items-center justify-center bg-(--color-primary) text-on-primary w-14 h-14 rounded-full shadow hover:bg-(--color-primary-container) transition"
         >
           {isPlaying ? <Pause className="fill-current"/> : <Play className="fill-current"/> }
         </button>
         {/* Botón Detener */}
         <button
           onClick={stop}
-          className="flex items-center justify-center bg-[var(--color-primary)] text-[var(--color-on-primary)] w-14 h-14 rounded-full shadow hover:bg-[var(--color-primary-container)] transition"
+          className="flex items-center justify-center bg-(--color-primary) text-on-primary w-14 h-14 rounded-full shadow hover:bg-(--color-primary-container) transition"
         >
           <Square className="fill-current"/>
         </button>
@@ -44,7 +44,7 @@ function FloatingMenu({ start, pause, stop, speechStatus }: Props) {
         className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all duration-500 transform ${
           open 
           ? "bg-gray-800 text-white rotate-360"
-          : "bg-[var(--color-primary)] text-[var(--color-on-primary)] hover:rotate-12"
+          : "bg-(--color-primary) text-on-primary hover:rotate-12"
         }`}
       >
         {open ? <X /> : <Speech className="fill-current"/>}
