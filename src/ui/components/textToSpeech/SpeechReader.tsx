@@ -44,4 +44,4 @@ function SpeechReader ({editor}: Props) {
   );
 }
 
-export default SpeechReader
+export default SpeechReader;
