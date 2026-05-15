@@ -1,0 +1,100 @@
+import { useEffect, useState, type ReactNode } from "react"
+import { ChapterService } from "../../../core/use-cases/ChapterUseCases";
+import type { EditingChapter, ReadingChapter, ChaptersFilters, RegisterChapter, UpdateChapter, ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
+import executeTask from "../utils/TaskExecutor";
+import { ChaptersContext, type ChaptersContextType } from "../ChaptersContext";
+import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+
+type Props = {
+  children: ReactNode;
+}
+
+const chapterService = new ChapterService;
+
+function ChaptersProvider({ children }: Props) {
+  // Basics
+  const [ loading, setLoading ] = useState<boolean>(false);
+  const [ updating, setUpdating ] = useState<boolean>(false);
+  const [ error, setError ] = useState<string | null>(null);
+  // Writing & Reading
+  const [ editingChapter, setEditingChapter ] = useState<EditingChapter | null>(null);
+  const [ readingChapter, setReadingChapter ] = useState<ReadingChapter | null>(null);
+  
+  // Business Methods
+  const getChaptersByStory = async (filters: ChaptersFilters, storyId: string) => {
+    const response = await executeTask(() => chapterService.getChaptersByStory(filters, storyId), setLoading, setError) as PageResponse<ChapterInfo>;
+    return response;
+  }
+
+  const getOwnedChaptersByStory = async (filters: ChaptersFilters, storyId: string) => {
+    const response = await executeTask(() => chapterService.getOwnedChaptersByStory(filters, storyId), setLoading, setError) as PageResponse<ChapterInfo>;
+    return response;
+  }
+
+  const createChapter = async (createChapter: RegisterChapter) => {
+    setError(null);
+    const response = await executeTask(() => chapterService.createChapter(createChapter), setLoading, setError);
+    if (!response) return false;
+    return true;
+  }
+
+  const updateChapter = async (updateChapter: UpdateChapter, chapterId: string) => {
+    setError(null);
+    const response = await executeTask(() => chapterService.updateChapter(updateChapter, chapterId), setUpdating, setError);
+    if (!response) return false;
+    return true;
+  }
+
+  const toggleChapterStatus = async (chapterId: string) => {
+    setError(null);
+    const response = await executeTask(() => chapterService.toggleChapterStatus(chapterId), setLoading, setError);
+    if (!response) return false;
+    return true;
+  }
+
+  const deleteChapter = async (storyId: string, chapterId: string) => {
+    setError(null);
+    const response = await executeTask(() => chapterService.deleteChapter(storyId, chapterId), setLoading, setError);
+    if (!response) return false;
+    return true;
+  }
+
+  /** UseEffects */
+  useEffect(() => {
+    const loadReadingAndEditingChapters = () => {
+      const editingChapter = localStorage.getItem('editingChapter');
+      if (editingChapter) {
+        setEditingChapter(JSON.parse(editingChapter));
+      }
+      const readingChapter = localStorage.getItem('readingChapter');
+      if (readingChapter) {
+        setReadingChapter(JSON.parse(readingChapter));
+      }
+    }
+    loadReadingAndEditingChapters();
+  }, []);
+
+  // Export Values
+  const exportValues: ChaptersContextType = {
+    loading,
+    updating,
+    error,
+    editingChapter,
+    readingChapter,
+    setEditingChapter,
+    setReadingChapter,
+    getChaptersByStory,
+    getOwnedChaptersByStory,
+    createChapter,
+    updateChapter,
+    toggleChapterStatus,
+    deleteChapter
+  }
+
+  return (
+    <ChaptersContext.Provider value={exportValues}>{children}</ChaptersContext.Provider>
+  )
+
+}
+
+export default ChaptersProvider;

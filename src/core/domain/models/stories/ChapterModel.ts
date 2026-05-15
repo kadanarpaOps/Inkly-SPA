@@ -24,3 +24,18 @@ export interface ChaptersFilters {
   limit: number;
   newestFirst: boolean;
 }
+
+// Web Models
+
+export interface EditingChapter {
+  id: string;
+  order: string;
+  title: string;
+  content: string;
+  hidden: boolean;
+}
+
+export interface ReadingChapter {
+  id: string;
+  lastActivity: string;
+}

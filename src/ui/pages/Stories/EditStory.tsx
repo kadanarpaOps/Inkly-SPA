@@ -133,8 +133,10 @@ const EditStory = () => {
     }
   }
 
+  
+
   return (
-    <main className="relative h-full">
+    <main className="relative h-full" id="info">
       {selectedCover && (
           <ImageCropperModal
               image={selectedCover}
@@ -167,7 +169,7 @@ const EditStory = () => {
 
       { story && !modifiedStory ? (
         <div className="p-8 md:p-14 md:px-30 max-w-7xl mx-auto space-y-16">
-          <section className="relative" id="info">
+          <section className="relative">
             <nav className="fixed top-26 right-20 flex flex-col gap-2 z-10">
               <a href="#info" className="p-4 rounded-xl text-on-surface-variant hover:bg-primary-container hover:text-on-primary hover:shadow-lg hover:shadow-primary-container/10 transition-all" title="Basic Info">
                 <Info size={20} />
