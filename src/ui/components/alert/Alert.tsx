@@ -1,0 +1,37 @@
+import { Info } from "lucide-react";
+import { useEffect } from "react"
+
+interface AlertProps {
+  message: string,
+  duration?: number,
+  onClose: () => void
+}
+
+function Alert({message, duration, onClose}: AlertProps) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, duration);
+    return () => clearTimeout(timer);
+  }, [duration, onClose]);
+
+  return (
+    <div className="fixed right-4 top-4 z-50 pointer-events-none">
+      <div
+        role="status"
+        aria-live="polite"
+        className="pointer-events-auto w-80 max-w-xs bg-[rgba(20,20,24,0.7)] border border-[rgba(255,255,255,0.06)] text-neutral-100 rounded-lg shadow-lg p-3 flex gap-3 items-start backdrop-blur-sm transition-opacity duration-300"
+      >
+        <div className="flex-shrink-0 mt-0.5">
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white">
+            <Info/>
+          </div>
+        </div>
+
+        <div className="flex-1 text-sm leading-snug break-words">
+          <p className="font-medium">{message}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Alert
