@@ -4,7 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useStories } from "../../hooks/useStories";
 import { useEffect, useRef, useState } from "react";
 import type { StatusNames, StoryInfo, UpdateStory } from "../../../core/domain/models/stories/StoryModel";
-import { Check, ChevronLeft, ChevronRight, Eye, EyeClosed, Info, List, Pencil, Plus, RotateCcw, Trash } from "lucide-react";
+import { ArrowBigDown, Check, ChevronLeft, ChevronRight, Eye, EyeClosed, Info, List, Pencil, Plus, RotateCcw, Trash } from "lucide-react";
 import { getRandomCover } from "../utils/covers.util";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
 import { updateSchema } from "../../schemas/stories/stories.schema";
@@ -426,6 +426,17 @@ const EditStory = () => {
                   Administra y organiza el avance de tu historia
                 </p>
               </div>
+              <button
+                onClick={() => setListByNewestFirst(!listByNewestFirst)}
+                className="flex items-center gap-2 hover:bg-inverse-on-surface transition-all duration-300 p-1 rounded-lg cursor-pointer"
+              >
+                {listByNewestFirst ? "Traer más viejos" : "Traer más nuevos"}
+                <ArrowBigDown
+                  className={`transition-transform duration-300 transform
+                      ${listByNewestFirst ? "rotate-360" : "rotate-180"}`}
+                  size={24}
+                />
+              </button>
               {!loadingChapters ? (
                 <button
                   disabled={loadingChapters}
