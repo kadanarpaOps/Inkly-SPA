@@ -53,7 +53,7 @@ const StoryDetails = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent"></div>
                 </div>
-                <div className="absolute -bottom-6 -right-6 font-headline font-extrabold text-4xl text-on-surface/5 pointer-events-none select-none">
+                <div className="absolute -bottom-6 -right-6 font-headline font-extrabold text-4xl text-on-surface/30 pointer-events-none select-none">
                   {story.status.replace("_"," ")}
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useStories } from "../../hooks/useStories";
 import { useEffect, useRef, useState } from "react";
 import type { StatusNames, StoryInfo, UpdateStory } from "../../../core/domain/models/stories/StoryModel";
-import { Check, Info, List, Pencil, Plus, RotateCcw, Trash } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Eye, EyeClosed, Info, List, Pencil, Plus, RotateCcw, Trash } from "lucide-react";
 import { getRandomCover } from "../utils/covers.util";
 import ImageCropperModal from "../../components/images/ImageCropperModal";
 import { updateSchema } from "../../schemas/stories/stories.schema";
@@ -14,6 +14,9 @@ import SelectCategoryModal from "../../components/stories/SelectCategoryModal";
 import { GenreIcon } from "../../components/stories/GenresIcons";
 import { getLastModifiedTime } from "../utils/time.util";
 import SelectNewStatusModal from "../../components/stories/SelectNewStatusModal";
+import { useChapters } from "../../hooks/useChapters";
+import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+import type { ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
 
 type UpdateFormValues = z.infer<typeof updateSchema>;
 
@@ -25,10 +28,13 @@ const EditStory = () => {
   const { authUser } = useAuth();
   // Use Stories
   const { loading, loadStoryById, updateStory, updateStoryCover, deleteStoryCover } = useStories();
+  // Use Chapters
+  const { loading: loadingChapters, createChapter, getOwnedChaptersByStory, toggleChapterStatus, deleteChapter } = useChapters();
   // Extract storyId from the URI
   const { storyId } = useParams<{ storyId: string}>();
   // Find Story Details
   const [ story, setStory ] = useState<StoryInfo | null>(null);
+  const [ chapters, setChapters ] = useState<PageResponse<ChapterInfo> | null>(null);
   useEffect(() => {
     const loadStory = async () => {
       if (storyId && authUser) {
@@ -40,10 +46,13 @@ const EditStory = () => {
           navigate("/forbidden")
         }
         setStory(responseStory);
+
+        const responseChapters = await getOwnedChaptersByStory({offset: 1, limit: 5, newestFirst: true}, responseStory.id);
+        setChapters(responseChapters);
       }
     };
     loadStory();
-  }, [authUser, storyId, loadStoryById, navigate]);
+  }, [authUser, storyId, loadStoryById, navigate, getOwnedChaptersByStory]);
   // Modify Story
   const [ modifiedStory, setModifiedStory ] = useState<boolean>(false);
   useEffect(() => {
@@ -117,7 +126,6 @@ const EditStory = () => {
     if (story && authUser) {
       const coverFile = new File([blob], "cover.jpg", { type: "image/jpeg" });
       const success = await updateStoryCover(coverFile, story.id);
-      console.log(success);
       if (success) {
         setSelectedCover(null);
         setModifiedStory(true);
@@ -133,7 +141,45 @@ const EditStory = () => {
     }
   }
 
-  
+  // Modify Chapters
+  const [ modifiedChapters, setModifiedChapters ] = useState<boolean>(false);
+  const [ listByNewestFirst, setListByNewestFirst ] = useState<boolean>(true);
+  const [ page, setPage ] = useState<number>(1);
+  useEffect(() => {
+    console.log(page);
+    const refreshChapters = async () => {
+      if (story) {
+        const refreshedChapters = await getOwnedChaptersByStory({offset: page, limit: 5, newestFirst: listByNewestFirst}, story.id);
+        setChapters(refreshedChapters);
+        setModifiedChapters(false);
+      }
+    }
+    refreshChapters();
+  }, [getOwnedChaptersByStory, modifiedChapters, story, listByNewestFirst, page])
+  const onChapterCreation = async () => {
+    if (story && authUser) {
+      const success = await createChapter({ storyId: story.id });
+      if (success) {
+        setModifiedChapters(true);
+      }
+    }
+  }
+  const onChapterDeletion = async (chapterId: string) => {
+    if (story && authUser) {
+      const success = await deleteChapter(story.id, chapterId);
+      if (success) {
+        setModifiedChapters(true);
+      }
+    }
+  }
+  const onChapterToggleStatus = async (chapterId: string) => {
+    if (story && authUser) {
+      const success = await toggleChapterStatus(chapterId);
+      if (success) {
+        setModifiedChapters(true);
+      }
+    }
+  }
 
   return (
     <main className="relative h-full" id="info">
@@ -380,13 +426,132 @@ const EditStory = () => {
                   Administra y organiza el avance de tu historia
                 </p>
               </div>
-              <button className="bg-primary-container text-on-primary-container px-6 py-4 rounded-full font-bold flex items-center gap-3 hover:scale-95 transition-all cursor-pointer">
-                <span>
-                  <Plus size={20} />
-                </span>
-                Crear Capítulo
-              </button>
+              {!loadingChapters ? (
+                <button
+                  disabled={loadingChapters}
+                  onClick={() => onChapterCreation()}
+                  className="bg-primary-container text-on-primary-container px-6 py-4 rounded-full font-bold flex items-center gap-3 hover:scale-95 transition-all cursor-pointer"
+                >
+                  <span>
+                    <Plus size={20} />
+                  </span>
+                  Crear Capítulo
+                </button>
+              ) : (
+                <div className="flex items-center justify-center w-42 h-10">
+                  <div className="loading-button" />
+                </div>
+              )}
             </div>
+            <div className="grid gap-4">
+              { chapters && chapters.data.length > 0 ? (
+                chapters.data.map(chapter => (
+                  <div key={chapter.id} className="group flex items-center justify-between p-6 rounded-2xl bg-surface-container-low border border-transparent hover:border-primary/20 transition-all cursor-default">
+                    <div className="flex items-center gap-6">
+                      <span className="text-2xl font-display font-black text-on-surface-variant/50 italic">
+                        {String(chapter.order).padStart(2, '0')}
+                      </span>
+                      <div>
+                        <h4 className={`text-lg ${chapter.title ? "font-bold text-on-surface group-hover:text-primary transition-colors" : "font-light text-on-surface-variant/40 italic"}`}>
+                          {chapter.title ? chapter.title : "Sin título"}
+                        </h4>
+                        <p className="text-xs text-on-surface-variant">
+                          {chapter.hidden ? "Borrador" : "Publicado"} • Última Edición {chapter.updatedAt ? getLastModifiedTime(chapter.updatedAt) : "Nunca"} • 0 palabras
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button className="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors cursor-pointer">
+                        <span>
+                          <Pencil size={24} />
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => onChapterToggleStatus(chapter.id)}
+                        className="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors cursor-pointer"
+                      >
+                        <span>
+                          {chapter.hidden ? (
+                            <Eye size={24} />
+                          ) : (
+                            <EyeClosed size={24} />
+                          )}
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => onChapterDeletion(chapter.id)}
+                        className="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors cursor-pointer"
+                      >
+                        <span>
+                          <Trash size={24} />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                !loadingChapters ? (
+                  <h3 className="text-2xl text-center pt-6 font-bold">
+                    No has creado ningún capítulo
+                  </h3>
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full">
+                    <div className="loading-button" />
+                  </div>
+                )
+              )}
+            </div>
+            { chapters && chapters.data.length > 0 && (
+              <div className="flex items-center justify-center gap-2 mt-14">
+                {/** Previous Navigation */}
+                <button
+                  onClick={() => setPage(chapters?.meta.numberPage - 1)}
+                  className={`w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/10 text-on-surface-variant
+                    ${chapters?.meta.numberPage !== 1 && "hover:bg-surface-variant/20 transition-colors cursor-pointer"}`}
+                  disabled={chapters?.meta.numberPage === 1}
+                >
+                  <span>
+                    <ChevronLeft size={24} />
+                  </span>
+                </button>
+                {/** Actual Page - 1 */}
+                {chapters?.meta.numberPage !== 1 && (
+                  <button
+                    onClick={() => setPage(chapters?.meta.numberPage - 1)}
+                    className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-variant/20 text-on-surface transition-colors cursor-pointer"
+                  >
+                    {chapters?.meta.numberPage - 1}
+                  </button>
+                )}
+                {/** Actual Page */}
+                <button
+                  disabled={true}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-on-primary font-bold cursor-default"
+                >
+                  {chapters?.meta.numberPage}
+                </button>
+                {/** Actual Page + 1 */}
+                {chapters?.meta.numberPage !== chapters?.meta.totalPages && (
+                  <button
+                    onClick={() => setPage(chapters?.meta.numberPage + 1)}
+                    className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-variant/20 text-on-surface transition-colors cursor-pointer"
+                  >
+                    {chapters?.meta.numberPage + 1}
+                  </button>
+                )}
+                {/** Next Navigation */}
+                <button
+                  onClick={() => setPage(chapters?.meta.numberPage + 1)}
+                  className={`w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/10 text-on-surface-variant
+                    ${chapters?.meta.numberPage !== chapters?.meta.totalPages && "hover:bg-surface-variant/20 transition-colors cursor-pointer"}`}
+                  disabled={chapters?.meta.numberPage === chapters?.meta.totalPages}
+                >
+                  <span>
+                    <ChevronRight size={24} />
+                  </span>
+                </button>
+              </div>
+            )}
           </section>
         </div>
       ) : (

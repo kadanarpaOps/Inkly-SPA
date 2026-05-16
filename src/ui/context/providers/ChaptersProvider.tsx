@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useState, type ReactNode } from "react"
 import { ChapterService } from "../../../core/use-cases/ChapterUseCases";
 import type { EditingChapter, ReadingChapter, ChaptersFilters, RegisterChapter, UpdateChapter, ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
 import executeTask from "../utils/TaskExecutor";
@@ -21,15 +21,15 @@ function ChaptersProvider({ children }: Props) {
   const [ readingChapter, setReadingChapter ] = useState<ReadingChapter | null>(null);
   
   // Business Methods
-  const getChaptersByStory = async (filters: ChaptersFilters, storyId: string) => {
+  const getChaptersByStory = useCallback(async (filters: ChaptersFilters, storyId: string) => {
     const response = await executeTask(() => chapterService.getChaptersByStory(filters, storyId), setLoading, setError) as PageResponse<ChapterInfo>;
     return response;
-  }
+  }, []);
 
-  const getOwnedChaptersByStory = async (filters: ChaptersFilters, storyId: string) => {
+  const getOwnedChaptersByStory = useCallback(async (filters: ChaptersFilters, storyId: string) => {
     const response = await executeTask(() => chapterService.getOwnedChaptersByStory(filters, storyId), setLoading, setError) as PageResponse<ChapterInfo>;
     return response;
-  }
+  }, []);
 
   const createChapter = async (createChapter: RegisterChapter) => {
     setError(null);
