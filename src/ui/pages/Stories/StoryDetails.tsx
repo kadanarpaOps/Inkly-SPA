@@ -45,13 +45,13 @@ const StoryDetails = () => {
           <section className="relative mb-16" id="info">
             <div className="flex flex-col lg:flex-row gap-12 items-start">
               <div className="w-full lg:w-72 shrink-0 group relative">
-                <div className="aspect-[2/3] w-full bg-surface-container-high rounded-xl overflow-hidden shadow-2xl relative">
+                <div className="aspect-2/3 w-full bg-surface-container-high rounded-xl overflow-hidden shadow-2xl relative">
                   <img
                     src={`${story.coverUrl ? story.coverUrl : getRandomCover()}`}
                     alt="Portada de Historia"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-surface/80 via-transparent to-transparent"></div>
                 </div>
                 <div className="absolute -bottom-6 -right-6 font-headline font-extrabold text-4xl text-on-surface/30 pointer-events-none select-none">
                   {story.status.replace("_"," ")}
@@ -167,7 +167,7 @@ const StoryDetails = () => {
                 { authUser && (
                   <div className="bg-surface-container-low rounded-3xl p-6 border border-outline-variant/5">
                     <textarea
-                      className="w-full bg-surface-container-lowest border-none rounded-2xl p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/20 min-h-[100px] resize-none mb-4 focus:outline-none"
+                      className="w-full bg-surface-container-lowest border-none rounded-2xl p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/20 min-h-25 resize-none mb-4 focus:outline-none"
                       placeholder="Escribe tus pensamientos..."
                     >
                     </textarea>
