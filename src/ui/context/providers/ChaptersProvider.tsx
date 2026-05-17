@@ -41,6 +41,7 @@ function ChaptersProvider({ children }: Props) {
   const updateChapter = async (updateChapter: UpdateChapter, chapterId: string) => {
     setError(null);
     const response = await executeTask(() => chapterService.updateChapter(updateChapter, chapterId), setUpdating, setError);
+    console.log(response);
     if (!response) return false;
     return true;
   }

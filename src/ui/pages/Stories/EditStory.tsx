@@ -146,7 +146,6 @@ const EditStory = () => {
   const [ listByNewestFirst, setListByNewestFirst ] = useState<boolean>(true);
   const [ page, setPage ] = useState<number>(1);
   useEffect(() => {
-    console.log(page);
     const refreshChapters = async () => {
       if (story) {
         const refreshedChapters = await getOwnedChaptersByStory({offset: page, limit: 5, newestFirst: listByNewestFirst}, story.id);
@@ -472,7 +471,12 @@ const EditStory = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors cursor-pointer">
+                      <button
+                        onClick={() => navigate("/write", {
+                          state: { chapterToEdit: chapter }
+                        })}
+                        className="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors cursor-pointer"
+                      >
                         <span>
                           <Pencil size={24} />
                         </span>

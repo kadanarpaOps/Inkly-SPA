@@ -4,7 +4,7 @@ import { useEditorState } from '@tiptap/react'
 
 import { menuBarStateSelector } from "../../../infrastructure/api/config/menu.bar.state";
 
-const Toolbar = ({ editor }: { editor: Editor }) => {
+const Toolbar = ({ editor, onSave }: { editor: Editor, onSave(): void }) => {
 
   const editorState = useEditorState({
     editor,
@@ -93,10 +93,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
             </div>
             <button
                 onClick={() => {
-                    const json = editor?.getJSON();
-                    console.log(json);
-                    const jsonFormatted = JSON.stringify(json);
-                    console.log(jsonFormatted);
+                    onSave();
                 }}
                 className="bg-high-enfasis cursor-pointer text-background-global px-6 py-2 rounded-xl font-bold text-sm tracking-tight hover:scale-95 transition-all"
             >

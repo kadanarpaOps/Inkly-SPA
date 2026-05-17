@@ -16,6 +16,11 @@ export const getOwnedChaptersByStoryRequest = async (filters: ChaptersFilters, s
   return response.data;
 }
 
+export const getChapterById = async (chapterId: string): Promise<ChapterInfo> => {
+  const response = await httpClient.get(`api/chapter/id/${chapterId}`);
+  return response.data;
+}
+
 export const createChapterRequest = async (createChapter: RegisterChapter): Promise<void> => {
   const response = await httpClient.post(`api/chapter/create`, createChapter);
   return response.data;

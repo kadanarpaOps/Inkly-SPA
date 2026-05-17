@@ -4,8 +4,12 @@ import StarterKit from '@tiptap/starter-kit'
 import TextAlign from '@tiptap/extension-text-align';
 import { Placeholder, CharacterCount } from '@tiptap/extensions';
 import Toolbar from "../../components/writing/Toolbar";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SpeechReader from '../../components/textToSpeech/SpeechReader';
+import { useChapters } from '../../hooks/useChapters';
+import { useLocation } from 'react-router';
+import type { EditingChapter } from '../../../core/domain/models/stories/ChapterModel';
+import { useAlert } from '../../hooks/useAlert';
 
 const extensions = [
     TextStyleKit, StarterKit,
@@ -24,6 +28,56 @@ const extensions = [
 
 export default function Write() {
 
+    // Use Location
+    const location = useLocation();
+    // Use Alerts
+    const { showAlert } = useAlert();
+
+    // Load or Recover Story
+    const [ editingChapter, setEditingChapter ] = useState<EditingChapter | null>(null);
+    const { updateChapter, error } = useChapters();
+
+    const storageEditingChapter = localStorage.getItem("editingChapter");
+    const chapterToEdit = location.state?.chapterToEdit as EditingChapter || null;
+
+    {/**
+        Hay 5 casuísticas:
+        1. No se envía un chapterToEdit y no hay un chapter en localStorage
+        2. No se envía un chapterToEdit y hay un chapter en localStorage
+        3. Se envía un chapterToEdit y no hay un chapter en localStorage
+        4. Se envía un chapterToEdit y hay un chapter en localStorage
+        4.1. El chapterToEdit enviado tiene el mismo id que el chapter en localStorage
+        4.2. El chapterToEdit enviado no tiene el mismo id que el chapter en localStorage
+    */}
+
+    useEffect(() => {
+        const loadChapterToEdit = () => {
+            if (chapterToEdit && !storageEditingChapter) {
+                console.log("Casuística 3")
+                localStorage.setItem('editingChapter', JSON.stringify(chapterToEdit));
+                setEditingChapter(chapterToEdit);
+            } else if (!chapterToEdit && storageEditingChapter) {
+                console.log("Casuística 2")
+                const recoveredChapterEdition = JSON.parse(storageEditingChapter) as EditingChapter;
+                setEditingChapter(recoveredChapterEdition);
+            } else if (chapterToEdit && storageEditingChapter) {
+                const recoveredChapterEdition = JSON.parse(storageEditingChapter) as EditingChapter;
+                if (recoveredChapterEdition.id !== chapterToEdit.id) {
+                    console.log("Casuística 4.2")
+                    console.log("Load SaveActualEditionModal");
+                } else {
+                    console.log("Casuística 4.1")
+                    setEditingChapter(recoveredChapterEdition);
+                }
+            } else {
+                console.log("Casuística 1")
+                console.log("Load LoadLastEditionModal.tsx");
+            }
+        }
+        loadChapterToEdit();
+    }, []);
+
+    // Editor
     const [ wordsCount, setWordsCount ] = useState(0);
     const [ activeEditor, setActiveEditor ] = useState<'title' | 'content'>('content');
 
@@ -43,7 +97,8 @@ export default function Write() {
             }
         },
         onFocus: () => setActiveEditor('title'),
-    });
+        content: editingChapter ? editingChapter.title : ""
+    }, [editingChapter]);
 
     const editor = useEditor({
         extensions,
@@ -51,12 +106,36 @@ export default function Write() {
             setWordsCount(editor.storage.characterCount.words());
         },
         onFocus: () => setActiveEditor('content'),
-    })
+        content: editingChapter ? JSON.parse(editingChapter.content) : ""
+    }, [editingChapter]);
+
+    const handleChapterSave = async () => {
+        const title = titleEditor?.getText();
+
+        const content = editor?.getJSON();
+        const contentFormatted = JSON.stringify(content);
+
+        const success = await updateChapter(
+            {
+                title: title,
+                content: contentFormatted
+            },
+            editingChapter!.id
+        );
+
+        if (!success) {
+            showAlert(error!, 5000);
+        } else {
+            showAlert("Capítulo guardado exitosamente", 5000);
+            setEditingChapter(null);
+            localStorage.removeItem('editingChapter');
+        }
+    }
 
     return (
         <div className="grow flex flex-col items-center px-12 pb-12 writing-canvas">
             {/** Barra de Herramientas */}
-            <Toolbar editor={activeEditor === 'title' ? titleEditor : editor} />
+            <Toolbar editor={activeEditor === 'title' ? titleEditor : editor} onSave={handleChapterSave} />
             <div className="w-full max-w-3xl grow">
                 <div className="relative focus:outline-none">
                     <EditorContent editor={titleEditor} className='mb-10' />
