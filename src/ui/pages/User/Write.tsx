@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router';
 import type { EditingChapter } from '../../../core/domain/models/stories/ChapterModel';
 import { useAlert } from '../../hooks/useAlert';
 import SaveActualEditionModal from '../../components/writing/SaveActualEditionModal';
+import LoadLastEditionModal from '../../components/writing/LoadLastEditionModal';
 
 const extensions = [
     TextStyleKit, StarterKit,
@@ -153,6 +154,12 @@ export default function Write() {
         }
     }
 
+    if (!editingChapter && !chapterToEdit) {
+        return (
+            <LoadLastEditionModal />
+        );
+    }
+
     return (
         <div className="grow flex flex-col items-center px-12 pb-12 writing-canvas">
             {editingChapter && chapterToEdit && (
@@ -166,6 +173,7 @@ export default function Write() {
                     />
                 )
             )}
+            
 
             {/** Barra de Herramientas */}
             <Toolbar editor={activeEditor === 'title' ? titleEditor : editor} onSave={handleChapterSave} />
