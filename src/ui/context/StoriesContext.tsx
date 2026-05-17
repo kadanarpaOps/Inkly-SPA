@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { BasicInfo, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryFilters, StoryInfo, UpdateStory  } from "../../core/domain/models/stories/StoryModel";
 import type { PageResponse } from "../../core/domain/models/common/PaginationModels";
 
 export interface StoriesContextType {
@@ -14,8 +14,11 @@ export interface StoriesContextType {
     updateStory: (story: UpdateStory, storyId: string) => Promise<boolean>;
     updateStoryCover: (file: File, storyId: string) => Promise<boolean>;
     deleteStoryCover: (storyId: string) => Promise<boolean>;
-    loadStoriesForAuthUser: (filters: UserFilters, userId: string) => Promise<PageResponse<StoryInfo>>;
+    loadStoriesForAuthUser: (filters: StoryFilters, userId: string) => Promise<PageResponse<StoryInfo>>;
     loadStoryById: (storyId: string) => Promise<StoryInfo>;
+    loadPublishedStories: (filters: StoryFilters) => Promise<PageResponse<StoryInfo>>; //Acabar de implementar estos 3 load en el context, hacer un useSearch y hacer la página de Explore dinámica pa que llene esos filters :p
+    loadLastModifiedStoryForAUthUser: (userId: string) => Promise<LastModifiedStory>;
+    loadAuthUserFavorites: (filters: StoryFilters, userId: string) => Promise<PageResponse<StoryInfo>>;
 }
 
 export const StoriesContext = createContext<StoriesContextType | null>(null);

@@ -8,9 +8,10 @@ interface Props {
   toEditChapter: EditingChapter;
   onSave(): void;
   onDiscard(): void;
+  onContinue(): void;
 }
 
-const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscard }: Props) => {
+const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscard, onContinue }: Props) => {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -24,7 +25,7 @@ const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscar
       <div className="relative w-full max-w-2xl bg-search-bg rounded-2xl flex-col p-8 h-[70vh] overflow-y-auto custom-scrollbar">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-fujiWhite tracking-tight">
-            ¡Tienes un Capítulo pendiente de guardar!
+            ¡Tienes un Capítulo pendiente por guardar!
           </h2>
         </div>
         <div className="group flex items-center justify-between p-6 rounded-2xl bg-surface-container-low border border-transparent hover:border-primary/20 transition-all cursor-default">
@@ -61,7 +62,7 @@ const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscar
                 </span>
               </div>
           </div>
-          <div onClick={() => onSave()} className="group relative w-min rounded-2xl bg-toolbar-bg cursor-pointer hover:scale-95 transition-all duration-300 overflow-hidden">
+          <div onClick={() => onContinue()} className="group relative w-min rounded-2xl bg-toolbar-bg cursor-pointer hover:scale-95 transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-linear-to-br from-black/20 to-transparent"></div>
               <div className="relative z-10 p-6 flex flex-row gap-4 items-center h-full justify-start">
                 <span className="text-4xl text-high-enfasis">
@@ -81,7 +82,7 @@ const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscar
           </h2>
         </div>
         <div className="flex items-center justify-center">
-          <div onClick={() => onSave()} className="group relative w-min rounded-2xl bg-toolbar-bg cursor-pointer hover:scale-95 transition-all duration-300 overflow-hidden">
+          <div onClick={() => onDiscard()} className="group relative w-min rounded-2xl bg-toolbar-bg cursor-pointer hover:scale-95 transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-linear-to-br from-black/20 to-transparent"></div>
               <div className="relative z-10 p-6 flex flex-row gap-4 items-center h-full justify-start">
                 <span className="text-4xl text-high-enfasis">

@@ -59,7 +59,7 @@ export interface UpdateStory {
     status: StatusNames;
 }
 
-export interface UserFilters {
+export interface StoryFilters {
     offset: number;
     limit: number;
     title?: string;

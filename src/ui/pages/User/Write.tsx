@@ -7,7 +7,7 @@ import Toolbar from "../../components/writing/Toolbar";
 import { useEffect, useState } from 'react';
 import SpeechReader from '../../components/textToSpeech/SpeechReader';
 import { useChapters } from '../../hooks/useChapters';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import type { EditingChapter } from '../../../core/domain/models/stories/ChapterModel';
 import { useAlert } from '../../hooks/useAlert';
 import SaveActualEditionModal from '../../components/writing/SaveActualEditionModal';
@@ -29,6 +29,8 @@ const extensions = [
 
 export default function Write() {
 
+    // Use Navigate
+    const navigate = useNavigate();
     // Use Location
     const location = useLocation();
     // Use Alerts
@@ -43,12 +45,12 @@ export default function Write() {
 
     {/**
         Hay 5 casuísticas:
-        1. No se envía un chapterToEdit y no hay un chapter en localStorage
-        2. No se envía un chapterToEdit y hay un chapter en localStorage
-        3. Se envía un chapterToEdit y no hay un chapter en localStorage
-        4. Se envía un chapterToEdit y hay un chapter en localStorage
-        4.1. El chapterToEdit enviado tiene el mismo id que el chapter en localStorage
-        4.2. El chapterToEdit enviado no tiene el mismo id que el chapter en localStorage
+        CREAR MODAL y PROBAR: Diga que no hay ultimo capitulo guardado, enviar a Mis Historias, Diga que hay ultimo capitulo guardado y setearlo en localStorage y editingChapter
+            1. No se envía un chapterToEdit y no hay un chapter en localStorage
+        PROBADA 2. No se envía un chapterToEdit y hay un chapter en localStorage
+        PROBADA 3. Se envía un chapterToEdit y no hay un chapter en localStorage
+        PROBADA 4.1. El chapterToEdit enviado tiene el mismo id que el chapter en localStorage
+        PROBAR onSave 4.2. El chapterToEdit enviado no tiene el mismo id que el chapter en localStorage
     */}
 
     useEffect(() => {
@@ -64,11 +66,11 @@ export default function Write() {
             } else if (chapterToEdit && storageEditingChapter) {
                 const recoveredChapterEdition = JSON.parse(storageEditingChapter) as EditingChapter;
                 if (recoveredChapterEdition.id !== chapterToEdit.id) {
-                    console.log("Casuística 4.2")
+                    console.log("Casuística 4.2 COMPLETADA")
                     setEditingChapter(recoveredChapterEdition);
                     console.log("Load SaveActualEditionModal");
                 } else {
-                    console.log("Casuística 4.1")
+                    console.log("Casuística 4.1 COMPLETADA")
                     setEditingChapter(recoveredChapterEdition);
                 }
             } else {
@@ -106,12 +108,15 @@ export default function Write() {
         extensions,
         onUpdate({ editor }) {
             setWordsCount(editor.storage.characterCount.words());
+            if (editingChapter) {
+                localStorage.setItem('editingChapter', JSON.stringify({ ...editingChapter, content: JSON.stringify(editor.getJSON()) }));
+            }
         },
         onFocus: () => setActiveEditor('content'),
-        content: editingChapter ? JSON.parse(editingChapter.content) : ""
+        content: editingChapter ? (editingChapter.content.trim().length > 0 ? JSON.parse(editingChapter.content) : editingChapter.content) : ""
     }, [editingChapter]);
 
-    const handleChapterSave = async () => {
+    const handleChapterSave = async (): Promise<boolean> => {
         const title = titleEditor?.getText();
 
         const content = editor?.getJSON();
@@ -132,12 +137,34 @@ export default function Write() {
             setEditingChapter(null);
             localStorage.removeItem('editingChapter');
         }
+
+        return success;
+    }
+
+    const setAnotherChapter = () => {
+        setEditingChapter(chapterToEdit);
+        localStorage.setItem('editingChapter', JSON.stringify(chapterToEdit));
+    }
+
+    const handleSaveAndEditOtherChapter = async () => {
+        const success = await handleChapterSave();
+        if (success) {
+            setAnotherChapter();
+        }
     }
 
     return (
         <div className="grow flex flex-col items-center px-12 pb-12 writing-canvas">
             {editingChapter && chapterToEdit && (
-                <SaveActualEditionModal onDiscard={() => {}} onSave={() => {}} toSaveChapter={editingChapter!} toEditChapter={chapterToEdit} />
+                editingChapter.id !== chapterToEdit. id && (
+                    <SaveActualEditionModal
+                        onDiscard={setAnotherChapter}
+                        onSave={handleSaveAndEditOtherChapter}
+                        onContinue={() => navigate(location.pathname, {state: {}, replace: true})}
+                        toSaveChapter={editingChapter!}
+                        toEditChapter={chapterToEdit}
+                    />
+                )
             )}
 
             {/** Barra de Herramientas */}

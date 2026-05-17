@@ -1,6 +1,6 @@
 import { deleteStoryCoverRequest, deleteStoryRequest, getAllGenresRequest, getAuthUserSavedStoriesRequest, getAuthUserStoriesRequest, getLastModifiedStoryRequest, getStoriesRequest, getStoryByIdRequest, pageTagsRequest, registerStoryRequest, toggleStoryHiddenRequest, updateStoryCoverRequest, updateStoryRequest, updateStoryTags } from "../../infrastructure/api/requests/stories.request";
 import type { PageResponse } from "../domain/models/common/PaginationModels";
-import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../domain/models/stories/StoryModel";
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, StoryFilters } from "../domain/models/stories/StoryModel";
 import type { StoryPort } from "../domain/ports/StoriesPort";
 
 export class StoryService implements StoryPort {
@@ -14,17 +14,17 @@ export class StoryService implements StoryPort {
         return pagedTags;
     }
 
-    async getStories(filters: UserFilters): Promise<PageResponse<StoryInfo>> {
+    async getStories(filters: StoryFilters): Promise<PageResponse<StoryInfo>> {
         const pagedStories = await getStoriesRequest(filters);
         return pagedStories;
     }
 
-    async getAuthUserStories(filters: UserFilters, userId: string): Promise<PageResponse<StoryInfo>> {
+    async getAuthUserStories(filters: StoryFilters, userId: string): Promise<PageResponse<StoryInfo>> {
         const pagedStories = await getAuthUserStoriesRequest(filters, userId);
         return pagedStories;
     }
 
-    async getAuthUserSavedStories(filters: UserFilters, userId: string): Promise<PageResponse<StoryInfo>> {
+    async getAuthUserSavedStories(filters: StoryFilters, userId: string): Promise<PageResponse<StoryInfo>> {
         const pagedStories = await getAuthUserSavedStoriesRequest(filters, userId);
         return pagedStories;
     }
