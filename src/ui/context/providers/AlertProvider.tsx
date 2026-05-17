@@ -2,11 +2,18 @@ import { useState, type ReactNode } from "react"
 import { AlertContext } from "../AlertContext";
 import Alert from "../../components/alert/Alert";
 
-function AlertProvider({children}: {children: ReactNode}) {
-  const [alert, setAlert] = useState<{ message: string; duration?: number } | null>(null);
+export const typeAlert = {
+    ERROR: "ERROR",
+    SUCCESS: "SUCCESS",
+} as const
 
-  const showAlert = (message: string, duration = 10000) => {
-    setAlert({ message, duration });
+export type TypeAlert = typeof typeAlert[keyof typeof typeAlert];
+
+function AlertProvider({children}: {children: ReactNode}) {
+  const [alert, setAlert] = useState<{ message: string; duration?: number; type?: string } | null>(null);
+
+  const showAlert = (message: string, duration = 10000, type=typeAlert.ERROR) => {
+    setAlert({ message, duration, type });
   }
 
   const handleClose = () => setAlert(null);
@@ -15,6 +22,7 @@ function AlertProvider({children}: {children: ReactNode}) {
       {children}
       {alert && (
         <Alert
+          type={alert.type}
           message={alert.message}
           duration={alert.duration}
           onClose={handleClose}

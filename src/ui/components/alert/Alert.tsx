@@ -1,13 +1,17 @@
-import { Info } from "lucide-react";
+import { CloudCheck, Info } from "lucide-react";
 import { useEffect } from "react"
 
 interface AlertProps {
   message: string,
   duration?: number,
+  type?: string
   onClose: () => void
 }
 
-function Alert({message, duration, onClose}: AlertProps) {
+function Alert({message, duration, type, onClose}: AlertProps) {
+  const isSuccess = type === "SUCCESS";
+  const Icon = isSuccess ? CloudCheck : Info;
+
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     return () => clearTimeout(timer);
@@ -18,11 +22,11 @@ function Alert({message, duration, onClose}: AlertProps) {
       <div
         role="status"
         aria-live="polite"
-        className="pointer-events-auto w-80 max-w-xs bg-[rgba(20,20,24,0.7)] border border-[rgba(255,255,255,0.06)] text-neutral-100 rounded-lg shadow-lg p-3 flex gap-3 items-start backdrop-blur-sm transition-opacity duration-300"
+        className="pointer-events-auto w-80 max-w-xs bg-[rgba(20,20,24,0.7)] border border-[rgba(255,255,255,0.06)] text-neutral-100 rounded-lg shadow-lg p-3 flex gap-3 backdrop-blur-sm transition-opacity items-center duration-300"
       >
         <div className="flex-shrink-0 mt-0.5">
-          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white">
-            <Info/>
+          <div className={`h-9 w-9 rounded-full flex items-center justify-center text-white ${isSuccess ? "bg-gradient-to-br from-emerald-400 to-cyan-500" : "bg-gradient-to-br from-pink-400 to-rose-600"}`}>
+            <Icon />
           </div>
         </div>
 
