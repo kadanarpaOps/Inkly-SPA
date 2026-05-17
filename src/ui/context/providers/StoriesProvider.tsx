@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { StoryService } from "../../../core/use-cases/StoryUseCases";
-import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, StoryFilters } from "../../../core/domain/models/stories/StoryModel";
 import executeTask from "../utils/TaskExecutor";
 import { StoriesContext, type StoriesContextType } from "../StoriesContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
@@ -48,7 +48,7 @@ function StoriesProvider({ children }: Props) {
         return true;
     };
 
-    const loadStoriesForAuthUser = useCallback(async (filters: UserFilters, userId: string) => {
+    const loadStoriesForAuthUser = useCallback(async (filters: StoryFilters, userId: string) => {
         const response = await executeTask(() => storiesService.getAuthUserStories(filters, userId), setLoading, setError) as PageResponse<StoryInfo>;
         return response;
     }, []);
@@ -58,8 +58,18 @@ function StoriesProvider({ children }: Props) {
         return response;
     }, []);
 
+    const loadPublishedStories = useCallback(async (filters: StoryFilters): Promise<PageResponse<StoryInfo>> => {
+        const response = await executeTask(() => storiesService.getStories(filters), setLoading, setError) as PageResponse<StoryInfo>;
+        return response;
+    }, []);
+
     const loadLastModifiedStoryForAuthUser = useCallback(async (userId: string) => {
         const response = await executeTask(() => storiesService.getLastModifiedStory(userId), setLoading, setError) as LastModifiedStory;
+        return response;
+    }, []);
+
+    const loadAuthUserFavorites = useCallback(async (filters: StoryFilters, userId: string): Promise<PageResponse<StoryInfo>> => {
+        const response = await executeTask(() => storiesService.getAuthUserSavedStories(filters, userId), setLoading, setError) as PageResponse<StoryInfo>;
         return response;
     }, []);
 
@@ -85,6 +95,9 @@ function StoriesProvider({ children }: Props) {
         pageTags,
         loadStoriesForAuthUser,
         loadStoryById,
+        loadPublishedStories,
+        loadLastModifiedStoryForAuthUser,
+        loadAuthUserFavorites,
     }
 
     return (

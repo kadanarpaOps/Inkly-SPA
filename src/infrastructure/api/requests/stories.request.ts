@@ -1,5 +1,5 @@
 import type { PageResponse } from '../../../core/domain/models/common/PaginationModels';
-import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, UserFilters } from '../../../core/domain/models/stories/StoryModel';
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, StoryFilters } from '../../../core/domain/models/stories/StoryModel';
 import httpClient from '../config/axios.instance';
 
 export const getAllGenresRequest = async (): Promise<BasicInfo[]> => {
@@ -14,21 +14,21 @@ export const pageTagsRequest = async (offset: number, limit: number, tagName: st
     return response.data;
 }
 
-export const getStoriesRequest = async (filters: UserFilters) : Promise<PageResponse<StoryInfo>> => {
+export const getStoriesRequest = async (filters: StoryFilters) : Promise<PageResponse<StoryInfo>> => {
     const response = await httpClient.get(`api/story/search`, {
         params: filters
     });
     return response.data;
 }
 
-export const getAuthUserStoriesRequest = async (filters: UserFilters, userId: string): Promise<PageResponse<StoryInfo>> => {
+export const getAuthUserStoriesRequest = async (filters: StoryFilters, userId: string): Promise<PageResponse<StoryInfo>> => {
     const response = await httpClient.get(`api/story/search/${userId}`, {
         params: filters
     });
     return response.data;
 }
 
-export const getAuthUserSavedStoriesRequest = async (filters: UserFilters, userId: string): Promise<PageResponse<StoryInfo>> => {
+export const getAuthUserSavedStoriesRequest = async (filters: StoryFilters, userId: string): Promise<PageResponse<StoryInfo>> => {
     const response = await httpClient.get(`api/favorite/search/${userId}`, {
         params: filters
     });
