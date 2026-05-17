@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { ChapterInfo, ChaptersFilters, EditingChapter, ReadingChapter, RegisterChapter, UpdateChapter } from "../../core/domain/models/stories/ChapterModel";
+import type { ChapterInfo, ChaptersFilters, RegisterChapter, UpdateChapter } from "../../core/domain/models/stories/ChapterModel";
 import type { PageResponse } from "../../core/domain/models/common/PaginationModels";
 
 export interface ChaptersContextType {
@@ -7,11 +7,6 @@ export interface ChaptersContextType {
   loading: boolean;
   updating: boolean
   error: string | null;
-  // Utils
-  editingChapter: EditingChapter | null;
-  readingChapter: ReadingChapter | null;
-  setEditingChapter: (chapter: EditingChapter | null) => void;
-  setReadingChapter: (chapter: ReadingChapter | null) => void;
   // Rest Methods
   getChaptersByStory: (filters: ChaptersFilters, storyId: string) => Promise<PageResponse<ChapterInfo>>;
   getOwnedChaptersByStory: (filters: ChaptersFilters, storyId: string) => Promise<PageResponse<ChapterInfo>>;

@@ -1,6 +1,6 @@
 import { deleteStoryCoverRequest, deleteStoryRequest, getAllGenresRequest, getAuthUserSavedStoriesRequest, getAuthUserStoriesRequest, getLastModifiedStoryRequest, getStoriesRequest, getStoryByIdRequest, pageTagsRequest, registerStoryRequest, toggleStoryHiddenRequest, updateStoryCoverRequest, updateStoryRequest, updateStoryTags } from "../../infrastructure/api/requests/stories.request";
 import type { PageResponse } from "../domain/models/common/PaginationModels";
-import type { BasicInfo, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../domain/models/stories/StoryModel";
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../domain/models/stories/StoryModel";
 import type { StoryPort } from "../domain/ports/StoriesPort";
 
 export class StoryService implements StoryPort {
@@ -34,7 +34,7 @@ export class StoryService implements StoryPort {
         return story;
     }
 
-    async getLastModifiedStory(userId: string): Promise<StoryInfo> {
+    async getLastModifiedStory(userId: string): Promise<LastModifiedStory> {
         const story = await getLastModifiedStoryRequest(userId);
         return story;
     }

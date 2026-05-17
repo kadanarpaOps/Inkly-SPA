@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { StoryService } from "../../../core/use-cases/StoryUseCases";
-import type { BasicInfo, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../../../core/domain/models/stories/StoryModel";
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, UserFilters } from "../../../core/domain/models/stories/StoryModel";
 import executeTask from "../utils/TaskExecutor";
 import { StoriesContext, type StoriesContextType } from "../StoriesContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
@@ -55,6 +55,11 @@ function StoriesProvider({ children }: Props) {
 
     const loadStoryById = useCallback(async (storyId: string) => {
         const response = await executeTask(() => storiesService.getStoryById(storyId), setLoading, setError) as StoryInfo;
+        return response;
+    }, []);
+
+    const loadLastModifiedStoryForAuthUser = useCallback(async (userId: string) => {
+        const response = await executeTask(() => storiesService.getLastModifiedStory(userId), setLoading, setError) as LastModifiedStory;
         return response;
     }, []);
 

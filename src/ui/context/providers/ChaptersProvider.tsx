@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react"
+import { useCallback, useState, type ReactNode } from "react"
 import { ChapterService } from "../../../core/use-cases/ChapterUseCases";
-import type { EditingChapter, ReadingChapter, ChaptersFilters, RegisterChapter, UpdateChapter, ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
+import type { ChaptersFilters, RegisterChapter, UpdateChapter, ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
 import executeTask from "../utils/TaskExecutor";
 import { ChaptersContext, type ChaptersContextType } from "../ChaptersContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
@@ -16,9 +16,6 @@ function ChaptersProvider({ children }: Props) {
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ updating, setUpdating ] = useState<boolean>(false);
   const [ error, setError ] = useState<string | null>(null);
-  // Writing & Reading
-  const [ editingChapter, setEditingChapter ] = useState<EditingChapter | null>(null);
-  const [ readingChapter, setReadingChapter ] = useState<ReadingChapter | null>(null);
   
   // Business Methods
   const getChaptersByStory = useCallback(async (filters: ChaptersFilters, storyId: string) => {
@@ -60,30 +57,11 @@ function ChaptersProvider({ children }: Props) {
     return true;
   }
 
-  /** UseEffects */
-  useEffect(() => {
-    const loadReadingAndEditingChapters = () => {
-      const editingChapter = localStorage.getItem('editingChapter');
-      if (editingChapter) {
-        setEditingChapter(JSON.parse(editingChapter));
-      }
-      const readingChapter = localStorage.getItem('readingChapter');
-      if (readingChapter) {
-        setReadingChapter(JSON.parse(readingChapter));
-      }
-    }
-    loadReadingAndEditingChapters();
-  }, []);
-
   // Export Values
   const exportValues: ChaptersContextType = {
     loading,
     updating,
     error,
-    editingChapter,
-    readingChapter,
-    setEditingChapter,
-    setReadingChapter,
     getChaptersByStory,
     getOwnedChaptersByStory,
     createChapter,

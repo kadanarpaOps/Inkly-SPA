@@ -33,6 +33,7 @@ export interface EditingChapter {
   title: string;
   content: string;
   hidden: boolean;
+  updatedAt: Date;
 }
 
 export interface ReadingChapter {

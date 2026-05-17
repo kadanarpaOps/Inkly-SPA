@@ -10,6 +10,7 @@ import { useChapters } from '../../hooks/useChapters';
 import { useLocation } from 'react-router';
 import type { EditingChapter } from '../../../core/domain/models/stories/ChapterModel';
 import { useAlert } from '../../hooks/useAlert';
+import SaveActualEditionModal from '../../components/writing/SaveActualEditionModal';
 
 const extensions = [
     TextStyleKit, StarterKit,
@@ -64,6 +65,7 @@ export default function Write() {
                 const recoveredChapterEdition = JSON.parse(storageEditingChapter) as EditingChapter;
                 if (recoveredChapterEdition.id !== chapterToEdit.id) {
                     console.log("Casuística 4.2")
+                    setEditingChapter(recoveredChapterEdition);
                     console.log("Load SaveActualEditionModal");
                 } else {
                     console.log("Casuística 4.1")
@@ -134,6 +136,10 @@ export default function Write() {
 
     return (
         <div className="grow flex flex-col items-center px-12 pb-12 writing-canvas">
+            {editingChapter && chapterToEdit && (
+                <SaveActualEditionModal onDiscard={() => {}} onSave={() => {}} toSaveChapter={editingChapter!} toEditChapter={chapterToEdit} />
+            )}
+
             {/** Barra de Herramientas */}
             <Toolbar editor={activeEditor === 'title' ? titleEditor : editor} onSave={handleChapterSave} />
             <div className="w-full max-w-3xl grow">

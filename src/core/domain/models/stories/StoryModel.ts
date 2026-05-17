@@ -1,3 +1,4 @@
+import type { ChapterInfo } from "./ChapterModel";
 
 export const statusNames = {
     IN_PROGRESS: "IN_PROGRESS",
@@ -34,6 +35,10 @@ export interface StoryInfo {
     status: StatusNames;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export interface LastModifiedStory extends StoryInfo {
+    chapters: ChapterInfo[];
 }
 
 export interface RegisterStory {

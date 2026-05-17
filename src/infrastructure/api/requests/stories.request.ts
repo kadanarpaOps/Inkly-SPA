@@ -1,5 +1,5 @@
 import type { PageResponse } from '../../../core/domain/models/common/PaginationModels';
-import type { BasicInfo, RegisterStory, StoryInfo, UpdateStory, UserFilters } from '../../../core/domain/models/stories/StoryModel';
+import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStory, UserFilters } from '../../../core/domain/models/stories/StoryModel';
 import httpClient from '../config/axios.instance';
 
 export const getAllGenresRequest = async (): Promise<BasicInfo[]> => {
@@ -40,7 +40,7 @@ export const getStoryByIdRequest = async (storyId: string): Promise<StoryInfo> =
     return response.data;
 }
 
-export const getLastModifiedStoryRequest = async (userId: string): Promise<StoryInfo> => {
+export const getLastModifiedStoryRequest = async (userId: string): Promise<LastModifiedStory> => {
     const response = await httpClient.get(`api/story/last-modified/${userId}`);
     return response.data;
 }
