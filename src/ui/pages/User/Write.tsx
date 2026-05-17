@@ -51,7 +51,7 @@ export default function Write() {
         PROBADA 2. No se envía un chapterToEdit y hay un chapter en localStorage
         PROBADA 3. Se envía un chapterToEdit y no hay un chapter en localStorage
         PROBADA 4.1. El chapterToEdit enviado tiene el mismo id que el chapter en localStorage
-        PROBAR onSave 4.2. El chapterToEdit enviado no tiene el mismo id que el chapter en localStorage
+        PROBADA 4.2. El chapterToEdit enviado no tiene el mismo id que el chapter en localStorage
     */}
 
     useEffect(() => {
@@ -96,13 +96,18 @@ export default function Write() {
                 defaultAlignment: 'left'
             }),
         ],
+        onUpdate({ editor}) {
+            if (editingChapter) {
+                localStorage.setItem('editingChapter', JSON.stringify({ ...editingChapter, title: JSON.stringify(editor.getJSON()) }));
+            }
+        },
         editorProps: {
             attributes: {
                 class: "text-5xl font-bold text-global outline-none min-h-fit",
             }
         },
         onFocus: () => setActiveEditor('title'),
-        content: editingChapter ? editingChapter.title : ""
+        content: editingChapter?.title ? (editingChapter.title.trim().length > 0 ? JSON.parse(editingChapter.title) : editingChapter.title) : "",
     }, [editingChapter]);
 
     const editor = useEditor({
@@ -114,18 +119,19 @@ export default function Write() {
             }
         },
         onFocus: () => setActiveEditor('content'),
-        content: editingChapter ? (editingChapter.content.trim().length > 0 ? JSON.parse(editingChapter.content) : editingChapter.content) : ""
+        content: editingChapter ? (editingChapter.content.trim().length > 0 ? JSON.parse(editingChapter.content) : editingChapter.content) : "",
     }, [editingChapter]);
 
     const handleChapterSave = async (): Promise<boolean> => {
-        const title = titleEditor?.getText();
+        const title = titleEditor?.getJSON();
+        const titleFormatted = JSON.stringify(title);
 
         const content = editor?.getJSON();
         const contentFormatted = JSON.stringify(content);
 
         const success = await updateChapter(
             {
-                title: title,
+                title: titleFormatted,
                 content: contentFormatted
             },
             editingChapter!.id

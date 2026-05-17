@@ -10,4 +10,5 @@ export default function ExploreStories() {
             Explore Stories
         </h1>
     );
+
 }
