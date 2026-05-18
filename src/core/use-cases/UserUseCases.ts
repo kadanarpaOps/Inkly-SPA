@@ -15,7 +15,7 @@ export class UserService implements UserPort {
         return pageResponse;
     }
 
-    async registerUser(user: RegisterUserRequest): Promise<void> {
+    async registerUser(user: RegisterUserRequest): Promise<string> {
         const registerRequest: Partial<RegisterUserRequest> = {};
         if (user.userName && user.userName.trim() !== "") {
             registerRequest.userName = user.userName;
@@ -26,7 +26,8 @@ export class UserService implements UserPort {
         if (user.password && user.password.trim() !== "") {
             registerRequest.password = user.password;
         }
-        await registerUserRequest(registerRequest as RegisterUserRequest);
+        const response = await registerUserRequest(registerRequest as RegisterUserRequest);
+        return response;
     }
 
     async updateUser(user: UpdateUserRequest): Promise<void> {

@@ -23,7 +23,7 @@ export interface UserContextType {
         userName: string,
         email: string,
         enable: boolean) => Promise<void>;
-    registerUser: (user: RegisterUserRequest) => Promise<void>;
+    registerUser: (user: RegisterUserRequest) => Promise<boolean>;
     updateUser: (user: UpdateUserRequest) => Promise<void>;
     toggleUserStatus: (userId: string) => Promise<void>;
 }

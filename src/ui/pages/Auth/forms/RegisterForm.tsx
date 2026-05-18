@@ -12,7 +12,7 @@ const RegisterForm = () => {
   // Use Navigate
   const navigate = useNavigate();
   // Use Users
-  const { registerUser, error, loading } = useUsers();
+  const { registerUser, loading } = useUsers();
   // Use Form
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(registerSchema)
@@ -21,8 +21,8 @@ const RegisterForm = () => {
   // On Submit
   const onSubmit = async (data: RegisterFormValues) => {
     const registerRequest: RegisterUserRequest = data;
-    await registerUser(registerRequest);
-    if (!error) {
+    const success = await registerUser(registerRequest);
+    if (success) {
       const authAction = "LOGIN";
       navigate("/auth", {
         state: { authAction }
@@ -86,8 +86,16 @@ const RegisterForm = () => {
               {errors.password && <p>{errors.password.message}</p>}
             </div>
           </div>
-          <button className="w-full bg-high-enfasis hover:bg-high-enfasis/90 text-on-primary-fixed font-semibold py-4 rounded-full transition-all duration-300 shadow-lg shadow-high-enfasis/20 active:scale-[0.98] mt-4 cursor-pointer" type="submit">
-            Crear Cuenta
+          <button
+            className={`w-full duration-300 ease-in-out transition-all mt-2 font-bold py-4 rounded-full ${!loading ? "bg-high-enfasis hover:bg-high-enfasis/90 text-on-primary-fixed font-semibold py-4 rounded-full transition-all duration-300 shadow-lg shadow-high-enfasis/20 hover:scale-[0.98] cursor-pointer" : "cursor-default"}`}
+            type="submit"
+            disabled={loading}
+          >
+            {!loading ? ("Crear Cuenta") : (
+              <div className="flex items-center justify-center w-full h-full">
+                <div className="loading-button" />
+              </div>
+            )}
           </button>
         </form>
       </div>

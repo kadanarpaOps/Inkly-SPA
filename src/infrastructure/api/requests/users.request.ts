@@ -20,29 +20,34 @@ export const pageUsersRequest = async (
     return response.data;
 }
 
-export const registerUserRequest = async (user: RegisterUserRequest): Promise<void> => {
-    await httpClient.post(`users`, user);
+export const registerUserRequest = async (user: RegisterUserRequest): Promise<string> => {
+    const response = await httpClient.post(`users`, user);
+    return response.status.toString();
 }
 
 export const updateUserRequest = async (user: UpdateUserRequest): Promise<void> => {
-    await httpClient.patch(`users/${user.userId}`, user);
+    const response = await httpClient.patch(`users/${user.userId}`, user);
+    return response.data;
 }
 
 export const toggleUserStatusRequest = async (userId: string): Promise<void> => {
-    await httpClient.patch(`users/${userId}/toggle-status`);
+    const response = await httpClient.patch(`users/${userId}/toggle-status`);
+    return response.data;
 }
 
 export const updateProfileImageRequest = async (userId: string, image: File): Promise<void> => {
     const formData = new FormData();
     formData.append('file', image);
 
-    await httpClient.patch(`users/${userId}/update-image`, formData, {
+    const response = await httpClient.patch(`users/${userId}/update-image`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     });
+    return response.data;
 }
 
 export const deleteProfileImageRequest = async (userId: string): Promise<void> => {
-    await httpClient.delete(`users/${userId}/delete-image`);
+    const response = await httpClient.delete(`users/${userId}/delete-image`);
+    return response.data;
 }

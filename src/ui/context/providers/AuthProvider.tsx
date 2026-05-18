@@ -41,7 +41,6 @@ function AuthProvider({ children }: Props) {
     // Business Methods (Update Info)
     const updateUserImage = async (userId: string, file: File): Promise<boolean> => {
         const response = await executeTask(() => userService.updateProfileImage(userId, file), setLoading, setError);
-        console.log(response);
         if (response !== null) {
             setModifiedAuthUser(true);
             return true;
@@ -51,7 +50,6 @@ function AuthProvider({ children }: Props) {
 
     const deleteUserImage = async (userId: string): Promise<boolean> => {
         const response = await executeTask(() => userService.deleteProfileImage(userId), setLoading, setError);
-        console.log(response);
         if (response !== null) {
             setModifiedAuthUser(true);
             return true;

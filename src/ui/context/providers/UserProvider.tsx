@@ -41,8 +41,11 @@ function UserProvider({ children }: Props) {
         setSearchingUsers(response);
     };
 
-    const registerUser = async (data: RegisterUserRequest) => {
-        await executeTask(() => userService.registerUser(data), setLoading, setError, showAlert, true);
+    const registerUser = async (data: RegisterUserRequest): Promise<boolean> => {
+        const response = await executeTask(() => userService.registerUser(data), setLoading, setError, showAlert, true);
+        console.log(response);
+        if (!response) return false;
+        return true;
     };
 
     const updateUser = async (data: UpdateUserRequest) => {

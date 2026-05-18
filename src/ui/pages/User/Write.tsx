@@ -140,7 +140,7 @@ export default function Write() {
             showAlert("Capítulo guardado exitosamente", 5000, "SUCCESS");
             setEditingChapter(null);
             localStorage.removeItem('editingChapter');
-            navigate(location.pathname, {state: {}, replace: true});
+            navigate(`/profile}`, {state: {}, replace: true});
         }
 
         return success;
@@ -149,6 +149,11 @@ export default function Write() {
     const setAnotherChapter = () => {
         setEditingChapter(chapterToEdit);
         localStorage.setItem('editingChapter', JSON.stringify(chapterToEdit));
+    }
+
+    const setCustomChapter = (chapter: EditingChapter) => {
+        setEditingChapter(chapter);
+        localStorage.setItem('editingChapter', JSON.stringify(chapter));
     }
 
     const handleSaveAndEditOtherChapter = async () => {
@@ -161,7 +166,7 @@ export default function Write() {
     {/** Casuística 1 */}
     if (!editingChapter && !chapterToEdit) {
         return (
-            <LoadLastEditionModal />
+            <LoadLastEditionModal setChapter={setCustomChapter} />
         );
     }
 

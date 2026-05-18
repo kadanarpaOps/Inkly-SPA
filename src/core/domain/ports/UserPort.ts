@@ -8,7 +8,7 @@ export interface UserPort {
         email: string,
         enable: boolean
     ): Promise<PageResponse<UserInfo>>;
-    registerUser(user: RegisterUserRequest): Promise<void>;
+    registerUser(user: RegisterUserRequest): Promise<string>;
     updateUser(user: UpdateUserRequest): Promise<void>;
     toggleUserStatus(userId: string): Promise<void>;
     updateProfileImage(userId: string, file: File): Promise<void>;

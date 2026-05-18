@@ -467,7 +467,7 @@ const EditStory = () => {
                           {chapter.title ? (renderWithoutFormat(JSON.parse(chapter.title))) : "Sin título"}
                         </h4>
                         <p className="text-xs text-on-surface-variant">
-                          {chapter.hidden ? "Borrador" : "Publicado"} • Última Edición {chapter.updatedAt ? getLastModifiedTime(chapter.updatedAt) : "Nunca"} • {chapter.content ? (chapter.content.trim().length > 0 ? countTotalWords(JSON.parse(chapter.content)) : 0) : 0} palabras
+                          {chapter.hidden ? "Borrador" : "Publicado"} • Última Edición {chapter.updatedAt ? getLastModifiedTime(chapter.updatedAt) : "Nunca"} • {chapter.content ? (chapter.content.trim().length > 0 && countTotalWords(JSON.parse(chapter.content))) : 0} palabras
                         </p>
                       </div>
                     </div>

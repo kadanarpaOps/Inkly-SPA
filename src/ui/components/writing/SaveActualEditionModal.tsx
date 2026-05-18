@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import type { EditingChapter } from "../../../core/domain/models/stories/ChapterModel";
 import { getLastModifiedTime } from "../../pages/utils/time.util";
 import { ChevronsRight, Save, Skull } from "lucide-react";
+import { countTotalWords, renderWithoutFormat } from "../../pages/utils/renderTiptap.util";
 
 interface Props {
   toSaveChapter: EditingChapter;
@@ -35,10 +36,10 @@ const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscar
             </span>
             <div>
               <h4 className={`text-lg ${toSaveChapter.title ? "font-bold text-on-surface group-hover:text-primary transition-colors" : "font-light text-on-surface-variant/40 italic"}`}>
-                {toSaveChapter.title ? toSaveChapter.title : "Sin título"}
+                {toSaveChapter.title ? (renderWithoutFormat(JSON.parse(toSaveChapter.title))) : "Sin título"}
               </h4>
               <p className="text-xs text-on-surface-variant">
-                {toSaveChapter.hidden ? "Borrador" : "Publicado"} • Última Edición {toSaveChapter.updatedAt ? getLastModifiedTime(toSaveChapter.updatedAt) : "Nunca"} • 0 palabras
+                {toSaveChapter.hidden ? "Borrador" : "Publicado"} • Última Edición {toSaveChapter.updatedAt ? getLastModifiedTime(toSaveChapter.updatedAt) : "Nunca"} • {toSaveChapter.content ? (toSaveChapter.content.trim().length > 0 && countTotalWords(JSON.parse(toSaveChapter.content))) : 0} palabras
               </p>
             </div>
           </div>
@@ -46,7 +47,7 @@ const SaveActualEditionModal = ({ toSaveChapter, toEditChapter, onSave, onDiscar
         <div className="text-center my-8">
           <h2 className="text-xl font-bold text-fujiWhite tracking-tight">
             <p className="text-on-surface-variant/60">
-              Puedes guardarlo y comenzar a editar Capítulo {String(toEditChapter.order).padStart(2, '0')} <span className="italic">{toEditChapter.title}</span>
+              Puedes guardarlo y comenzar a editar Capítulo {String(toEditChapter.order).padStart(2, '0')} <span className="italic">{toEditChapter.title ? (renderWithoutFormat(JSON.parse(toEditChapter.title))) : "Sin título"}</span>
             </p>
           </h2>
         </div>

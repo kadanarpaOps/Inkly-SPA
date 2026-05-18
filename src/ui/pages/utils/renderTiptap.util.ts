@@ -39,7 +39,10 @@ export const renderWithFormat = (jsonDoc: JSONContent) => {
  * @returns {string} - The total words in the content
  */
 export const countTotalWords = (jsonDoc: JSONContent) => {
-  const text = renderWithFormat(jsonDoc);
-  const cleanText = text.trim().replace(/\s+/g, ' ');
-  return cleanText.split(' ').length;
+  const text = renderWithoutFormat(jsonDoc);
+  const cleanText = text.trim();
+
+  if (!cleanText) return 0;
+
+  return cleanText.split(/\s+/).length;
 }
