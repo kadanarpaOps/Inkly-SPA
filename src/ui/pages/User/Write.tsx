@@ -57,26 +57,23 @@ export default function Write() {
     useEffect(() => {
         const loadChapterToEdit = () => {
             if (chapterToEdit && !storageEditingChapter) {
-                console.log("Casuística 3")
+                {/** Casuística 3 */}
                 localStorage.setItem('editingChapter', JSON.stringify(chapterToEdit));
                 setEditingChapter(chapterToEdit);
             } else if (!chapterToEdit && storageEditingChapter) {
-                console.log("Casuística 2")
+                {/** Casuística 2 */}
                 const recoveredChapterEdition = JSON.parse(storageEditingChapter) as EditingChapter;
                 setEditingChapter(recoveredChapterEdition);
             } else if (chapterToEdit && storageEditingChapter) {
                 const recoveredChapterEdition = JSON.parse(storageEditingChapter) as EditingChapter;
                 if (recoveredChapterEdition.id !== chapterToEdit.id) {
-                    console.log("Casuística 4.2 COMPLETADA")
+                    {/** Casuística 4.2 */}
                     setEditingChapter(recoveredChapterEdition);
                     console.log("Load SaveActualEditionModal");
                 } else {
-                    console.log("Casuística 4.1 COMPLETADA")
+                    {/** Casuística 4.1 */}
                     setEditingChapter(recoveredChapterEdition);
                 }
-            } else {
-                console.log("Casuística 1")
-                console.log("Load LoadLastEditionModal.tsx");
             }
         }
         loadChapterToEdit();
@@ -140,9 +137,10 @@ export default function Write() {
         if (!success) {
             showAlert(error!, 5000);
         } else {
-            showAlert("Capítulo guardado exitosamente", 5000);
+            showAlert("Capítulo guardado exitosamente", 5000, "SUCCESS");
             setEditingChapter(null);
             localStorage.removeItem('editingChapter');
+            navigate(location.pathname, {state: {}, replace: true});
         }
 
         return success;
@@ -160,6 +158,7 @@ export default function Write() {
         }
     }
 
+    {/** Casuística 1 */}
     if (!editingChapter && !chapterToEdit) {
         return (
             <LoadLastEditionModal />

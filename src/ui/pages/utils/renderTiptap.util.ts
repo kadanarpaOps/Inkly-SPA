@@ -32,3 +32,14 @@ export const renderWithFormat = (jsonDoc: JSONContent) => {
     return '';
   }
 }
+
+/**
+ * Methods 3: Count words in no formatted content
+ * @param {Object} jsonDoc - The Tiptap JSON object
+ * @returns {string} - The total words in the content
+ */
+export const countTotalWords = (jsonDoc: JSONContent) => {
+  const text = renderWithFormat(jsonDoc);
+  const cleanText = text.trim().replace(/\s+/g, ' ');
+  return cleanText.split(' ').length;
+}

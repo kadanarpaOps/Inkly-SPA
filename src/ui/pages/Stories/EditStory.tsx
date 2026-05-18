@@ -17,6 +17,7 @@ import SelectNewStatusModal from "../../components/stories/SelectNewStatusModal"
 import { useChapters } from "../../hooks/useChapters";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
 import type { ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
+import { countTotalWords, renderWithoutFormat } from "../utils/renderTiptap.util";
 
 type UpdateFormValues = z.infer<typeof updateSchema>;
 
@@ -463,10 +464,10 @@ const EditStory = () => {
                       </span>
                       <div>
                         <h4 className={`text-lg ${chapter.title ? "font-bold text-on-surface group-hover:text-primary transition-colors" : "font-light text-on-surface-variant/40 italic"}`}>
-                          {chapter.title ? chapter.title : "Sin título"}
+                          {chapter.title ? (renderWithoutFormat(JSON.parse(chapter.title))) : "Sin título"}
                         </h4>
                         <p className="text-xs text-on-surface-variant">
-                          {chapter.hidden ? "Borrador" : "Publicado"} • Última Edición {chapter.updatedAt ? getLastModifiedTime(chapter.updatedAt) : "Nunca"} • 0 palabras
+                          {chapter.hidden ? "Borrador" : "Publicado"} • Última Edición {chapter.updatedAt ? getLastModifiedTime(chapter.updatedAt) : "Nunca"} • {chapter.content ? (chapter.content.trim().length > 0 ? countTotalWords(JSON.parse(chapter.content)) : 0) : 0} palabras
                         </p>
                       </div>
                     </div>
