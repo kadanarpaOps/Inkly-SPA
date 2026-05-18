@@ -3,15 +3,22 @@ import { AxiosError } from "axios";
 const executeTask = async <T,>(
     task: () => Promise<T>,
     setLoading: (loading: boolean) => void,
-    setServerError: (error: string | null) => void
+    setServerError: (error: string | null) => void,
+    showAlert?: (message: string, duration?: number, type?: string) => void,
+    needAlert: boolean = false
 ): Promise<T | null> => {
     setLoading(true);
     setServerError(null);
     try {
         return await task();
     } catch (error) {
+        let errorMessage = "Ocurrió un error en el servidor";
         if (error instanceof AxiosError) {
-            setServerError(error.response?.data?.message || "Ocurrió un error en el servidor");
+            errorMessage = error.response?.data?.message || errorMessage;
+            setServerError(errorMessage);
+            if (needAlert && showAlert) {
+                showAlert(errorMessage, 5000, "ERROR");
+            }
         }
         return null;
     } finally {

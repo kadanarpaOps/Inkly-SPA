@@ -5,6 +5,7 @@ import executeTask from "../utils/TaskExecutor";
 import { UserService } from "../../../core/use-cases/UserUseCases";
 import type { RegisterUserRequest, UpdateUserRequest } from "../../../core/domain/models/users/UserModel";
 import { UserContext, type UserContextType } from "../UserContext";
+import { useAlert } from "../../hooks/useAlert";
 
 type Props = {
     children: ReactNode;
@@ -13,6 +14,8 @@ type Props = {
 const userService = new UserService();
 
 function UserProvider({ children }: Props) {
+    // Alert Component
+    const { showAlert } = useAlert();
     // Basics
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -39,7 +42,7 @@ function UserProvider({ children }: Props) {
     };
 
     const registerUser = async (data: RegisterUserRequest) => {
-        await executeTask(() => userService.registerUser(data), setLoading, setError);
+        await executeTask(() => userService.registerUser(data), setLoading, setError, showAlert, true);
     };
 
     const updateUser = async (data: UpdateUserRequest) => {
