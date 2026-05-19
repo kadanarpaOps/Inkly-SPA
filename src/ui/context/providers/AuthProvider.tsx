@@ -5,6 +5,7 @@ import executeTask from "../utils/TaskExecutor";
 import { UserService } from "../../../core/use-cases/UserUseCases";
 import type { LoginResponse, SessionValidation } from "../../../core/domain/models/auth/AuthModels";
 import { AuthContext, type AuthContextType } from "../AuthContext";
+import { useAlert } from "../../hooks/useAlert";
 
 type Props = {
     children: ReactNode;
@@ -14,6 +15,8 @@ const authService = new AuthService();
 const userService = new UserService();
 
 function AuthProvider({ children }: Props) {
+    // Alert Component
+    const { showAlert } = useAlert();
     // Basics
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -25,22 +28,22 @@ function AuthProvider({ children }: Props) {
     // Rest Methods
     const login = async (userName: string, password: string): Promise<boolean> => {
         setError(null);
-        const response = await executeTask(() => authService.login(userName, password), setLoading, setError) as LoginResponse | null;
+        const response = await executeTask(() => authService.login(userName, password), setLoading, setError, showAlert, true) as LoginResponse | null;
         if (!response) return false;
-        const userInfo = await executeTask(() => userService.getUserById(response.userId), setLoading, setError);
+        const userInfo = await executeTask(() => userService.getUserById(response.userId), setLoading, setError, showAlert, true);
         if (!userInfo) return false;
         setAuthUser(userInfo);
         return true;
     };
 
     const logout = async () => {
-        await executeTask(() => authService.logout(), setLoading, setError);
+        await executeTask(() => authService.logout(), setLoading, setError, showAlert, true);
         setAuthUser(null);
     };
      
     // Business Methods (Update Info)
     const updateUserImage = async (userId: string, file: File): Promise<boolean> => {
-        const response = await executeTask(() => userService.updateProfileImage(userId, file), setLoading, setError);
+        const response = await executeTask(() => userService.updateProfileImage(userId, file), setLoading, setError, showAlert, true);
         if (response !== null) {
             setModifiedAuthUser(true);
             return true;
@@ -49,7 +52,7 @@ function AuthProvider({ children }: Props) {
     };
 
     const deleteUserImage = async (userId: string): Promise<boolean> => {
-        const response = await executeTask(() => userService.deleteProfileImage(userId), setLoading, setError);
+        const response = await executeTask(() => userService.deleteProfileImage(userId), setLoading, setError, showAlert, true);
         if (response !== null) {
             setModifiedAuthUser(true);
             return true;

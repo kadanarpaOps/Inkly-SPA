@@ -4,6 +4,7 @@ import type { BasicInfo, LastModifiedStory, RegisterStory, StoryInfo, UpdateStor
 import executeTask from "../utils/TaskExecutor";
 import { StoriesContext, type StoriesContextType } from "../StoriesContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+import { useAlert } from "../../hooks/useAlert";
 
 type Props = {
     children: ReactNode;
@@ -12,6 +13,8 @@ type Props = {
 const storiesService = new StoryService();
 
 function StoriesProvider({ children }: Props) {
+    // Alert Component
+    const { showAlert } = useAlert();
     // Basics
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -25,25 +28,25 @@ function StoriesProvider({ children }: Props) {
     };
 
     const createStory = async (storyData: RegisterStory): Promise<boolean> => {
-        const response = await executeTask(() => storiesService.registerStory(storyData), setLoading, setError);
+        const response = await executeTask(() => storiesService.registerStory(storyData), setLoading, setError, showAlert, true);
         if (!response) return false;
         return true;
     };
 
     const updateStory = async (storyData: UpdateStory, storyId: string): Promise<boolean> => {
-        const response = await executeTask(() => storiesService.updateStory(storyData, storyId), setLoading, setError);
+        const response = await executeTask(() => storiesService.updateStory(storyData, storyId), setLoading, setError, showAlert, true);
         if (!response) return false;
         return true;
     }
 
     const updateStoryCover = async (file: File, storyId: string): Promise<boolean> => {
-        const response = await executeTask(() => storiesService.updateStoryCover(file, storyId), setLoading, setError);
+        const response = await executeTask(() => storiesService.updateStoryCover(file, storyId), setLoading, setError, showAlert, true);
         if (!response) return false;
         return true;
     };
 
     const deleteStoryCover = async (storyId: string): Promise<boolean> => {
-        const response = await executeTask(() => storiesService.deleteStoryCover(storyId), setLoading, setError);
+        const response = await executeTask(() => storiesService.deleteStoryCover(storyId), setLoading, setError, showAlert, true);
         if (!response) return false;
         return true;
     };

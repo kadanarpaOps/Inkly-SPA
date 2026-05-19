@@ -12,7 +12,7 @@ export type TypeAlert = typeof typeAlert[keyof typeof typeAlert];
 function AlertProvider({children}: {children: ReactNode}) {
   const [alert, setAlert] = useState<{ message: string; duration?: number; type?: string } | null>(null);
 
-  const showAlert = (message: string, duration = 10000, type=typeAlert.ERROR) => {
+  const showAlert = (message: string, duration = 10000, type: string = typeAlert.ERROR) => {
     setAlert({ message, duration, type });
   }
 

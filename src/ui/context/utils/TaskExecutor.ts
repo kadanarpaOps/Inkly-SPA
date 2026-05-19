@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { typeAlert } from "../providers/AlertProvider";
 
 const executeTask = async <T,>(
     task: () => Promise<T>,
@@ -17,7 +18,7 @@ const executeTask = async <T,>(
             errorMessage = error.response?.data?.message || errorMessage;
             setServerError(errorMessage);
             if (needAlert && showAlert) {
-                showAlert(errorMessage, 5000, "ERROR");
+                showAlert(errorMessage, 5000, typeAlert.ERROR);
             }
         }
         return null;

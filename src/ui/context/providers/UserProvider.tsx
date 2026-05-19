@@ -49,7 +49,7 @@ function UserProvider({ children }: Props) {
     };
 
     const updateUser = async (data: UpdateUserRequest) => {
-        await executeTask(() => userService.updateUser(data), setLoading, setError);
+        await executeTask(() => userService.updateUser(data), setLoading, setError, showAlert, true);
         setModifiedUser(true);
     };
 

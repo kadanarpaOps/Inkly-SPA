@@ -4,6 +4,7 @@ import type { ChaptersFilters, RegisterChapter, UpdateChapter, ChapterInfo } fro
 import executeTask from "../utils/TaskExecutor";
 import { ChaptersContext, type ChaptersContextType } from "../ChaptersContext";
 import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+import { useAlert } from "../../hooks/useAlert";
 
 type Props = {
   children: ReactNode;
@@ -12,6 +13,8 @@ type Props = {
 const chapterService = new ChapterService;
 
 function ChaptersProvider({ children }: Props) {
+  // Alert Component
+  const { showAlert } = useAlert();
   // Basics
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ updating, setUpdating ] = useState<boolean>(false);
@@ -30,28 +33,28 @@ function ChaptersProvider({ children }: Props) {
 
   const createChapter = async (createChapter: RegisterChapter) => {
     setError(null);
-    const response = await executeTask(() => chapterService.createChapter(createChapter), setLoading, setError);
+    const response = await executeTask(() => chapterService.createChapter(createChapter), setLoading, setError, showAlert, true);
     if (!response) return false;
     return true;
   }
 
   const updateChapter = async (updateChapter: UpdateChapter, chapterId: string) => {
     setError(null);
-    const response = await executeTask(() => chapterService.updateChapter(updateChapter, chapterId), setUpdating, setError);
+    const response = await executeTask(() => chapterService.updateChapter(updateChapter, chapterId), setUpdating, setError, showAlert, true);
     if (!response) return false;
     return true;
   }
 
   const toggleChapterStatus = async (chapterId: string) => {
     setError(null);
-    const response = await executeTask(() => chapterService.toggleChapterStatus(chapterId), setLoading, setError);
+    const response = await executeTask(() => chapterService.toggleChapterStatus(chapterId), setLoading, setError, showAlert, true);
     if (!response) return false;
     return true;
   }
 
   const deleteChapter = async (storyId: string, chapterId: string) => {
     setError(null);
-    const response = await executeTask(() => chapterService.deleteChapter(storyId, chapterId), setLoading, setError);
+    const response = await executeTask(() => chapterService.deleteChapter(storyId, chapterId), setLoading, setError, showAlert, true);
     if (!response) return false;
     return true;
   }
