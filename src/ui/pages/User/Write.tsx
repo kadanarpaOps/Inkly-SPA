@@ -46,7 +46,7 @@ export default function Write() {
 
     {/**
         Hay 5 casuísticas:
-        CREAR MODAL y PROBAR: Diga que no hay ultimo capitulo guardado, enviar a Mis Historias, Diga que hay ultimo capitulo guardado y setearlo en localStorage y editingChapter
+        PROBADA: Diga que no hay ultimo capitulo guardado, enviar a Mis Historias, Diga que hay ultimo capitulo guardado y setearlo en localStorage y editingChapter
             1. No se envía un chapterToEdit y no hay un chapter en localStorage
         PROBADA 2. No se envía un chapterToEdit y hay un chapter en localStorage
         PROBADA 3. Se envía un chapterToEdit y no hay un chapter en localStorage
@@ -140,7 +140,7 @@ export default function Write() {
             showAlert("Capítulo guardado exitosamente", 5000, "SUCCESS");
             setEditingChapter(null);
             localStorage.removeItem('editingChapter');
-            navigate(`/profile}`, {state: {}, replace: true});
+            navigate(`/profile`, {state: {}, replace: true});
         }
 
         return success;

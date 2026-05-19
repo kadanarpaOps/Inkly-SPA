@@ -15,6 +15,7 @@ import StoryDetails from "../pages/Stories/StoryDetails";
 import EditStory from "../pages/Stories/EditStory";
 import LandingPage from "../pages/landing/LandingPage";
 import RecoveryPassword from "../pages/Auth/RecoveryPassword";
+import { ProtectedRoute } from "../../infrastructure/routes/routes.control";
 
 const AppLayout = () => {
 
@@ -40,17 +41,25 @@ const AppLayout = () => {
               <Route path="/recovery-pass" element={<RecoveryPassword />} />
             </Route>
             <Route element={<MainLayout />}>
-              <Route path="/explore" element={<ExploreStories />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/write" element={<Write />} />
-              <Route path="/profile" element={<Profile />} />
               {/** Stories */}
               <Route path="/explore/story/:storyId" element={<StoryDetails />} />
-              <Route path="/story/edit/:storyId" element={<EditStory />} />
+              <Route path="/explore" element={<ExploreStories />} />
+              {/** Secured */}
+              <Route element={<ProtectedRoute requiredRoles={["INKLY_USER"]} />}>
+                <Route path="/library" element={<Library />} />
+                <Route path="/write" element={<Write />} />
+                <Route path="/story/edit/:storyId" element={<EditStory />} />
+              </Route>
+              <Route element={<ProtectedRoute requiredRoles={[]} />}>
+                <Route path="/profile" element={<Profile />} />
+              </Route>
             </Route>
-            <Route path="/story/create" element={<CreateStory />} />
+            <Route element={<ProtectedRoute requiredRoles={["INKLY_USER"]} />}>
+              <Route path="/story/create" element={<CreateStory />} />
+            </Route>
             <Route path="/" element={<LandingPage />} />
             <Route path="/forbidden" element={<ErrorPage statusCode={403} messageError="No tienes Permisos para explorar por aquí..." />} />
+            <Route path="/unauthorized" element={<ErrorPage statusCode={220} messageError="Error 220 Teclado Elevado, bailemos!!" />} />
             <Route path="/network-lost" element={<ErrorPage statusCode={500} messageError="Regálanos unos minutos en lo que se restaura la conexión..." />} />
             <Route path="*" element={<ErrorPage statusCode={404} messageError="Página no encontrada" />} />
           </Routes>
