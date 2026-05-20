@@ -43,7 +43,7 @@ export const searchSchema = z.object({
     limit: z.number(),
     title: z.string().nullable().optional(),
     genreName: z.string().nullable().optional(),
-    secondaryGenreName: z.string().optional(),
+    secondaryGenreName: z.string().nullable().optional(),
     status: z.enum([statusNames.IN_PROGRESS, statusNames.COMPLETED, statusNames.ABANDONED, statusNames.PAUSED]).nullable().optional(),
     tagNames: z.array(z.string()).nullable().optional(),
     newestFirst: z.boolean(),
