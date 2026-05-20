@@ -37,3 +37,14 @@ export const updateSchema = z.object({
         error: () => ({ message: "Selecciona un estado válido" })
     }),
 })
+
+export const searchSchema = z.object({
+    offset: z.number(),
+    limit: z.number(),
+    title: z.string().nullable().optional(),
+    genreName: z.string().nullable().optional(),
+    secondaryGenreName: z.string().optional(),
+    status: z.enum([statusNames.IN_PROGRESS, statusNames.COMPLETED, statusNames.ABANDONED, statusNames.PAUSED]).nullable().optional(),
+    tagNames: z.array(z.string()).nullable().optional(),
+    newestFirst: z.boolean(),
+})
