@@ -38,6 +38,8 @@ function AuthProvider({ children }: Props) {
 
     const logout = async () => {
         await executeTask(() => authService.logout(), setLoading, setError, showAlert, true);
+        localStorage.removeItem('editingChapter');
+        localStorage.removeItem('readingChapter');
         setAuthUser(null);
     };
      

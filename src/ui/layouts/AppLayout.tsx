@@ -4,7 +4,6 @@ import AuthLayout from "./AuthLayout";
 import Auth from "../pages/Auth/Login&Register";
 import MainLayout from "./MainLayout";
 import ExploreStories from "../pages/Stories/ExploreStories";
-import { Library } from "lucide-react";
 import Write from "../pages/User/Write";
 import Profile from "../pages/User/Profile";
 import CreateStory from "../pages/Stories/CreateStory";
@@ -16,6 +15,7 @@ import EditStory from "../pages/Stories/EditStory";
 import LandingPage from "../pages/landing/LandingPage";
 import RecoveryPassword from "../pages/Auth/RecoveryPassword";
 import { ProtectedRoute } from "../../infrastructure/routes/routes.control";
+import Library from "../pages/User/Library";
 
 const AppLayout = () => {
 
