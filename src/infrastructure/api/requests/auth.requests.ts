@@ -1,4 +1,5 @@
 import type { LoginRequest, LoginResponse, SessionValidation } from "../../../core/domain/models/auth/AuthModels";
+import type { VerificationRequest } from "../../../core/domain/models/verify/VerificationRequest";
 import httpClient from "../config/axios.instance";
 
 export const loginRequest = async (loginData: LoginRequest): Promise<LoginResponse> => {
@@ -22,4 +23,12 @@ export const verifyRefreshTokenRequest = async (): Promise<SessionValidation> =>
 
 export const refreshSessionRequest = async (): Promise<void> => {
     await httpClient.post(`auth/refresh-session`);
+}
+
+export const createVerificationCode = async (request: VerificationRequest): Promise<void> => {
+    await httpClient.post('verification-codes', request);
+}
+
+export const verifyCode = async (request: VerificationRequest): Promise<void> => {
+    await httpClient.post('verification-codes/verify', request);
 }

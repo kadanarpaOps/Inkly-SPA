@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import type { UserInfo } from "../../core/domain/models/users/UserModel";
 import type { SessionValidation } from "../../core/domain/models/auth/AuthModels";
+import type { VerificationRequest } from "../../core/domain/models/verify/VerificationRequest";
 
 export interface AuthContextType {
     // Basics
@@ -20,6 +21,8 @@ export interface AuthContextType {
     validateAccess: () => Promise<SessionValidation>;
     validateSession: () => Promise<SessionValidation>;
     refreshSession: () => Promise<void>;
+    createVerificationCode: (request: VerificationRequest) => Promise<void>;
+    verifyCode: (request: VerificationRequest) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
