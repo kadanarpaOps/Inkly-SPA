@@ -1,4 +1,6 @@
 import type { PageResponse } from '../../../core/domain/models/common/PaginationModels';
+import type { UpdateEmailRequest } from '../../../core/domain/models/users/UpdateEmailRequest';
+import type { UpdatePasswordRequest } from '../../../core/domain/models/users/UpdatePasswordRequest';
 import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from '../../../core/domain/models/users/UserModel';
 import httpClient from '../config/axios.instance';
 
@@ -49,5 +51,15 @@ export const updateProfileImageRequest = async (userId: string, image: File): Pr
 
 export const deleteProfileImageRequest = async (userId: string): Promise<void> => {
     const response = await httpClient.delete(`users/${userId}/delete-image`);
+    return response.data;
+}
+
+export const updateForgottenPassword = async (usernameOrEmail: string, passwordRequest: UpdatePasswordRequest): Promise<void> => {
+    const response = await httpClient.patch(`users/${usernameOrEmail}/update-password`, passwordRequest);
+    return response.data;
+}
+
+export const updateEmail = async(usernameOrEmail: string, emailRequest: UpdateEmailRequest): Promise<void> => {
+    const response = await httpClient.patch(`users/${usernameOrEmail}/update-email`, emailRequest);
     return response.data;
 }

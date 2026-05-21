@@ -6,6 +6,8 @@ import { UserService } from "../../../core/use-cases/UserUseCases";
 import type { RegisterUserRequest, UpdateUserRequest } from "../../../core/domain/models/users/UserModel";
 import { UserContext, type UserContextType } from "../UserContext";
 import { useAlert } from "../../hooks/useAlert";
+import type { UpdatePasswordRequest } from "../../../core/domain/models/users/UpdatePasswordRequest";
+import type { UpdateEmailRequest } from "../../../core/domain/models/users/UpdateEmailRequest";
 
 type Props = {
     children: ReactNode;
@@ -57,6 +59,14 @@ function UserProvider({ children }: Props) {
         await executeTask(() => userService.toggleUserStatus(userId), setLoading, setError);
     };
 
+    const updateForgottenPassword = async (usernameOrEmail: string, passwordRequest: UpdatePasswordRequest) => {
+        await executeTask(() => userService.updateForgottenPassword(usernameOrEmail, passwordRequest), setLoading, setError, showAlert, true);
+    }
+
+    const updateEmail = async (usernameOrEmail: string, emailRequest: UpdateEmailRequest) => {
+        await executeTask(() => userService.updateEmail(usernameOrEmail, emailRequest), setLoading, setError, showAlert, true);
+    }
+
     // Export Values
     const exportValues: UserContextType = {
         loading,
@@ -71,6 +81,8 @@ function UserProvider({ children }: Props) {
         registerUser,
         updateUser,
         toggleUserStatus,
+        updateForgottenPassword,
+        updateEmail
     };
 
     return (
