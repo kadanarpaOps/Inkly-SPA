@@ -55,12 +55,14 @@ export default function Library() {
                                 loading={loading}
                                 loadStories={loadStoriesForAuthUser}
                                 userId={authUser.userId}
+                                routeAction="/story/edit/"
                             />
                         ) : (
                             <ExploreSection
                                 loading={loading}
                                 loadStories={loadAuthUserFavorites}
                                 userId={authUser.userId}
+                                routeAction="/explore/story/"
                             />
                         )
                     ) : (

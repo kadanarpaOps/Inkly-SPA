@@ -11,6 +11,7 @@ export default function ExploreStories() {
             <ExploreSection
                 loadStories={loadPublishedStories}
                 loading={loading}
+                routeAction="/explore/story/"
             />
         </main>
     );

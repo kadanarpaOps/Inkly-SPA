@@ -20,9 +20,10 @@ interface Props {
   loadStories: (filters: StoryFilters, userId?: string) => Promise<PageResponse<StoryInfo>>;
   userId?: string;
   loading: boolean;
+  routeAction: string;
 }
 
-const ExploreSection = ({ loadStories, userId, loading }: Props) => {
+const ExploreSection = ({ loadStories, userId, loading, routeAction }: Props) => {
 
     // Use Navigate
     const navigate = useNavigate();
@@ -225,7 +226,7 @@ const ExploreSection = ({ loadStories, userId, loading }: Props) => {
                             <div
                                 className="col-span-1"
                                 key={story.id}
-                                onClick={() => navigate(`/explore/story/${story.id}`)}
+                                onClick={() => navigate(`${routeAction}${story.id}`)}
                             >
                                 <BookCard
                                     author=""
