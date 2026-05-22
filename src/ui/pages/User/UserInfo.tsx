@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { BadgeInfo, Calendar, CheckCircle2, Clock3, Mail, ShieldCheck, UserRound, XCircle } from "lucide-react";
+import { BadgeInfo, BookOpen, Calendar, CheckCircle2, Clock3, Eye, Mail, ShieldCheck, Star, UserRound, XCircle } from "lucide-react";
 import { getUserByIdRequest } from "../../../infrastructure/api/requests/users.request";
 import type { UserInfo as UserInfoModel } from "../../../core/domain/models/users/UserModel";
+import { useStories } from "../../hooks/useStories";
+import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+import type { StoryInfo } from "../../../core/domain/models/stories/StoryModel";
+import { getRandomCover } from "../utils/covers.util";
 
 const formatDate = (dateValue: string | Date) => {
 	const date = new Date(dateValue);
@@ -15,9 +19,13 @@ const formatDate = (dateValue: string | Date) => {
 export default function UserInfo() {
 	const navigate = useNavigate();
 	const { userId } = useParams<{ userId: string }>();
+	const { loadPublishedStories } = useStories();
 	const [user, setUser] = useState<UserInfoModel | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [userStories, setUserStories] = useState<PageResponse<StoryInfo> | null>(null);
+	const [storiesLoading, setStoriesLoading] = useState(true);
+	const [storiesError, setStoriesError] = useState<string | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -54,6 +62,43 @@ export default function UserInfo() {
 		};
 	}, [userId]);
 
+	useEffect(() => {
+		let isMounted = true;
+
+		const loadUserStories = async () => {
+			if (!userId) {
+				if (isMounted) {
+					setStoriesError("No se encontró el usuario solicitado.");
+					setStoriesLoading(false);
+				}
+				return;
+			}
+
+			try {
+				setStoriesLoading(true);
+				setStoriesError(null);
+				const response = await loadPublishedStories({ offset: 1, limit: 8, newestFirst: true, userId });
+
+				if (!isMounted) return;
+				setUserStories(response);
+			} catch {
+				if (!isMounted) return;
+				setStoriesError("No pudimos cargar las historias de este usuario.");
+				setUserStories(null);
+			} finally {
+				if (isMounted) {
+					setStoriesLoading(false);
+				}
+			}
+		};
+
+		loadUserStories();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [userId, loadPublishedStories]);
+
 	if (loading) {
 		return (
 			<main className="relative h-full flex items-center justify-center">
@@ -89,6 +134,7 @@ export default function UserInfo() {
 	const profileImage = user.profileImageUrl
 		? user.profileImageUrl
 		: `https://ui-avatars.com/api/?name=${encodeURIComponent(user.userName)}&background=dcd7ba&color=16161d`;
+	const userStoriesCount = userStories?.meta?.totalItems ?? 0;
 
 	return (
 		<main className="relative h-full pb-16">
@@ -249,6 +295,77 @@ export default function UserInfo() {
 						</div>
 					</aside>
 				</div>
+
+				<section className="mt-12 rounded-3xl border border-toolbar-bg/10 bg-background-global/80 backdrop-blur-md p-6 shadow-2xl">
+					<div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+						<div>
+							<h2 className="text-xl font-bold text-global flex items-center gap-2">
+								<BookOpen size={20} />
+								Historias publicadas
+							</h2>
+							<p className="text-several-light text-sm mt-1">
+								{userStoriesCount} historia{userStoriesCount === 1 ? "" : "s"} disponible{userStoriesCount === 1 ? "" : "s"} para abrir su detalle.
+							</p>
+						</div>
+					</div>
+
+					{storiesLoading ? (
+						<div className="flex items-center justify-center py-16">
+							<div className="loading-button" />
+						</div>
+					) : storiesError || !userStories || userStories.data.length === 0 ? (
+						<div className="rounded-2xl border border-dashed border-toolbar-bg/15 bg-background-global/50 p-8 text-center">
+							<p className="text-global font-semibold mb-2">No hay historias publicadas</p>
+							<p className="text-several-light text-sm">
+								{storiesError ?? "Este usuario todavía no tiene historias visibles para explorar."}
+							</p>
+						</div>
+					) : (
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+							{userStories.data.map((story) => (
+								<article
+									key={story.id}
+									onClick={() => navigate(`/explore/story/${story.id}`)}
+									className="group cursor-pointer overflow-hidden rounded-2xl border border-toolbar-bg/10 bg-background-global/60 shadow-xl transition-transform hover:-translate-y-1"
+								>
+									<div className="relative aspect-[3/4] overflow-hidden">
+										<img
+											src={story.coverUrl || getRandomCover()}
+											alt="Portada de historia"
+											className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+										/>
+										<div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
+										<div className="absolute top-3 right-3 rounded-full bg-background-global/80 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+											{story.genre.name}
+										</div>
+										<div className="absolute inset-x-0 bottom-0 p-4 text-white">
+											<h3 className="line-clamp-1 text-lg font-bold">{story.title}</h3>
+											<p className="mt-1 line-clamp-2 text-xs text-white/75">
+												{story.description}
+											</p>
+										</div>
+									</div>
+
+									<div className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
+										<div className="flex items-center gap-3 text-several-light">
+											<span className="flex items-center gap-1">
+												<Eye size={16} />
+												{story.totalViews}
+											</span>
+											<span className="flex items-center gap-1">
+												<Star size={16} />
+												{story.totalRating}
+											</span>
+										</div>
+										<span className="text-global font-semibold">
+											{story.totalChapters} capítulos
+										</span>
+									</div>
+								</article>
+							))}
+						</div>
+					)}
+				</section>
 			</div>
 		</main>
 	);
