@@ -54,7 +54,7 @@ function LandingNavbar() {
 function Hero() {
     const navigate = useNavigate();
     return (
-        <section className="relative min-h-[calc(100vh-56px)] flex items-center justify-center overflow-hidden bg-[url('/images/hero-bg.webp')] bg-cover bg-[center_top] bg-no-repeat bg-[#1a1a24]">
+        <section className="relative min-h-[calc(100vh-56px)] flex items-center justify-center overflow-hidden bg-[url('/images/hero-bg.webp')] bg-cover bg-position-[center_top] bg-no-repeat bg-[#1a1a24]">
             {/* Overlay */}
             <div className="absolute inset-0 bg-linear-to-b from-[#14141e]/65 via-[#14141e]/45 to-[#14141e]/80 z-10" />
 
@@ -180,7 +180,7 @@ function FeaturesSection() {
                     <h2 className="text-[clamp(1.6rem,3vw,2.4rem)] font-light text-[#e8e0d0] tracking-wide">
                         Todo lo que un amante de las historias necesita
                     </h2>
-                    <div className="w-12 h-[1px] bg-[#c8b97a]/40 mx-auto mt-1" />
+                    <div className="w-12 h-px bg-[#c8b97a]/40 mx-auto mt-1" />
                 </div>
                 {/* Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -199,12 +199,20 @@ interface BookCardProps {
     author: string;
     genre: string;
     coverColor: string;
+    coverUrl?: string;
 }
 
-function BookCard({ title, author, genre, coverColor }: BookCardProps) {
+export function BookCard({ title, author, genre, coverColor, coverUrl }: BookCardProps) {
     return (
         <div className="flex flex-col gap-3 cursor-pointer group transition-transform hover:-translate-y-1.5">
             <div className="relative w-full aspect-3/4 rounded-sm overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.4)] group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.6)] transition-shadow" style={{ background: coverColor }}>
+                { coverUrl && (
+                    <img
+                        src={`${coverUrl}`}
+                        alt="Portada de Historia"
+                        className="w-full h-full object-cover"
+                    />
+                )}
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent flex items-end p-3">
                     <span className="text-[0.65rem] font-semibold tracking-widest uppercase text-[#d4c98a] bg-black/40 border border-[#c8b97a]/40 px-2 py-0.5 rounded-full">
                         {genre}
@@ -233,14 +241,14 @@ const FEATURED_BOOKS: BookCardProps[] = [
 
 function FeaturedSection() {
     return (
-        <section className="bg-[#16161d] py-20 px-8">
+        <section className="bg-background-global py-20 px-8">
             <div className="max-w-275 mx-auto">
                 <div className="text-center flex flex-col gap-3 mb-14">
                     <span className="text-[#c8b97a]/60 text-xs tracking-[0.3em] uppercase font-light">Destacado</span>
                     <h2 className="text-[clamp(1.3rem,3vw,2rem)] font-light text-[#e8e0d0] tracking-wide">
                         Historias que no puedes perderte
                     </h2>
-                    <div className="w-12 h-[1px] bg-[#c8b97a]/40 mx-auto mt-1" />
+                    <div className="w-12 h-px bg-[#c8b97a]/40 mx-auto mt-1" />
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-x-6 gap-y-8 max-[768px]:grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
                     {FEATURED_BOOKS.map((book) => (
@@ -265,7 +273,7 @@ function AboutSection() {
                         <h2 className="text-[clamp(1.6rem,3vw,2.4rem)] font-light text-[#e8e0d0] tracking-wide leading-snug">
                             Nacimos del amor<br />por las historias
                         </h2>
-                        <div className="w-12 h-[1px] bg-[#c8b97a]/40 mt-1" />
+                        <div className="w-12 h-px bg-[#c8b97a]/40 mt-1" />
                     </div>
 
                     <div className="flex flex-col gap-5 text-[#9a9080] text-sm leading-relaxed font-light">
@@ -323,7 +331,7 @@ function AboutSection() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
     return (
-        <footer className="bg-[#0d0e14] py-10 px-8 border-t border-[#c8b97a]/08">
+        <footer className="bg-surface-container-lowest py-10 px-8 border-t border-[#c8b97a]/08">
             <div className="max-w-275 mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-2">
                     <img src="/inkly-favicon.svg" alt="Inkly" className="w-5 h-5 opacity-50" />
@@ -346,7 +354,7 @@ function Footer() {
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 export default function LandingPage() {
     return (
-        <div className="min-h-screen bg-[#16161d] text-[#e8e0d0] font-['Poppins'] overflow-x-hidden">
+        <div className="min-h-screen bg-background-global text-[#e8e0d0] font-['Poppins'] overflow-x-hidden">
             <LandingNavbar />
             <main>
                 <Hero />

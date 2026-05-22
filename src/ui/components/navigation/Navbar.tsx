@@ -19,7 +19,7 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
   // Use Auth
   const { authUser, logout } = useAuth();
   // Use Stories
-  const { loadPublishedStories, loadAuthUserFavorites, loadStoriesForAuthUser, loading } = useStories();
+  const { loadPublishedStories, loading } = useStories();
 
   //Title Input Management
   const [ toSearchTitle, setToSearchTitle ] = useState("");
@@ -28,6 +28,10 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const toSearch = e.target.value;
     setToSearchTitle(toSearch);
+    if (isInSearchPage) {
+        navigate(`/explore?title=${encodeURIComponent(toSearch)}`, { replace: true });
+        return;
+    }
     if (toSearch.trim() != "") {
         const searchResult = await loadPublishedStories({ offset: 1, limit: 3, title: toSearch, newestFirst: true });
         if (searchResult.data) {
@@ -81,7 +85,7 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
                             className="bg-search-bg border-none rounded-full py-2 pl-10 pr-6 text-sm text-global focus:ring-2 focus:ring-high-enfasis/50 w-94 transition-all focus:outline-none"
                             placeholder="Buscar Historias..."
                             ref={searchedStoryRef}
-                            onChange={!isInSearchPage ? handleInputChange : () => {}}
+                            onChange={handleInputChange}
                         />
                         { toSearchTitle && !isInSearchPage && (
                             <div

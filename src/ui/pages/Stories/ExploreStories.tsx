@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStories } from "../../hooks/useStories";
 import { useSearchStories } from "../../hooks/useSearchStories";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useWatch } from "react-hook-form";
 import type { StatusNames } from "../../../core/domain/models/stories/StoryModel";
 import SelectCategoryModal from "../../components/stories/SelectCategoryModal";
 import SelectNewStatusModal from "../../components/stories/SelectNewStatusModal";
 import { GenreIcon } from "../../components/stories/GenresIcons";
-import { Bolt, Cog, LineSquiggle, Plus, RotateCcw, Search } from "lucide-react";
+import { Bolt, ChevronLeft, ChevronRight, Cog, LineSquiggle, Plus, RotateCcw, Search } from "lucide-react";
 import { StatusIcon } from "../../components/stories/StatusesIcons";
 import type { searchSchema } from "../../schemas/stories/stories.schema";
 import type z from "zod";
+import { BookCard } from "../landing/LandingPage";
+import { getRandomColor } from "../utils/colors.util";
 
 type SearchFormValues = z.infer<typeof searchSchema>;
 
@@ -18,20 +20,21 @@ export default function ExploreStories() {
     
     // Use Navigate
     const navigate = useNavigate();
+    // Use Search Params
+    const [ searchParams, setSearchParams ] = useSearchParams();
     // Use Stories
     const { loading, loadPublishedStories, loadAuthUserFavorites } = useStories();
     // Use Search Stories
     const { searchForm, resultStories, handleSearch, resetSearch } = useSearchStories({ loadStories: loadPublishedStories });
+    const [ page, setPage ] = useState<number>(1);
     // Use Form
-    const { register, handleSubmit, reset, control, setValue } = searchForm;
+    const { handleSubmit, reset, control, setValue } = searchForm;
 
     // Watch for real time values
     const currentGenre = useWatch({ control, name: "genreName" });
     const currentSubgenre = useWatch({ control, name: "secondaryGenreName" });
     const currentStatus = useWatch({ control, name: "status" });
     const currentTags = useWatch({ control, name: "tagNames" });
-    const currentPage = useWatch({ control, name: "offset"})
-    const currentPageSize = useWatch({ control, name: "limit"})
 
     // Select Search Genre or Subgenre
     const [ isSelectingGenreOrSubgenre, setIsSelectingGenreOrSubgenre ] = useState<"genre" | "subgenre" | null>(null);
@@ -49,12 +52,36 @@ export default function ExploreStories() {
     };
 
     // Use Effect for default search
+    useEffect(() => {
+        const initialSearch = async () => {
+            await handleSearch({
+                offset: 1,
+                limit: 1,
+                title: null,
+                genreName: null,
+                secondaryGenreName: null,
+                status: null,
+                tagNames: null,
+                newestFirst: true
+            });
+        };
+        initialSearch();
+    }, [handleSearch]);
 
     // Handle Submit
     const onSubmit = async (data: SearchFormValues) => {
-        data.offset = 0;
-        await handleSearch(data);
+        const titleParam = searchParams.get("title") || "";
+
+        data.offset = page;
+        await handleSearch({ ...data, title: titleParam !== "" ? titleParam : null, limit: 1});
     }
+
+    useEffect(() => {
+        const loadPerChange = async () => {
+            handleSubmit(onSubmit)();
+        };
+        loadPerChange();
+    }, [handleSubmit, page])
 
     return (
         <main className="relative w-full">
@@ -74,7 +101,7 @@ export default function ExploreStories() {
                     repeatedStatus={[currentStatus ? currentStatus! : ""]}
                 />
             )}
-            <div className="min-h-screen max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full justify-center">
                     <div className="col-span-1">
                         <label className="text-md font-semibold tracking-wide text-primary/80 uppercase ml-3 mb-3 flex items-center gap-3">
@@ -175,15 +202,101 @@ export default function ExploreStories() {
                             </span>
                         </button>
                     </div>
-                    <div className="flex justify-end space-x-3">
-                        <button type="button" onClick={() => { resetSearch(); reset(); }} className="px-4 py-2 rounded-lg border border-toolbar-bg/10 text-global hover:bg-toolbar-bg/5 transition cursor-pointer">
-                            Limpiar
-                        </button>
-                        <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg border border-toolbar-bg/10 text-global hover:bg-toolbar-bg/5 transition cursor-pointer">
-                            <Search size={20} />
-                        </button>
+                    <div className="col-span-2 items-center justify-center space-x-3">
+                        <div className="flex items-center gap-3">
+                            <button type="button" onClick={() => { resetSearch(); reset(); }} className="px-4 py-2 rounded-lg border border-toolbar-bg/10 text-global hover:bg-toolbar-bg/5 transition cursor-pointer">
+                                Limpiar
+                            </button>
+                            <button type="submit" disabled={loading} className="px-4 py-2 rounded-lg border border-toolbar-bg/10 text-global hover:bg-toolbar-bg/5 transition cursor-pointer">
+                                <Search size={20} />
+                            </button>
+                        </div>
                     </div>
                 </form>
+            </div>
+            <div className="px-8 py-4">
+                <div>
+                    { resultStories && !loading && resultStories.data.length > 0 ? (
+                        <div className="grid grid-cols-6 gap-6">
+                            {resultStories.data.map(story => (
+                                <div
+                                    className="col-span-1"
+                                    key={story.id}
+                                    onClick={() => navigate(`/explore/story/${story.id}`)}
+                                >
+                                    <BookCard
+                                        author=""
+                                        coverColor={getRandomColor()}
+                                        coverUrl={story.coverUrl ? story.coverUrl : ""}
+                                        genre={story.genre.name}
+                                        title={story.title}
+                                    />
+                                </div>
+                            ))}
+                            <div className="col-span-6">
+                                <div className="flex items-center justify-center gap-2 mt-14">
+                                  {/** Previous Navigation */}
+                                  <button
+                                    onClick={() => setPage(resultStories?.meta.numberPage - 1)}
+                                    className={`w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/10 text-on-surface-variant
+                                      ${resultStories?.meta.numberPage !== 1 && "hover:bg-surface-variant/20 transition-colors cursor-pointer"}`}
+                                    disabled={resultStories?.meta.numberPage === 1}
+                                  >
+                                    <span>
+                                      <ChevronLeft size={24} />
+                                    </span>
+                                  </button>
+                                  {/** Actual Page - 1 */}
+                                  {resultStories?.meta.numberPage !== 1 && (
+                                    <button
+                                      onClick={() => setPage(resultStories?.meta.numberPage - 1)}
+                                      className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-variant/20 text-on-surface transition-colors cursor-pointer"
+                                    >
+                                      {resultStories?.meta.numberPage - 1}
+                                    </button>
+                                  )}
+                                  {/** Actual Page */}
+                                  <button
+                                    disabled={true}
+                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-on-primary font-bold cursor-default"
+                                  >
+                                    {resultStories?.meta.numberPage}
+                                  </button>
+                                  {/** Actual Page + 1 */}
+                                  {resultStories?.meta.numberPage !== resultStories?.meta.totalPages && (
+                                    <button
+                                      onClick={() => setPage(resultStories?.meta.numberPage + 1)}
+                                      className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-variant/20 text-on-surface transition-colors cursor-pointer"
+                                    >
+                                      {resultStories?.meta.numberPage + 1}
+                                    </button>
+                                  )}
+                                  {/** Next Navigation */}
+                                  <button
+                                    onClick={() => setPage(resultStories?.meta.numberPage + 1)}
+                                    className={`w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/10 text-on-surface-variant
+                                      ${resultStories?.meta.numberPage !== resultStories?.meta.totalPages && "hover:bg-surface-variant/20 transition-colors cursor-pointer"}`}
+                                    disabled={resultStories?.meta.numberPage === resultStories?.meta.totalPages}
+                                  >
+                                    <span>
+                                      <ChevronRight size={24} />
+                                    </span>
+                                  </button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        loading ? (
+                            <div className="flex col-span-6 min-h-full items-center justify-center w-full h-full">
+                              <div className="loading-button" />
+                            </div>
+                        ) : (
+                            <h3 className="col-span-6 text-center min-h-full text-2xl font-bold">
+                                No hay historias con los criterios que buscas
+                            </h3>
+                        )
+                    )}
+                </div>
             </div>
         </main>
     );
