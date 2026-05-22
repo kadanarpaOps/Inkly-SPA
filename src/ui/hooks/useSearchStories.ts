@@ -56,7 +56,7 @@ export const useSearchStories = ({ loadStories, userId }: Props): UseSearchStori
       newestFirst: values.newestFirst,
     };
 
-    const response = await loadStories(filters, userId);
+    const response = await loadStories!(filters, userId);
     setResultStories(response);
     
     setLoading(false);

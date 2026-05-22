@@ -28,7 +28,7 @@ const EditStory = () => {
   // Use Auth
   const { authUser } = useAuth();
   // Use Stories
-  const { loading, loadStoryById, updateStory, updateStoryCover, deleteStoryCover } = useStories();
+  const { loading, loadStoryById, updateStory, updateStoryCover, deleteStoryCover, toggleStoryStatus } = useStories();
   // Use Chapters
   const { loading: loadingChapters, createChapter, getOwnedChaptersByStory, toggleChapterStatus, deleteChapter } = useChapters();
   // Extract storyId from the URI
@@ -66,6 +66,14 @@ const EditStory = () => {
     }
     refreshStory();
   }, [storyId, loadStoryById, modifiedStory]);
+  const onStoryToggleStatus = async (storyId: string) => {
+    if (story && authUser) {
+      const success = await toggleStoryStatus(storyId);
+      if (success) {
+        setModifiedStory(true);
+      }
+    }
+  }
 
   // Use Form and IsEditing Values...
   const { register, handleSubmit, setValue, reset } = useForm({
@@ -412,6 +420,37 @@ const EditStory = () => {
                       {story.updatedAt ? getLastModifiedTime(story.updatedAt): "Nunca"}
                     </p>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div className="p-5 mt-8">
+              <div className="grid grid-cols-12">
+                <div className="col-span-4 justify-center">
+                  <h3 className="text-md text-on-surface-variant/60 tracking-tighter font-bold mb-2">
+                    Visibilidad
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <p className="text-3xl font-display font-bold text-primary">
+                      {story.hidden ? "PRIVADO" : "PÚBLICO"}
+                    </p>
+                    <button
+                      onClick={() => onStoryToggleStatus(story.id)}
+                      className="p-2 hover:text-high-enfasis rounded-lg text-on-surface-variant transition-colors cursor-pointer"
+                    >
+                      <span>
+                        {story.hidden ? (
+                          <EyeClosed size={24} />
+                        ) : (
+                          <Eye size={24} />
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div className="col-span-8 justify-center">
+                  <h3 className="text-md text-on-surface-variant/60 tracking-tighter font-bold mb-2">
+                    Tags
+                  </h3>
                 </div>
               </div>
             </div>

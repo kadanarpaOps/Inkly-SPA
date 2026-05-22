@@ -51,6 +51,12 @@ function StoriesProvider({ children }: Props) {
         return true;
     };
 
+    const toggleStoryStatus = async (storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.toggleStoryHidden(storyId), setLoading, setError, showAlert, true);
+        if (!response) return false;
+        return true;
+    }
+
     const loadStoriesForAuthUser = useCallback(async (filters: StoryFilters, userId: string) => {
         const response = await executeTask(() => storiesService.getAuthUserStories(filters, userId), setLoading, setError) as PageResponse<StoryInfo>;
         return response;
@@ -95,6 +101,7 @@ function StoriesProvider({ children }: Props) {
         updateStory,
         updateStoryCover,
         deleteStoryCover,
+        toggleStoryStatus,
         pageTags,
         loadStoriesForAuthUser,
         loadStoryById,

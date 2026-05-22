@@ -14,6 +14,7 @@ export interface StoriesContextType {
     updateStory: (story: UpdateStory, storyId: string) => Promise<boolean>;
     updateStoryCover: (file: File, storyId: string) => Promise<boolean>;
     deleteStoryCover: (storyId: string) => Promise<boolean>;
+    toggleStoryStatus: (storyId: string) => Promise<boolean>;
     loadStoriesForAuthUser: (filters: StoryFilters, userId: string) => Promise<PageResponse<StoryInfo>>;
     loadStoryById: (storyId: string) => Promise<StoryInfo>;
     loadPublishedStories: (filters: StoryFilters) => Promise<PageResponse<StoryInfo>>; //Acabar de implementar estos 3 load en el context, hacer un useSearch y hacer la página de Explore dinámica pa que llene esos filters :p
