@@ -7,6 +7,11 @@ import { getRandomCover } from "../utils/covers.util";
 import { useUsers } from "../../hooks/useUsers";
 import type { UserInfo } from "../../../core/domain/models/users/UserModel";
 import { Bookmark, BookOpen, Clock, Info, List, MessageSquareText, Pencil } from "lucide-react";
+import { useChapters } from "../../hooks/useChapters";
+import type { PageResponse } from "../../../core/domain/models/common/PaginationModels";
+import type { ChapterInfo } from "../../../core/domain/models/stories/ChapterModel";
+import { countTotalWords, renderWithFormat, renderWithoutFormat } from "../utils/renderTiptap.util";
+import { getLastModifiedTime } from "../utils/time.util";
 
 const StoryDetails = () => {
 
@@ -15,7 +20,9 @@ const StoryDetails = () => {
   // Use Auth
   const { authUser } = useAuth();
   // Use Stories
-  const { loadStoryById } = useStories();
+  const { loadStoryById, addToFavorites, removeFromFavorites, existsFromFavorites } = useStories();
+  // Use Chapters
+  const { getChaptersByStory } = useChapters();
   // Use Users
   const { findUserById } = useUsers();
   // Extract storyId from the URI
@@ -23,6 +30,10 @@ const StoryDetails = () => {
   // Find Story Details
   const [ story, setStory ] = useState<StoryInfo | null>(null);
   const [ author, setAuthor ] = useState<UserInfo | null>(null);
+  const [ favorite, setFavorite ] = useState<boolean>(false);
+  const [ chapters, setChapters ] = useState<PageResponse<ChapterInfo> | null>(null);
+  const [ totalItemsChapters, setTotalChaptersItems ] = useState<number | null>(null)
+
   useEffect(() => {
     const loadStory = async () => {
       if (storyId) {
@@ -33,10 +44,35 @@ const StoryDetails = () => {
         const responseAuthor = await findUserById(responseStory.userId);
         setStory(responseStory);
         setAuthor(responseAuthor);
+        if (authUser) {
+          const responseFavorite = await existsFromFavorites(authUser.userId, responseStory.id);
+          setFavorite(responseFavorite);
+        }
+
+        const responseChapters = await getChaptersByStory({offset: 1, limit: 5, newestFirst: true}, responseStory.id);
+        const totalChapters = responseChapters.meta.totalItems;
+        setTotalChaptersItems(totalChapters);
+        setChapters(responseChapters);
       }
     };
     loadStory();
-  }, [storyId, loadStoryById, findUserById, navigate]);
+  }, [storyId, loadStoryById, findUserById, navigate, authUser, getChaptersByStory]);
+
+  // Favorite Details
+  const handleAddFavorite = async (userId: string, storyId: string) => {
+    const success = await addToFavorites(userId, storyId);
+    if (success) {
+      const responseFavorite = await existsFromFavorites(userId, storyId);
+      setFavorite(responseFavorite);
+    }
+  }
+  const handleRemoveFavorite = async (userId: string, storyId: string) => {
+    const success = await removeFromFavorites(userId, storyId);
+    if (success) {
+      const responseFavorite = await existsFromFavorites(userId, storyId);
+      setFavorite(responseFavorite);
+    }
+  }
 
   return (
     <main className="relative h-full">
@@ -108,11 +144,14 @@ const StoryDetails = () => {
                   </button>
                   { authUser && (
                     authUser.userId !== author?.userId && (
-                      <button className="border border-outline-variant/30 bg-surface-container-low text-on-surface px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-surface-container-high transition-all cursor-pointer">
+                      <button
+                        onClick={() => !favorite ? handleAddFavorite(authUser.userId, story.id) : handleRemoveFavorite(authUser.userId, story.id)}
+                        className="border border-outline-variant/30 bg-surface-container-low text-on-surface px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-surface-container-high transition-all cursor-pointer"
+                      >
                         <span>
-                          <Bookmark size={20} strokeWidth={3} />
+                          <Bookmark size={20} strokeWidth={3} fill={`${ !favorite ? "transparent" : "currentColor" }`} />
                         </span>
-                        Guardar
+                        { !favorite ? "Guardar" : "Eliminar"}
                       </button>
                     )
                   )}
@@ -132,6 +171,7 @@ const StoryDetails = () => {
               </nav>
             </div>
           </section>
+
           {/** Chapters List */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-8 space-y-12">
@@ -141,27 +181,49 @@ const StoryDetails = () => {
                     Capítulos
                   </h3>
                   <span className="text-sm font-medium text-primary bg-primary/10 px-4 py-1 rounded-full">
-                    12 Capítulos
+                    {totalItemsChapters} Capítulos
                   </span>
                 </div>
-                <div className="space-y-3">
-                  <div className="group flex items-center justify-between p-5 bg-surface-container-lowest/50 hover:bg-surface-container-high/50 rounded-2xl transition-all cursor-pointer border border-transparent hover:border-primary/10">
+              
+                {/** Load more chapters */}
+              <div className="grid gap-4">
+              { chapters && chapters.data.length > 0 ? (
+                chapters.data.map(chapter => (
+                  <div
+                    onClick={() => navigate("/read", {
+                      state: { chapterToRead: chapter }
+                    })}
+                    key={chapter.id} className="group flex items-center justify-between p-6 rounded-2xl bg-surface-container-low border border-transparent hover:border-primary/20 transition-all cursor-default"
+                  >
                     <div className="flex items-center gap-6">
-                      <span className="text-3xl font-display font-black text-on-surface/5 group-hover:text-primary/20 transition-colors">
-                        01
+                      <span className="text-2xl font-display font-black text-on-surface-variant/50 italic">
+                        {String(chapter.order).padStart(2, '0')}
                       </span>
                       <div>
-                        <h4 className="font-bold text-on-surface">
-                          Prueba 1
+                        <h4 className={`text-lg ${chapter.title ? "font-bold text-on-surface group-hover:text-primary transition-colors" : "font-light text-on-surface-variant/40 italic"}`}>
+                          {renderWithoutFormat(JSON.parse(chapter.title))}
                         </h4>
-                        <p className="text-xs text-on-surface-variant/60">
-                          Publicado el 26/07/2026 05:36:05 PM • 2.4k palabras
+                        <p className="text-xs text-on-surface-variant">
+                          {chapter.hidden ? "Borrador" : "Publicado"} • Última Edición {chapter.updatedAt ? getLastModifiedTime(chapter.updatedAt) : "Nunca"} • {chapter.content ? (chapter.content.trim().length > 0 && countTotalWords(JSON.parse(chapter.content))) : 0} palabras
                         </p>
                       </div>
                     </div>
                   </div>
-                </div>
-                {/** Load more chapters */}
+                ))
+              ) : (
+                !chapters ? (
+                  <h3 className="text-2xl text-center pt-6 font-bold">
+                    No has creado ningún capítulo
+                  </h3>
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full">
+                    <div className="loading-button" />
+                  </div>
+                )
+              )}
+            </div>
+
+
               </section>
               {/** Comments */}
               <section className="space-y-8" id="comments">

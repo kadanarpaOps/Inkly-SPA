@@ -57,6 +57,9 @@ export const useSearchStories = ({ loadStories, userId }: Props): UseSearchStori
     };
 
     const response = await loadStories!(filters, userId);
+    if (!response.data) {
+      setResultStories(null);
+    }
     setResultStories(response);
     
     setLoading(false);

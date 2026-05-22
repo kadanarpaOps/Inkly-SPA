@@ -20,6 +20,10 @@ export interface StoriesContextType {
     loadPublishedStories: (filters: StoryFilters) => Promise<PageResponse<StoryInfo>>; //Acabar de implementar estos 3 load en el context, hacer un useSearch y hacer la página de Explore dinámica pa que llene esos filters :p
     loadLastModifiedStoryForAuthUser: (userId: string) => Promise<LastModifiedStory>;
     loadAuthUserFavorites: (filters: StoryFilters, userId?: string) => Promise<PageResponse<StoryInfo>>;
+    // Favorites
+    addToFavorites: (userId: string, storyId: string) => Promise<boolean>;
+    removeFromFavorites: (userId: string, storyId: string) => Promise<boolean>;
+    existsFromFavorites: (userId: string, storyId: string) => Promise<boolean>;
 }
 
 export const StoriesContext = createContext<StoriesContextType | null>(null);

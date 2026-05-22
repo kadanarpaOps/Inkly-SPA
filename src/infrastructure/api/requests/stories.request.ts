@@ -32,6 +32,14 @@ export const getAuthUserSavedStoriesRequest = async (filters: StoryFilters, user
     const response = await httpClient.get(`api/favorite/search/${userId}`, {
         params: filters
     });
+
+    if(response.data.stories) {
+        return {
+            data: response.data.stories,
+            meta: response.data.meta  
+        }
+    }
+    
     return response.data;
 }
 
@@ -90,4 +98,23 @@ export const updateStoryTags = async (tagNames: string[], storyId: string): Prom
         tagNames
     });
     return response.data;
+}
+
+// Favorites
+export const addToFavoritesRequest = async (userId: string, storyId: string): Promise<void> => {
+    const response = await httpClient.post(`api/favorite/add`, {
+        userId: userId,
+        storyId: storyId
+    });
+    return response.data;
+}
+
+export const removeFromFavoritesRequest = async (userId: string, storyId: string): Promise<void> => {
+    const response = await httpClient.delete(`api/favorite/remove/${userId}/story/${storyId}`);
+    return response.data;
+}
+
+export const verifyFromFavoritesRequest = async (userId: string, storyId: string): Promise<void> => {
+    const response = await httpClient.get(`api/favorite/exists/${userId}/story/${storyId}`);
+    return response.data.data;
 }

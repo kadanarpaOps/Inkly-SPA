@@ -82,6 +82,26 @@ function StoriesProvider({ children }: Props) {
         return response;
     }, []);
 
+    // Favorites
+
+    const addToFavorites = async (userId: string, storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.addToFavorites(userId, storyId), setLoading, setError, showAlert, true);
+        if (!response) return false;
+        return true;
+    }
+
+    const removeFromFavorites = async (userId: string, storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.removeFromFavorites(userId, storyId), setLoading, setError, showAlert, true);
+        if (!response) return false;
+        return true;
+    }
+
+    const existsFromFavorites = useCallback(async (userId: string, storyId: string): Promise<boolean> => {
+        const response = await executeTask(() => storiesService.existsFromFavorites(userId, storyId), setLoading, setError, showAlert, true);
+        if (!response) return false;
+        return true;
+    }, [showAlert]);
+
     /** useEffects */
     // Load all Genres
     useEffect(() => {
@@ -108,6 +128,10 @@ function StoriesProvider({ children }: Props) {
         loadPublishedStories,
         loadLastModifiedStoryForAuthUser,
         loadAuthUserFavorites,
+        // Favorites
+        addToFavorites,
+        removeFromFavorites,
+        existsFromFavorites
     }
 
     return (

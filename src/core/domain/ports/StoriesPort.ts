@@ -16,4 +16,8 @@ export interface StoryPort {
     updateStoryCover(image: File, storyId: string): Promise<void>;
     deleteStoryCover(storyId: string): Promise<void>;
     updateStoryTags(tagNames: string[], storyId: string ): Promise<void>;
+    //Favorites
+    addToFavorites(userId: string, storyId: string): Promise<void>;
+    removeFromFavorites(userId: string, storyId: string): Promise<void>;
+    existsFromFavorites(userId: string, storyId: string): Promise<void>;
 }

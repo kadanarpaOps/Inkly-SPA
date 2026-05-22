@@ -29,7 +29,7 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
     const toSearch = e.target.value;
     setToSearchTitle(toSearch);
     if (isInSearchPage) {
-        navigate(`/explore?title=${encodeURIComponent(toSearch)}`, { replace: true });
+        navigate(`${location.pathname}?title=${encodeURIComponent(toSearch)}`, { replace: true });
         return;
     }
     if (toSearch.trim() != "") {

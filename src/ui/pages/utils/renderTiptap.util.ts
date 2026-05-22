@@ -1,7 +1,15 @@
+import TextAlign from "@tiptap/extension-text-align";
 import { generateHTML, generateText, type JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
-const extensions = [ StarterKit ];
+const extensions = [ 
+  StarterKit,
+  TextAlign.configure({
+    alignments: ['left', 'center', 'right', 'justify'],
+    types: ['heading', 'paragraph'],
+    defaultAlignment: 'left'
+  })
+];
 
 /**
  * Method 1: Converts Tiptap JSON into raw string content

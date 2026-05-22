@@ -18,6 +18,7 @@ import RecoveryPassword from "../pages/Auth/RecoveryPassword";
 import { ProtectedRoute } from "../../infrastructure/routes/routes.control";
 import Library from "../pages/User/Library";
 import Users from "../pages/Users/Users";
+import Read from "../pages/Stories/Read.tsx";
 
 const AppLayout = () => {
 
@@ -46,6 +47,7 @@ const AppLayout = () => {
               {/** Stories */}
               <Route path="/explore/story/:storyId" element={<StoryDetails />} />
               <Route path="/explore" element={<ExploreStories />} />
+              <Route path="/read" element={<Read />} />
               {/** Secured */}
               <Route element={<ProtectedRoute requiredRoles={["INKLY_USER"]} />}>
                 <Route path="/library" element={<Library />} />
