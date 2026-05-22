@@ -68,6 +68,7 @@ export interface StoryFilters {
     status?: StatusNames;
     tagNames?: string[];
     newestFirst?: boolean;
+    userId?: string;
 }
 
 export interface UpdateTags {

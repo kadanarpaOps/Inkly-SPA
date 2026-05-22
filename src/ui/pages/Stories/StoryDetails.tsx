@@ -75,7 +75,10 @@ const StoryDetails = () => {
                     <span className="text-sm">
                       <Pencil size={20} fill="currentColor" />
                     </span>
-                    <span className="text-md font-medium">
+                    <span
+                      className={`text-md font-medium ${author ? "cursor-pointer hover:underline" : ""}`}
+                      onClick={() => author && navigate(`/user/${author.userId}`)}
+                    >
                       {author?.userName}
                     </span>
                   </div>

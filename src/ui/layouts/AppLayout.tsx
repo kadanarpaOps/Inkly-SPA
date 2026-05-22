@@ -6,6 +6,7 @@ import MainLayout from "./MainLayout";
 import ExploreStories from "../pages/Stories/ExploreStories";
 import Write from "../pages/User/Write";
 import Profile from "../pages/User/Profile";
+import UserInfo from "../pages/User/UserInfo";
 import CreateStory from "../pages/Stories/CreateStory";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
@@ -50,6 +51,8 @@ const AppLayout = () => {
                 <Route path="/write" element={<Write />} />
                 <Route path="/story/edit/:storyId" element={<EditStory />} />
               </Route>
+              {/* User Insecured */}
+              <Route path="/user/:userId" element={<UserInfo />} />
               <Route element={<ProtectedRoute requiredRoles={[]} />}>
                 <Route path="/profile" element={<Profile />} />
               </Route>
