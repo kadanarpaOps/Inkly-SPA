@@ -1,4 +1,6 @@
 import type { PageResponse } from "../models/common/PaginationModels";
+import type { UpdateEmailRequest } from "../models/users/UpdateEmailRequest";
+import type { UpdatePasswordRequest } from "../models/users/UpdatePasswordRequest";
 import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from "../models/users/UserModel";
 
 export interface UserPort {
@@ -13,4 +15,6 @@ export interface UserPort {
     toggleUserStatus(userId: string): Promise<void>;
     updateProfileImage(userId: string, file: File): Promise<void>;
     deleteProfileImage(userId: string): Promise<void>;
+    updateForgottenPassword(usernameOrEmail: string, passwordRequest: UpdatePasswordRequest): Promise<void>;
+    updateEmail(usernameOrEmail: string, emailRequest: UpdateEmailRequest): Promise<void>;
 }

@@ -6,6 +6,7 @@ import { UserService } from "../../../core/use-cases/UserUseCases";
 import type { LoginResponse, SessionValidation } from "../../../core/domain/models/auth/AuthModels";
 import { AuthContext, type AuthContextType } from "../AuthContext";
 import { useAlert } from "../../hooks/useAlert";
+import type { VerificationRequest } from "../../../core/domain/models/verify/VerificationRequest";
 
 type Props = {
     children: ReactNode;
@@ -77,6 +78,14 @@ function AuthProvider({ children }: Props) {
         await executeTask(() => authService.refreshSession(), () => {}, setError);
     };
 
+    const createVerificationCode = async (request: VerificationRequest): Promise<void> => {
+        await executeTask(() => authService.createVerificationCode(request), setLoading, setError, showAlert, true);
+    }
+
+    const verifyCode = async (request: VerificationRequest): Promise<void> => {
+        await executeTask(() => authService.verifyCode(request), setLoading, setError, showAlert, true);
+    }        
+
     /** useEffects */
     // Refresh Auth User Info
     useEffect(() => {
@@ -128,6 +137,8 @@ function AuthProvider({ children }: Props) {
         validateAccess,
         validateSession,
         refreshSession,
+        createVerificationCode,
+        verifyCode
     };
 
     return (

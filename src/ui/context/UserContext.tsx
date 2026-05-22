@@ -1,6 +1,8 @@
 import { createContext } from "react";
 import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from "../../core/domain/models/users/UserModel";
 import type { PageResponse } from "../../core/domain/models/common/PaginationModels";
+import type { UpdatePasswordRequest } from "../../core/domain/models/users/UpdatePasswordRequest";
+import type { UpdateEmailRequest } from "../../core/domain/models/users/UpdateEmailRequest";
 
 export interface UserContextType {
     // Basics
@@ -26,6 +28,8 @@ export interface UserContextType {
     registerUser: (user: RegisterUserRequest) => Promise<boolean>;
     updateUser: (user: UpdateUserRequest) => Promise<void>;
     toggleUserStatus: (userId: string) => Promise<void>;
+    updateForgottenPassword: (usernameOrEmail: string, request: UpdatePasswordRequest) => Promise<void>;
+    updateEmail: (usernameOrEmail: string, request: UpdateEmailRequest) => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextType | null>(null);

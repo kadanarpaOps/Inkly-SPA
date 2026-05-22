@@ -1,7 +1,9 @@
 import type { PageResponse } from "../domain/models/common/PaginationModels";
 import type { RegisterUserRequest, UpdateUserRequest, UserInfo } from "../domain/models/users/UserModel";
 import type { UserPort } from "../domain/ports/UserPort";
-import { deleteProfileImageRequest, getUserByIdRequest, pageUsersRequest, registerUserRequest, toggleUserStatusRequest, updateProfileImageRequest, updateUserRequest } from "../../infrastructure/api/requests/users.request";
+import { deleteProfileImageRequest, getUserByIdRequest, pageUsersRequest, registerUserRequest, toggleUserStatusRequest, updateEmail, updateForgottenPassword, updateProfileImageRequest, updateUserRequest } from "../../infrastructure/api/requests/users.request";
+import type { UpdatePasswordRequest } from "../domain/models/users/UpdatePasswordRequest";
+import type { UpdateEmailRequest } from "../domain/models/users/UpdateEmailRequest";
 
 export class UserService implements UserPort {
 
@@ -56,4 +58,11 @@ export class UserService implements UserPort {
         await deleteProfileImageRequest(userId);
     }
 
+    async updateForgottenPassword(usernameOrEmail: string, passwordRequest: UpdatePasswordRequest) {
+        await updateForgottenPassword(usernameOrEmail, passwordRequest);
+    }
+
+    async updateEmail(usernameOrEmail: string, emailRequest: UpdateEmailRequest) {
+        await updateEmail(usernameOrEmail, emailRequest);
+    }
 }

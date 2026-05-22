@@ -1,5 +1,6 @@
-import { loginRequest, logoutRequest, refreshSessionRequest, verifyAccessTokenRequest, verifyRefreshTokenRequest } from "../../infrastructure/api/requests/auth.requests";
+import { createVerificationCode, loginRequest, logoutRequest, refreshSessionRequest, verifyAccessTokenRequest, verifyCode, verifyRefreshTokenRequest } from "../../infrastructure/api/requests/auth.requests";
 import type { LoginRequest, LoginResponse, SessionValidation } from "../domain/models/auth/AuthModels";
+import type { VerificationRequest } from "../domain/models/verify/VerificationRequest";
 import type { AuthPort } from "../domain/ports/AuthPort";
 
 export class AuthService implements AuthPort {
@@ -28,4 +29,11 @@ export class AuthService implements AuthPort {
         await refreshSessionRequest();
     }
 
+    async createVerificationCode(request: VerificationRequest): Promise<void> {
+        await createVerificationCode(request);
+    }
+    
+    async verifyCode(request: VerificationRequest): Promise<void> {
+        await verifyCode(request);
+    }
 }
