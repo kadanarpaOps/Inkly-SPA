@@ -313,7 +313,7 @@ export default function UserInfo() {
 						<div className="flex items-center justify-center py-16">
 							<div className="loading-button" />
 						</div>
-					) : storiesError || !userStories || userStories.data.length === 0 ? (
+					) : storiesError || !userStories || (userStories?.data?.length ?? 0) === 0 ? (
 						<div className="rounded-2xl border border-dashed border-toolbar-bg/15 bg-background-global/50 p-8 text-center">
 							<p className="text-global font-semibold mb-2">No hay historias publicadas</p>
 							<p className="text-several-light text-sm">
