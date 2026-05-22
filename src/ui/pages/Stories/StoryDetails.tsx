@@ -106,12 +106,16 @@ const StoryDetails = () => {
                     </span>
                     Comenzar
                   </button>
-                  <button className="border border-outline-variant/30 bg-surface-container-low text-on-surface px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-surface-container-high transition-all cursor-pointer">
-                    <span>
-                      <Bookmark size={20} strokeWidth={3} />
-                    </span>
-                    Guardar
-                  </button>
+                  { authUser && (
+                    authUser.userId !== author?.userId && (
+                      <button className="border border-outline-variant/30 bg-surface-container-low text-on-surface px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-surface-container-high transition-all cursor-pointer">
+                        <span>
+                          <Bookmark size={20} strokeWidth={3} />
+                        </span>
+                        Guardar
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
               {/** Page Navigation */}

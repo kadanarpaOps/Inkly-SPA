@@ -57,8 +57,8 @@ function StoriesProvider({ children }: Props) {
         return true;
     }
 
-    const loadStoriesForAuthUser = useCallback(async (filters: StoryFilters, userId: string) => {
-        const response = await executeTask(() => storiesService.getAuthUserStories(filters, userId), setLoading, setError) as PageResponse<StoryInfo>;
+    const loadStoriesForAuthUser = useCallback(async (filters: StoryFilters, userId?: string) => {
+        const response = await executeTask(() => storiesService.getAuthUserStories(filters, userId!), setLoading, setError) as PageResponse<StoryInfo>;
         return response;
     }, []);
 
@@ -77,8 +77,8 @@ function StoriesProvider({ children }: Props) {
         return response;
     }, []);
 
-    const loadAuthUserFavorites = useCallback(async (filters: StoryFilters, userId: string): Promise<PageResponse<StoryInfo>> => {
-        const response = await executeTask(() => storiesService.getAuthUserSavedStories(filters, userId), setLoading, setError) as PageResponse<StoryInfo>;
+    const loadAuthUserFavorites = useCallback(async (filters: StoryFilters, userId?: string): Promise<PageResponse<StoryInfo>> => {
+        const response = await executeTask(() => storiesService.getAuthUserSavedStories(filters, userId!), setLoading, setError) as PageResponse<StoryInfo>;
         return response;
     }, []);
 

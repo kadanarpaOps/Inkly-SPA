@@ -1,4 +1,4 @@
-import { Bell, LogOut, PanelTopClose, Search } from "lucide-react"
+import { LogOut, PanelTopClose, Search } from "lucide-react"
 import { useLocation, useNavigate } from "react-router"
 import { useAuth } from "../../hooks/useAuth"
 import { useStories } from "../../hooks/useStories"
@@ -124,7 +124,6 @@ const Navbar = ({ isSidebarOpen, toggleSidebar }: NavbarProps) => {
             <div className="flex justify-end">
                 {authUser && (
                     <>
-                        <Bell fill="currentColor" size={26} />
                         <LogOut
                             size={26}
                             className="ml-4 md:ml-8 cursor-pointer hover:text-high-enfasis"

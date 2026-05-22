@@ -2,14 +2,21 @@ import { BookOpen, PenLine, Users } from 'lucide-react';
 import { Globe, Rss, Mail } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../hooks/useAuth';
 
 
 // ─── Navbar Landing (versión visitante) ──────────────────────────────────────
 function LandingNavbar() {
+
+    // Use Navigate
     const navigate = useNavigate();
+
+    // Use AUth
+    const { authUser } = useAuth();
+
     return (
         <header className="sticky top-0 z-40 w-full bg-[#c8b97a] shadow-[0_2px_16px_rgba(0,0,0,0.4)]">
-            <div className="grid grid-cols-3 items-center px-8 h-14">
+            <div className="grid grid-cols-2 justify-around items-center px-8 h-14">
                 {/* Izquierda — Logo */}
                 <div className="flex items-center gap-3">
                     <img src="/inkly-favicon.svg" alt="Inkly" className="w-7 h-7 opacity-80" />
@@ -17,7 +24,7 @@ function LandingNavbar() {
                 </div>
 
                 {/* Centro — Búsqueda */}
-                <div className="flex justify-center">
+                {/**<div className="flex justify-center">
                     <div className="flex items-center relative">
                         <svg className="absolute left-3 text-[#1a2030]/50 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
@@ -28,22 +35,33 @@ function LandingNavbar() {
                             className="bg-white/35 border-none rounded-full py-1.5 pl-9 pr-5 text-sm text-[#1a2030] placeholder-[#1a2030]/50 focus:outline-none focus:ring-2 focus:ring-[#1a2030]/20 w-64 transition-all focus:bg-white/50"
                         />
                     </div>
-                </div>
+                </div>*/}
 
                 {/* Derecha — CTAs */}
                 <div className="flex items-center justify-end gap-3">
-                    <button
-                        onClick={() => navigate('/auth')}
-                        className="text-[#1a2030] text-sm font-medium px-4 py-1.5 rounded-full border border-[#1a2030]/30 hover:bg-[#1a2030]/10 transition-colors cursor-pointer"
-                    >
-                        Iniciar sesión
-                    </button>
-                    <button
-                        onClick={() => navigate('/auth')}
-                        className="bg-[#1a2030] text-[#c8b97a] text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-[#1a2030]/80 transition-colors cursor-pointer"
-                    >
-                        Registrarse
-                    </button>
+                    { authUser ? (
+                        <button
+                            onClick={() => navigate('/profile')}
+                            className="bg-[#1a2030] text-[#c8b97a] text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-[#1a2030]/80 transition-colors cursor-pointer"
+                        >
+                            Volver a Inkly
+                        </button>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => navigate('/auth')}
+                                className="text-[#1a2030] text-sm font-medium px-4 py-1.5 rounded-full border border-[#1a2030]/30 hover:bg-[#1a2030]/10 transition-colors cursor-pointer"
+                            >
+                                Iniciar sesión
+                            </button>
+                            <button
+                                onClick={() => navigate('/auth', { state: { authAction: "REGISTER" }})}
+                                className="bg-[#1a2030] text-[#c8b97a] text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-[#1a2030]/80 transition-colors cursor-pointer"
+                            >
+                                Registrarse
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </header>
