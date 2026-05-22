@@ -1,4 +1,4 @@
-import { BookCopy, CircleUserRound, Compass, SquarePen } from "lucide-react";
+import { BookCopy, CircleUserRound, Compass, SquarePen, UsersRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router"
 import { useAuth } from "../../hooks/useAuth";
 
@@ -59,6 +59,18 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
             <CircleUserRound size={26} />
             <span>Mi Cuenta</span>
           </a>
+          {authUser?.role.roleName === "INKLY_ADMIN" && (
+            <a
+              className={"flex items-center space-x-3 py-4 px-4 ".concat(
+              location.pathname.includes("/users")
+              ? "text-high-enfasis bg-high-enfasis/10 rounded-r-full border-l-4 border-high-enfasis cursor-default"
+              : "text-several-light hover:bg-several-light/10 hover:rounded-r-full hover:border-l-4 border-several-light transition-all duration-100 cursor-pointer")}
+              onClick={() => navigate("/users")}
+            >
+              <UsersRound size={26} />
+              <span>Usuarios</span>
+            </a>
+          )}
         </div>
         <div className="mt-auto border-t border-inputs-bg/15">
           { authUser ? (

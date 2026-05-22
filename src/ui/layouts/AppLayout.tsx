@@ -6,7 +6,7 @@ import MainLayout from "./MainLayout";
 import ExploreStories from "../pages/Stories/ExploreStories";
 import Write from "../pages/User/Write";
 import Profile from "../pages/User/Profile";
-import UserInfo from "../pages/User/UserInfo";
+import UserInfo from "../pages/User/UserInfo.tsx";
 import CreateStory from "../pages/Stories/CreateStory";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
@@ -17,6 +17,7 @@ import LandingPage from "../pages/landing/LandingPage";
 import RecoveryPassword from "../pages/Auth/RecoveryPassword";
 import { ProtectedRoute } from "../../infrastructure/routes/routes.control";
 import Library from "../pages/User/Library";
+import Users from "../pages/Users/Users";
 
 const AppLayout = () => {
 
@@ -53,6 +54,7 @@ const AppLayout = () => {
               </Route>
               {/* User Insecured */}
               <Route path="/user/:userId" element={<UserInfo />} />
+              <Route path="/users" element={<Users />} />
               <Route element={<ProtectedRoute requiredRoles={[]} />}>
                 <Route path="/profile" element={<Profile />} />
               </Route>

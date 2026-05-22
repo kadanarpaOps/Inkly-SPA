@@ -20,11 +20,11 @@ export interface UserContextType {
     findPagedUsersResult: (page: number, pageSize: number,
         userName: string,
         email: string,
-        enable: boolean) => Promise<void>;
+        enable: boolean) => Promise<PageResponse<UserInfo> | null>;
     findPagedUsersForSearch: (page: number, pageSize: number,
         userName: string,
         email: string,
-        enable: boolean) => Promise<void>;
+        enable: boolean) => Promise<PageResponse<UserInfo> | null>;
     registerUser: (user: RegisterUserRequest) => Promise<boolean>;
     updateUser: (user: UpdateUserRequest) => Promise<void>;
     toggleUserStatus: (userId: string) => Promise<void>;

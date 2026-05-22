@@ -33,15 +33,17 @@ function UserProvider({ children }: Props) {
         return response;
     }, []);
 
-    const findPagedUsersResult = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
+    const findPagedUsersResult = useCallback(async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
         const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);
         setPagedUsers(response);
-    };
+        return response;
+    }, []);
 
-    const findPagedUsersForSearch = async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
+    const findPagedUsersForSearch = useCallback(async (page: number, pageSize: number, userName: string, email: string, enable: boolean) => {
         const response = await executeTask(() => userService.pageUsers(page, pageSize, userName, email, enable), setLoading, setError);
         setSearchingUsers(response);
-    };
+        return response;
+    }, []);
 
     const registerUser = async (data: RegisterUserRequest): Promise<boolean> => {
         const response = await executeTask(() => userService.registerUser(data), setLoading, setError, showAlert, true);
