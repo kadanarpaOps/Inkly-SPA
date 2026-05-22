@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { BookOpen, PenLine, Users } from 'lucide-react';
 import { Globe, Rss, Mail } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -7,40 +9,84 @@ import { useNavigate } from 'react-router';
 // ─── Navbar Landing (versión visitante) ──────────────────────────────────────
 function LandingNavbar() {
     const navigate = useNavigate();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <header className="sticky top-0 z-40 w-full bg-[#c8b97a] shadow-[0_2px_16px_rgba(0,0,0,0.4)]">
-            <div className="grid grid-cols-3 items-center px-8 h-14">
-                {/* Izquierda — Logo */}
-                <div className="flex items-center gap-3">
-                    <img src="/inkly-favicon.svg" alt="Inkly" className="w-7 h-7 opacity-80" />
-                    <span className="text-[#1a2030] font-bold text-lg tracking-widest uppercase">Inkly</span>
+            <div className="flex items-center justify-between px-5 md:px-8 h-14 gap-3">
+
+                {/* Logo */}
+                <div className="flex items-center gap-2 shrink-0">
+                    <img src="/inkly-favicon.svg" alt="Inkly" className="w-6 h-6 md:w-7 md:h-7 opacity-80" />
+                    <span className="text-[#1a2030] font-bold text-base md:text-lg tracking-widest uppercase">Inkly</span>
                 </div>
 
-                {/* Centro — Búsqueda */}
-                <div className="flex justify-center">
-                    <div className="flex items-center relative">
-                        <svg className="absolute left-3 text-[#1a2030]/50 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                {/* Búsqueda — visible en sm+, oculta en xs */}
+                <div className="hidden sm:flex flex-1 justify-center max-w-xs mx-auto">
+                    <div className="flex items-center relative w-full">
+                        <svg className="absolute left-3 text-[#1a2030]/50 w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                         </svg>
                         <input
                             type="text"
                             placeholder="Buscar historias..."
-                            className="bg-white/35 border-none rounded-full py-1.5 pl-9 pr-5 text-sm text-[#1a2030] placeholder-[#1a2030]/50 focus:outline-none focus:ring-2 focus:ring-[#1a2030]/20 w-64 transition-all focus:bg-white/50"
+                            className="bg-white/35 border-none rounded-full py-1.5 pl-9 pr-4 text-sm text-[#1a2030] placeholder-[#1a2030]/50 focus:outline-none focus:ring-2 focus:ring-[#1a2030]/20 w-full transition-all focus:bg-white/50"
                         />
                     </div>
                 </div>
 
-                {/* Derecha — CTAs */}
-                <div className="flex items-center justify-end gap-3">
+                {/* Desktop: botones directos (md+) */}
+                <div className="hidden md:flex items-center gap-3 shrink-0">
                     <button
                         onClick={() => navigate('/auth')}
-                        className="text-[#1a2030] text-sm font-medium px-4 py-1.5 rounded-full border border-[#1a2030]/30 hover:bg-[#1a2030]/10 transition-colors cursor-pointer"
+                        className="text-[#1a2030] text-sm font-medium px-4 py-1.5 rounded-full border border-[#1a2030]/30 hover:bg-[#1a2030]/10 transition-colors cursor-pointer whitespace-nowrap"
                     >
                         Iniciar sesión
                     </button>
                     <button
                         onClick={() => navigate('/auth')}
-                        className="bg-[#1a2030] text-[#c8b97a] text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-[#1a2030]/80 transition-colors cursor-pointer"
+                        className="bg-[#1a2030] text-[#c8b97a] text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-[#1a2030]/80 transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                        Registrarse
+                    </button>
+                </div>
+
+                {/* Móvil/Tablet: hamburguesa (< md) */}
+                <button
+                    onClick={() => setIsMenuOpen(prev => !prev)}
+                    className="md:hidden flex items-center justify-center w-9 h-9 rounded-full bg-[#1a2030]/10 hover:bg-[#1a2030]/20 transition-colors cursor-pointer shrink-0"
+                    aria-label="Menú"
+                >
+                    {isMenuOpen
+                        ? <X size={18} className="text-[#1a2030]" />
+                        : <Menu size={18} className="text-[#1a2030]" />
+                    }
+                </button>
+            </div>
+
+            {/* Menú desplegable (< md) */}
+            <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="flex flex-col gap-3 px-5 pb-5 pt-1 bg-[#c8b97a]">
+
+                    {/* Búsqueda — solo aquí en xs */}
+                    <div className="sm:hidden flex items-center relative">
+                        <Search size={15} className="absolute left-3 text-[#1a2030]/50" />
+                        <input
+                            type="text"
+                            placeholder="Buscar historias..."
+                            className="bg-white/35 border-none rounded-full py-2 pl-9 pr-4 text-sm text-[#1a2030] placeholder-[#1a2030]/50 focus:outline-none focus:ring-2 focus:ring-[#1a2030]/20 w-full transition-all focus:bg-white/50"
+                        />
+                    </div>
+
+                    <button
+                        onClick={() => { navigate('/auth'); setIsMenuOpen(false); }}
+                        className="w-full text-[#1a2030] text-sm font-medium py-2.5 rounded-full border border-[#1a2030]/30 hover:bg-[#1a2030]/10 transition-colors cursor-pointer"
+                    >
+                        Iniciar sesión
+                    </button>
+                    <button
+                        onClick={() => { navigate('/auth'); setIsMenuOpen(false); }}
+                        className="w-full bg-[#1a2030] text-[#c8b97a] text-sm font-semibold py-2.5 rounded-full hover:bg-[#1a2030]/80 transition-colors cursor-pointer"
                     >
                         Registrarse
                     </button>
